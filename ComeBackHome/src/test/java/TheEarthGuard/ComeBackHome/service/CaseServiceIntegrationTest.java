@@ -64,8 +64,7 @@ public class CaseServiceIntegrationTest {
 
         //Then
         System.out.println("[TEST] " +  caseRepository.findByMissingName("홍길동"));
-//        Optional<Case> findCaseByName = caseRepository.findByMissingName("홍길동");
-//        System.out.println("[TEST] findCaseByName " + findCaseByName);
-//        assertEquals(caseObj1.getCase_id(), findCase.getCase_id());
+        Optional<Case> findCaseByName = caseRepository.findByMissingName("홍길동");
+        System.out.println("[TEST] findCaseByName " + findCaseByName);
     }
 }
