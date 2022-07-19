@@ -19,7 +19,8 @@ public class CaseService {
      * 사건 등록하기
      */
     public Long UploadCase(Case caseObj) {
-        System.out.println("[TEST] UploadCase Finder_id " + caseObj.getFinder_id());
+        System.out.println("[CASE_SERVICE] caseObj.getMissing_time" + caseObj.getMissing_time());
+//        System.out.println("[TEST] UploadCase Finder_id " + caseObj.getFinder_id());
 //        validateDuplicateCase(caseObj); //중복 사건 검증
         caseRepository.save(caseObj);
         return caseObj.getCase_id();

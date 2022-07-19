@@ -43,11 +43,13 @@ public class CaseController {
         caseObj.setMissing_sex(form.getMissing_sex());
         caseObj.setMissing_desc(form.getMissing_desc());
         caseObj.setMissing_area(form.getMissing_area());
-        caseObj.setMissing_lat(26.45621); // 계산 필요
-        caseObj.setMissing_lng(18.45621); // 계산 필요
+        caseObj.setMissing_lat(26.41315621); // 계산 필요
+        caseObj.setMissing_lng(18.456132121); // 계산 필요
+        caseObj.setMissing_time(form.getMissing_time());
 
-        Timestamp missing_time3 = Timestamp.valueOf("1880-12-12 01:24:23");
-        caseObj.setMissing_time(missing_time3);
+//        Timestamp missing_time3 = Timestamp.valueOf("1880-12-12 01:24:23");
+
+        System.out.println("[CASE_CONTROLLER] caseObj.getMissing_time" + caseObj.getMissing_time());
 
         caseService.UploadCase(caseObj);
         return "redirect:/";

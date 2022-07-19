@@ -14,31 +14,37 @@
       <p>
       <label for="missing_pic">실종자 사진</label>
       <input type="text" id="missing_pic" name="missing_pic" placeholder="사진 경로를 입력하세요">
+<!--      사진 선택 -->
       </p>
 
       <p>
       <label for="missing_age">실종자 나이</label>
-      <input type="text" id="missing_age" name="missing_age" placeholder="나이를 입력하세요">
+      <input type="number" id="missing_age" name="missing_age" placeholder="나이를 입력하세요">
       </p>
 
       <p>
       <label for="missing_sex">실종자 성별</label>
-      <input type="text" id="missing_sex" name="missing_sex" placeholder="성별을 입력하세요">
+      <label for="man">남자</label>
+      <input type="radio" name="missing_sex" value="man" id="man">
+      <label for="woman">여자</label>
+      <input type="radio" name="missing_sex" value="woman" id="woman"> <br><br>
       </p>
 
       <p>
       <label for="missing_desc">실종자 정보</label>
-      <input type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
+      <textarea type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
+      </textarea>
       </p>
 
       <p>
       <label for="missing_area">실종 지역</label>
       <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요">
+      <!--  지도선택-->
       </p>
 
       <p>
       <label for="missing_time">실종 시간</label>
-      <input type="text" id="missing_time" name="missing_time" placeholder="실종 추정 시간 입력하세요">
+      <input type="datetime-local" id="missing_time" name="missing_time">
       </p>
 
     </div>

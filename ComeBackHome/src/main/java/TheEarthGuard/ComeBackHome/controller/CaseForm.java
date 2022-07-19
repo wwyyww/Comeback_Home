@@ -10,8 +10,7 @@ public class CaseForm {
     private Boolean missing_sex; //
     private String missing_desc;
     private String missing_area;
-//    private Timestamp missing_time; //
-    private String missing_time; //
+    private Timestamp missing_time; //
 
     public String getMissing_name() {
         return missing_name;
@@ -61,11 +60,11 @@ public class CaseForm {
         this.missing_area = missing_area;
     }
 
-    public String getMissing_time() {
+    public Timestamp getMissing_time() {
         return missing_time;
     }
 
-    public void setMissing_time(String missing_time) {
+    public void setMissing_time(Timestamp missing_time) {
         this.missing_time = missing_time;
     }
 
