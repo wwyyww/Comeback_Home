@@ -4,23 +4,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
+@Table(name="reports")
 public class Report {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long report_id;
     private String case_id;
     private String user_id;
     private String witness_area;
-    private String witness_time; // 수정 가능성 있음
+    private Timestamp witness_time; // 수정 가능성 있음
     private String witness_txt;
     private String witness_pic;
-    private String is_alert;
+    private Boolean is_alert;
 
     // 생성자
-    public Report(String case_id, String user_id, String witness_area, String witness_time,
-        String witness_txt, String witness_pic, String is_alert) {
+    public Report(String case_id, String user_id, String witness_area, Timestamp witness_time,
+        String witness_txt, String witness_pic, Boolean is_alert) {
         this.case_id = case_id;
         this.user_id = user_id;
         this.witness_area = witness_area;
@@ -67,11 +70,11 @@ public class Report {
         this.witness_area = witnessArea;
     }
 
-    public String getWitness_time() {
+    public Timestamp getWitness_time() {
         return witness_time;
     }
 
-    public void setWitness_time(String witnessTime) {
+    public void setWitness_time(Timestamp witnessTime) {
         this.witness_time = witnessTime;
     }
 
@@ -91,11 +94,11 @@ public class Report {
         this.witness_pic = witnessPic;
     }
 
-    public String getIs_alert() {
+    public Boolean getIs_alert() {
         return is_alert;
     }
 
-    public void setIs_alert(String isAlert) {
+    public void setIs_alert(Boolean isAlert) {
         this.is_alert = isAlert;
     }
 }
