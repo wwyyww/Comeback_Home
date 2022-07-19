@@ -1,9 +1,7 @@
 package TheEarthGuard.ComeBackHome;
 
-import TheEarthGuard.ComeBackHome.respoitory.CaseRepository;
-import TheEarthGuard.ComeBackHome.respoitory.JpaCaseRepository;
-import TheEarthGuard.ComeBackHome.respoitory.JpaReportRepository;
-import TheEarthGuard.ComeBackHome.respoitory.ReportRepository;
+import TheEarthGuard.ComeBackHome.service.UserService;
+import TheEarthGuard.ComeBackHome.respoitory.*;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import javax.persistence.EntityManager;
@@ -32,12 +30,21 @@ public class SpringConfig {
     }
 
     @Bean
+    public UserService memberService() {
+        return new UserService(memberRepository());
+    }
+    @Bean
     public ReportRepository reportRepository() {
         return new JpaReportRepository(em);
     }
     @Bean
     public CaseRepository caseRepository() {
         return new JpaCaseRepository(em);
+    }
+
+    @Bean
+    public UserRepository memberRepository() {
+        return new JpaUserRepository(em);
     }
 
 }

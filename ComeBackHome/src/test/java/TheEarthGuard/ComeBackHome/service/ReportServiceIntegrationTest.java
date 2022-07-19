@@ -12,7 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class ReportServiceIntegrationTest {
-    @Autowired ReportService reportService;
+    @Autowired
+    ReportService reportService;
     @Autowired ReportRepository reportRepository;
 
 

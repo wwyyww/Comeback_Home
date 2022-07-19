@@ -1,5 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html
+        lang="ko"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8" />
+  <title>comebackhome</title>
+</head>
 <body>
 <div class="container">
   <div>
@@ -17,6 +24,17 @@
       <a href="/reports/new">증언 하기</a>
       <a href="/reports">증언 목록</a>
     </p>
+
+    <h4>회원 관련</h4>
+    <p>
+      <a href="/users/signup">회원가입</a>
+      <a href="/users/login">로그인</a>
+    </p>
+
+    <div sec:authorize="isAuthenticated()">
+      <span sec:authentication="name"></span>님 환영합니다.
+    </div>
+    <a sec:authorize="isAuthenticated()">로그아웃</a>
 
 
     <a href="/mapTest">지도 테스트</a>

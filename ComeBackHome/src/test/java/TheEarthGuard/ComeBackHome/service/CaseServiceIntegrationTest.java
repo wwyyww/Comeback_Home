@@ -6,8 +6,6 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.respoitory.CaseRepository;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
