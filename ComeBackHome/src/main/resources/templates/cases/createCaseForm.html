@@ -2,10 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
-  <form action="/cases/new" method="post">
+  <form action="/cases/new/submit" method="post">
     <div class="form-group">
-<!--      <label for="finder_id">찾는자 id</label> &lt;!&ndash; 나중엔 없어질 팔드&ndash;&gt;-->
-<!--      <input type="text" id="finder_id" name="finder_id" placeholder="찾는자 id를 입력하세요">-->
       <p>
       <label for="missing_name">실종자 이름</label>
       <input type="text" id="missing_name" name="missing_name" placeholder="이름을 입력하세요">
@@ -19,34 +17,37 @@
 
       <p>
       <label for="missing_age">실종자 나이</label>
-      <input type="number" id="missing_age" name="missing_age" placeholder="나이를 입력하세요">
+      <input type="number" id="missing_age" name="missing_age" min="1" max="150" placeholder="나이를 입력하세요">
       </p>
 
       <p>
       <label for="missing_sex">실종자 성별</label>
       <label for="man">남자</label>
-      <input type="radio" name="missing_sex" value="man" id="man">
+      <input type="radio" name="missing_sex" value=false id="man">
       <label for="woman">여자</label>
-      <input type="radio" name="missing_sex" value="woman" id="woman"> <br><br>
+      <input type="radio" name="missing_sex" value=true id="woman"> <br><br>
       </p>
 
       <p>
       <label for="missing_desc">실종자 정보</label>
-      <textarea type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
-      </textarea>
+      <input type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
       </p>
 
       <p>
       <label for="missing_area">실종 지역</label>
-      <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요">
-      <!--  지도선택-->
+        <div th:if="${place}">
+          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:text="${place.name}">
+        </div>
+        <div th:unless="${place}">
+          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요">
+        </div>
+        <a href="/cases/new/selectPlace">지도에서 찾기</a>        <!--  지도선택-->
       </p>
 
       <p>
       <label for="missing_time">실종 시간</label>
-      <input type="datetime-local" id="missing_time" name="missing_time">
+      <input type="datetime-local" id="missing_time" name="missing_time" >
       </p>
-
     </div>
     <button type="submit">등록</button>
   </form>
