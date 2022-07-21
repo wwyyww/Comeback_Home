@@ -1,7 +1,7 @@
 package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Report;
-import TheEarthGuard.ComeBackHome.respoitory.ReportRepository;
+import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;

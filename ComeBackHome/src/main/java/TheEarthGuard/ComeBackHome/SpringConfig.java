@@ -1,7 +1,6 @@
 package TheEarthGuard.ComeBackHome;
 
-import TheEarthGuard.ComeBackHome.service.UserService;
-import TheEarthGuard.ComeBackHome.respoitory.*;
+import TheEarthGuard.ComeBackHome.repository.*;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import javax.persistence.EntityManager;

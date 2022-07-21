@@ -1,6 +1,6 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import TheEarthGuard.ComeBackHome.respoitory.ReportRepository;
+import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

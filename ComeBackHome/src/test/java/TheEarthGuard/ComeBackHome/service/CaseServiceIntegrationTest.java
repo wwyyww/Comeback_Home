@@ -3,7 +3,7 @@ package TheEarthGuard.ComeBackHome.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.respoitory.CaseRepository;
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import java.sql.Timestamp;
 import java.util.Optional;
 import javax.transaction.Transactional;

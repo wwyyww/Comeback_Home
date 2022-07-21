@@ -1,4 +1,4 @@
-package TheEarthGuard.ComeBackHome.respoitory;
+package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

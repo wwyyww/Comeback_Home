@@ -1,17 +1,15 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import TheEarthGuard.ComeBackHome.domain.Case;
+import static java.util.Optional.ofNullable;
+
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.respoitory.UserRepository;
+import TheEarthGuard.ComeBackHome.repository.UserRepository;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.transaction.Transactional;
-import java.util.Optional;
-
-import static java.util.Optional.*;
 
 @SpringBootTest
 @Transactional
