@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
 
@@ -31,9 +31,9 @@ public class UserService implements UserDetailsService {
         userRepository.save(user.create(user));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
+
+
 }

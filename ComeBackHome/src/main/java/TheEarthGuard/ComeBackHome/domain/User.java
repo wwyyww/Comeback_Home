@@ -19,6 +19,7 @@ public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     @Email
     @NotBlank(message = "이메일은 필수 입력값입니다.")
     private String email;
@@ -46,7 +47,7 @@ public class User implements UserDetails {
         this.warning_cnt = warning_cnt;
     }
 
-    protected User() {
+    public User() {
 
     }
 

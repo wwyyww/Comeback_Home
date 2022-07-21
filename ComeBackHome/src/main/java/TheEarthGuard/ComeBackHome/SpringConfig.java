@@ -29,10 +29,10 @@ public class SpringConfig {
         return new CaseService(caseRepository());
     }
 
-    @Bean
-    public UserService memberService() {
-        return new UserService(memberRepository());
-    }
+//    @Bean
+//    public UserService memberService() {
+//        return new UserService(memberRepository());
+//    }
     @Bean
     public ReportRepository reportRepository() {
         return new JpaReportRepository(em);
@@ -42,9 +42,9 @@ public class SpringConfig {
         return new JpaCaseRepository(em);
     }
 
-    @Bean
-    public UserRepository memberRepository() {
-        return new JpaUserRepository(em);
-    }
+//    @Bean
+//    public UserRepository memberRepository() {
+//        return new JpaUserRepository(em);
+//    }
 
 }
