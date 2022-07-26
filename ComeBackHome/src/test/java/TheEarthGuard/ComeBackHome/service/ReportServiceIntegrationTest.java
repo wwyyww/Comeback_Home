@@ -1,11 +1,7 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import TheEarthGuard.ComeBackHome.domain.Report;
-import TheEarthGuard.ComeBackHome.respoitory.ReportRepository;
+import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,19 +13,19 @@ public class ReportServiceIntegrationTest {
     @Autowired ReportRepository reportRepository;
 
 
-    @Test
-    public void 증언남기기() throws Exception {
-        //Given
-        Report report = new Report("CaseID1","userID1", "wa", "wt", "wTxt", "wPic", "false");
-
-        //When
-        Long report_id = reportService.testify(report);
-        System.out.println("[TEST] Report " + report.getReport_id());
-
-        //Then
-        Report findReport = reportRepository.findByReportId(report_id).get();
-        assertEquals(report.getReport_id(), findReport.getReport_id());
-    }
+//    @Test
+//    public void 증언남기기() throws Exception {
+//        //Given
+//        Report report = new Report("CaseID1","userID1", "wa", "wt", "wTxt", "wPic", "false");
+//
+//        //When
+//        Long report_id = reportService.testify(report);
+//        System.out.println("[TEST] Report " + report.getReport_id());
+//
+//        //Then
+//        Report findReport = reportRepository.findByReportId(report_id).get();
+//        assertEquals(report.getReport_id(), findReport.getReport_id());
+//    }
 
 //    @Test
 //    public void 중복_증언_예외() throws Exception {

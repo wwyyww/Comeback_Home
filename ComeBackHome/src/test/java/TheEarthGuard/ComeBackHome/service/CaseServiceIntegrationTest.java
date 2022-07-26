@@ -3,9 +3,9 @@ package TheEarthGuard.ComeBackHome.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.respoitory.CaseRepository;
-
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import java.sql.Timestamp;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,31 @@ public class CaseServiceIntegrationTest {
     @Test
     public void 사건_등록하기() throws Exception {
         //Given
-        String dateTime = "1900-01-01 01:24:23";
-        Timestamp missing_time = Timestamp.valueOf(dateTime);
-
-        Case caseObj = new Case("finder1",false,0,1,"/pic/picture1","홍길동",20,false,"조선시대때 실종된 홍길동을 찾습니다.", "한양", 15.2345, 38.4353, missing_time);
-        System.out.println("[TEST] Case finder_id" + caseObj.getFinder_id());
+        String finder_id = "finderID123";
+        String missing_pic = "/picture1.png";
+        String missing_name = "홍길동";
+        Integer missing_age = 18;
+        Boolean missing_sex = true;
+        String missing_desc = "홍길동씨를 찾습니다. 나이는 n살, 사는 지역은 m으로...";
+        String missing_area = "한양구";
+        Double missing_lat = 32.123245;
+        Double missing_lng = 18.123245;
+        Timestamp missing_time = Timestamp.valueOf("1880-12-12 01:24:23");
 
         //When
+        Case caseObj = Case.builder()
+            .finder_id(finder_id)
+            .missing_pic(missing_pic)
+            .missing_name(missing_name)
+            .missing_age(missing_age)
+            .missing_sex(missing_sex)
+            .missing_desc(missing_desc)
+            .missing_area(missing_area)
+            .missing_lat(missing_lat) // 계산 필요
+            .missing_lng(missing_lng) // 계산 필요
+            .missing_time(missing_time)
+            .build();
+
         Long case_id = caseService.UploadCase(caseObj);
         System.out.println("[TEST] Case caseId " + caseObj.getCase_id());
 
@@ -39,16 +57,56 @@ public class CaseServiceIntegrationTest {
 
 
     @Test
-    public void 사건_실종자이름_검색하기() throws Exception {
-        //Given
-        Timestamp missing_time1 = Timestamp.valueOf("1900-01-01 01:24:23");
-        Timestamp missing_time2 = Timestamp.valueOf("1950-12-12 01:24:23");
-        Timestamp missing_time3 = Timestamp.valueOf("1880-12-12 01:24:23");
+    public void 사건_실종자이름_검색하기() throws Exception {//Given
+        String finder_id = "finderID123";
+        String missing_pic = "/picture1.png";
+        Integer missing_age = 18;
+        Boolean missing_sex = true;
+        String missing_desc = "홍길동씨를 찾습니다. 나이는 n살, 사는 지역은 m으로...";
+        String missing_area = "한양구";
+        Double missing_lat = 32.123245;
+        Double missing_lng = 18.123245;
+        Timestamp missing_time = Timestamp.valueOf("1880-12-12 01:24:23");
 
-        Case caseObj1 = new Case("finder1",false,0,1,"/pic/picture1","홍길동",20,false,"조선시대때 실종된 홍길동을 찾습니다.", "한양", 15.2345, 38.4353, missing_time1);
-        Case caseObj2 = new Case("finder2",false,0,1,"/pic/picture2","김길동",20,true,"조선시대때 실종된 김길동을 찾습니다.", "한양", 10.2345, 35.4353, missing_time2);
-        Case caseObj3= new Case("finder3",false,0,1,"/pic/picture3","홍길동",20,false,"조선시대때 실종된 홍길동을 찾습니다.", "부산", 8.2345, 38.4353, missing_time3);
-//        System.out.println("[TEST] Case finder_id" + caseObj1.getFinder_id());
+        //When
+        Case caseObj1 = Case.builder()
+            .finder_id(finder_id)
+            .missing_pic(missing_pic)
+            .missing_name("홍길동")
+            .missing_age(missing_age)
+            .missing_sex(missing_sex)
+            .missing_desc(missing_desc)
+            .missing_area(missing_area)
+            .missing_lat(missing_lat) // 계산 필요
+            .missing_lng(missing_lng) // 계산 필요
+            .missing_time(missing_time)
+            .build();
+
+        Case caseObj2 = Case.builder()
+            .finder_id(finder_id)
+            .missing_pic(missing_pic)
+            .missing_name("김길동")
+            .missing_age(missing_age)
+            .missing_sex(missing_sex)
+            .missing_desc(missing_desc)
+            .missing_area(missing_area)
+            .missing_lat(missing_lat) // 계산 필요
+            .missing_lng(missing_lng) // 계산 필요
+            .missing_time(missing_time)
+            .build();
+
+        Case caseObj3 = Case.builder()
+            .finder_id(finder_id)
+            .missing_pic(missing_pic)
+            .missing_name("이길동")
+            .missing_age(missing_age)
+            .missing_sex(missing_sex)
+            .missing_desc(missing_desc)
+            .missing_area(missing_area)
+            .missing_lat(missing_lat) // 계산 필요
+            .missing_lng(missing_lng) // 계산 필요
+            .missing_time(missing_time)
+            .build();
 
 
         //When

@@ -2,8 +2,7 @@ package TheEarthGuard.ComeBackHome.service;
 
 
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.respoitory.UserRepository;
-import lombok.RequiredArgsConstructor;
+import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +19,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final KakaoOAuth2 kakaoOAuth2;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -31,9 +32,20 @@ public class UserService implements UserDetailsService {
         userRepository.save(user.create(user));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
+
+    @Override
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null){
+            throw new UsernameNotFoundException("User not authorized.");
+        }
+        return user;    }
+
+    public void kakaoLogin(String code) {
+
+    }
+
 }

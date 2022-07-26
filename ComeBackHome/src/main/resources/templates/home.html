@@ -32,12 +32,11 @@
     </p>
 
     <div sec:authorize="isAuthenticated()">
-      <span sec:authentication="name"></span>님 환영합니다.
+      <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님 환영합니다.
     </div>
-    <a sec:authorize="isAuthenticated()">로그아웃</a>
+    <p sec:authorize="isAuthenticated()"><a th:href="@{/users/logout}">로그아웃</a></p>
 
 
-    <a href="/mapTest">지도 테스트</a>
 
     <!-- 카카오 맵 -->
     <div id="map" style="width:1500px;height:400px;"></div>

@@ -1,7 +1,6 @@
-package TheEarthGuard.ComeBackHome.respoitory;
+package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.domain.Report;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
