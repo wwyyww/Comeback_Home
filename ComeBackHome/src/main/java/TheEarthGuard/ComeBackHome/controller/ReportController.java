@@ -27,8 +27,23 @@ public class ReportController {
     }
 
     //게시판 등록
-    @ResponseBody
-    @PostMapping("/report/new")
+    @PostMapping(value = "/reports/new")
+    public String createReport(ReportForm form){
+
+        Report reportObj = new Report();
+
+        reportObj.setIs_alert(false);
+        reportObj.setCase_id("1"); //하드코딩
+        reportObj.setUser_id("aa"); //하드코딩
+
+        reportObj.setWitness_area(form.getWitness_area());
+        reportObj.setWitness_time(form.getWitness_time());
+        reportObj.setWitness_txt(form.getWitness_txt());
+//        reportObj.setWitness_pic(form.getWitness_pic());
+
+        reportService.UploadReport(reportObj);
+        return "redirect:/";
+    }
 
     @GetMapping(value = "/reports")
     public String list(Model model) {
