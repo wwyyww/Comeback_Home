@@ -8,9 +8,10 @@ import java.sql.Timestamp;
 
 @Builder
 @Getter
+@Setter
 @Entity
 @Table(name="reports")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class Report {
     @Id
