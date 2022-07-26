@@ -26,7 +26,7 @@ public class ReportService {
 
     private void validateDuplicateReport(Report report) {
         // 수정 필요함 : 해당 유저가 해당 사건에 대해 등록한 적이 있는지 확인해야됨
-        reportRepository.findByCaseId(String.valueOf(report.getCases().getCase_id()))
+        reportRepository.findByCaseId(report.getCase_id())
             .ifPresent(m -> {
                 throw new IllegalStateException("이미 존재하는 증언입니다.");
             });

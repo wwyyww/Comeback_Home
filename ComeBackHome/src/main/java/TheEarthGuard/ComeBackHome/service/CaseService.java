@@ -51,7 +51,9 @@ public class CaseService {
     /**
      * 사건 검색
      */
-    public Optional<Case> findOnebyMissingName(String keyword){
-        return caseRepository.findByMissingName(keyword);
-    }
+//    public List<Case> search(String keyword){
+//        List<Case> caseList = caseRepository.(keyword);
+//        return caseList;
+//
+//    }
 }
