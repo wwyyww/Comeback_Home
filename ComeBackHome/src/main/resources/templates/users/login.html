@@ -1,26 +1,25 @@
-<!--로그인 페이지-->
-<!-- login.html-->
 <!DOCTYPE html>
-<!-- Latest compiled and minified CSS -->
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
     <h1>로그인</h1>
     <form th:action="@{/login_proc}" method="post">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <div class="form-group">
             <label th:for="email">이메일</label>
-            <input type="text" name="email" class="form-control" placeholder="아이디 입력해주세요">
+            <input type="text" name="email" class="form-control" placeholder="이메일 입력해주세요">
         </div>
         <div class="form-group">
-            <label th:for="pw">비밀번호</label>
-            <input type="password" class="form-control" name="pw" placeholder="비밀번호 입력해주세요">
+            <label th:for="password">비밀번호</label>
+            <input type="password" class="form-control" name="password" placeholder="비밀번호">
         </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <a class="p-2" href="https://kauth.kakao.com/oauth/authorize?client_id=a758e9f7b1f0c72d192b378bfb4b9b98
+&redirect_uri=http://localhost:8080/users/kakao&response_type=code">
+        <img th:src="@{/images/kakao_login_medium_narrow.png}" style="height:40px"/>
+    </a>
+    <a href="/users/google"><p>구글로그인</p></a>
+
     <br/>
 </div>
 </body>
