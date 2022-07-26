@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <title>클릭한 위치에 마커 표시하기</title>
-
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
 </head>
 <body>
+
 <!--장소 선택 방식 -->
 <div class="place_option">
   <a href="/cases/new/selectPlace"><button>장소 직접 선택하기</button></a>
@@ -23,50 +26,90 @@
 </div>
 
 
-<div id="map" style="width:100%;height:350px;"></div>
-<p><em>지도를 클릭해주세요!</em></p>
-<div id="clickLatlng"></div>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df3c33f5950a30da0e53e3fcc48cb634&libraries=services,clusterer,drawing"></script>
+<form action="/cases/new" method="post">
+  <p><em>지도를 클릭해주세요!</em></p>
+  <div id="map" style="width:100%;height:350px;"></div>
+  <div className="form-group">
+    <div id="clickLatlng"></div>
+    <input type="number" step=0.00000001 id="missing_lat" name="missing_lat">
+    <input type="number" step=0.00000001 id="missing_lng" name="missing_lng">
+    <input type="text"  id="missing_area" name="missing_area">
+    <button type="submit">등록</button>
+  </div>
+
+</form>
+
+
+
 <script>
-  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-      mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-      };
+    var position = new naver.maps.LatLng(37.3595704, 127.105399);
 
-  var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    var map = new naver.maps.Map('map', {
+      center: position,
+      zoom: 15
+    });
 
-  // 지도를 클릭한 위치에 표출할 마커입니다
-  var marker = new kakao.maps.Marker({
-    // 지도 중심좌표에 마커를 생성합니다
-    position: map.getCenter()
-  });
-  // 지도에 마커를 표시합니다
-  marker.setMap(map);
+    var marker = new naver.maps.Marker({
+      position: position,
+      map: map
+    });
 
-  // 지도에 클릭 이벤트를 등록합니다
-  // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-  kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    function searchCoordinateToAddress(latlng) {
 
-    // 클릭한 위도, 경도 정보를 가져옵니다
-    var latlng = mouseEvent.latLng;
+      naver.maps.Service.reverseGeocode({
+        coords: latlng,
+        orders: [
+          naver.maps.Service.OrderType.ADDR,
+          naver.maps.Service.OrderType.ROAD_ADDR
+        ].join(',')
+      }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          if (!latlng) {
+            return alert('ReverseGeocode Error, Please check latlng');
+          }
+          if (latlng.toString) {
+            return alert('ReverseGeocode Error, latlng:' + latlng.toString());
+          }
+          if (latlng.x && latlng.y) {
+            return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
+          }
+          return alert('ReverseGeocode Error, Please check latlng');
+        }
 
-    // 마커 위치를 클릭한 위치로 옮깁니다
-    marker.setPosition(latlng);
+        var address = response.v2.address,
+            htmlAddresses = [];
 
-    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-    message += '경도는 ' + latlng.getLng() + ' 입니다';
+        if (address.jibunAddress !== '') {
+          htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
+        }
 
-    var resultDiv = document.getElementById('clickLatlng');
-    resultDiv.innerHTML =  message;
-  });
+        if (address.roadAddress !== '') {
+          htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+        }
+
+        missing_area.value = address.jibunAddress;
+      });
+    }
+
+    naver.maps.Event.addListener(map, 'click', function(e) {
+      marker.setPosition(e.coord);
+      var message = marker.position.toString();
+      var resultDiv = document.getElementById('clickLatlng');
+      resultDiv.innerHTML =  message;
+
+      var missing_lat = document.getElementById('missing_lat');
+      var missing_lng = document.getElementById('missing_lng');
+      var missing_area = document.getElementById('missing_area');
+      missing_lat.value = marker.position.lat();
+      missing_lng.value = marker.position.lng();
+
+      searchCoordinateToAddress(marker.position);
+    });
+
+
 </script>
 
-  <form action="/cases/new" method="post">
-    <div className="form-group">
-      <button type="submit">등록</button>
-    </div>
-  </form>
+
 </body>
 </html>

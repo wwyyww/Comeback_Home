@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class CaseController {
@@ -28,8 +28,9 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/new")
-    public String updateCaseForm(@RequestBody PlaceInfoDto placeInfoDto, Model model) {
-        System.out.println(placeInfoDto);
+    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, Model model) {
+        System.out.println(placeInfoDto.getLat());
+        System.out.println(placeInfoDto.getName());
         model.addAttribute("place", placeInfoDto);
         return "cases/createCaseForm";
     }
@@ -59,6 +60,19 @@ public class CaseController {
         model.addAttribute("cases", cases);
         return "cases/caseList";
     }
+
+
+//    @RequestMapping(value="/cases/new/missing-place/{option}", method= RequestMethod.GET)
+//    public String setMissingPlace(@RequestParam(value="option", required =false, defaultValue="1") String opt) {
+//        if (opt.equals("1")) {
+//            return "/cases/selectPlace";
+//        } else if (opt.equals("2")) {
+//            return "/cases/searchPlace";
+//        } else {
+//            return "/error/";
+//        }
+
+
 
     @GetMapping(value = "/cases/new/selectPlace")
     public String selectPlace() {
