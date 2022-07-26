@@ -34,6 +34,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
+        System.out.println("EMAIL : " + email);
         return userRepository.findByEmail(email);
     }
     public Optional<User> findById(Long id){

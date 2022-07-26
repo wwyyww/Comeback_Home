@@ -37,8 +37,8 @@
       <label for="missing_area">실종 지역</label>
         <div th:if="${place}">
           <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${place.missing_area} " readonly>
-          <input type="hidden" id="missing_lng" name="missing_lng" th:value="${place.missing_lng} " readonly>
-          <input type="hidden" id="missing_lat" name="missing_lat" th:value="${place.missing_lat} " readonly>
+          <input type="text" id="missing_lng" name="missing_lng" th:value="${place.missing_lng} " readonly>
+          <input type="text" id="missing_lat" name="missing_lat" th:value="${place.missing_lat} " readonly>
     </div>
         <div th:unless="${place}">
           <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요">

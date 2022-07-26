@@ -27,7 +27,6 @@ public class Case {
     @ManyToOne
     @JoinColumn(name="finder_id")
     private User user;
-
     private Boolean is_find;
     private Integer report_cnt;
     private Integer hit_cnt;

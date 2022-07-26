@@ -16,16 +16,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.validation.Valid;
-
 @Controller
 public class CaseController {
     private final CaseService caseService;
+    private UserService userService;
 
     @Autowired
-    public CaseController(CaseService caseService) {
+    public CaseController(CaseService caseService, UserService userService) {
         this.caseService = caseService;
+        this.userService = userService;
     }
+
 
     @GetMapping(value = "/cases/new")
     public String createCaseForm() {
@@ -41,10 +42,15 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/new/submit")
-    public String uploadCaseForm(@Valid CaseFormDto form) {
+    public String uploadCaseForm(@ModelAttribute CaseFormDto form) {
+        User user = userService.findByEmail("hmk9667@gmail.com");
+        System.out.println(user.getEmail());
+
+        System.out.println("name : " + form.getMissing_name());
+        System.out.println("missing_pic : " + form.getMissing_pic());
+        
         Case caseObj = Case.builder()
-                .user(new User())
-//            .finder_id("finderId123")
+            .user(user)
             .missing_pic(form.getMissing_pic())
             .missing_name(form.getMissing_name())
             .missing_age(form.getMissing_age())
