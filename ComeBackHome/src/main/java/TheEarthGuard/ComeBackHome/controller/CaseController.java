@@ -1,6 +1,7 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseFormDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
@@ -38,7 +39,8 @@ public class CaseController {
     @PostMapping(value = "/cases/new/submit")
     public String uploadCaseForm(CaseFormDto form) {
         Case caseObj = Case.builder()
-            .finder_id("finderId123")
+                .user(new User())
+//            .finder_id("finderId123")
             .missing_pic(form.getMissing_pic())
             .missing_name(form.getMissing_name())
             .missing_age(form.getMissing_age())
