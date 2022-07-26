@@ -32,9 +32,11 @@
   <div id="map" style="width:100%;height:350px;"></div>
   <div className="form-group">
     <div id="clickLatlng"></div>
-    <input type="number" step=0.00000001 id="missing_lat" name="missing_lat">
-    <input type="number" step=0.00000001 id="missing_lng" name="missing_lng">
-    <input type="text"  id="missing_area" name="missing_area">
+<!--    <input type="number" step=0.00000001 id="missing_lat" name="missing_lat">-->
+<!--    <input type="number" step=0.00000001 id="missing_lng" name="missing_lng">-->
+    <input type="hidden" id="missing_lat" name="missing_lat">
+    <input type="hidden" id="missing_lng" name="missing_lng">
+    <input type="text" id="missing_area" name="missing_area">
     <button type="submit">등록</button>
   </div>
 
@@ -101,8 +103,8 @@
       var missing_lat = document.getElementById('missing_lat');
       var missing_lng = document.getElementById('missing_lng');
       var missing_area = document.getElementById('missing_area');
-      missing_lat.value = marker.position.lat();
-      missing_lng.value = marker.position.lng();
+      missing_lat.value = marker.position.lat().toString();
+      missing_lng.value = marker.position.lng().toString();
 
       searchCoordinateToAddress(marker.position);
     });

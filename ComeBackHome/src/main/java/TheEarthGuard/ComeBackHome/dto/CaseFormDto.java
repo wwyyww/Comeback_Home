@@ -14,6 +14,8 @@ public class CaseFormDto {
     private Boolean missing_sex;
     private String missing_desc;
     private String missing_area;
+    private String missing_lng;
+    private String missing_lat;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime missing_time;
 }

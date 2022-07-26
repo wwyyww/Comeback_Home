@@ -6,6 +6,7 @@ import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import java.sql.Timestamp;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,14 +30,14 @@ public class CaseController {
 
     @PostMapping(value = "/cases/new")
     public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, Model model) {
-        System.out.println(placeInfoDto.getLat());
-        System.out.println(placeInfoDto.getName());
+        System.out.println(placeInfoDto.getMissing_area());
+        System.out.println(placeInfoDto.getMissing_lat());
         model.addAttribute("place", placeInfoDto);
         return "cases/createCaseForm";
     }
 
     @PostMapping(value = "/cases/new/submit")
-    public String uploadCaseForm(CaseFormDto form) {
+    public String uploadCaseForm(@Valid CaseFormDto form) {
         Case caseObj = Case.builder()
             .finder_id("finderId123")
             .missing_pic(form.getMissing_pic())
@@ -45,8 +46,8 @@ public class CaseController {
             .missing_sex(form.getMissing_sex())
             .missing_desc(form.getMissing_desc())
             .missing_area(form.getMissing_area())
-            .missing_lat(26.41315621) // 계산 필요
-            .missing_lng(18.456132121) // 계산 필요
+            .missing_lat(Double.parseDouble(form.getMissing_lat())) // 계산 필요
+            .missing_lng(Double.parseDouble(form.getMissing_lng())) // 계산 필요
             .missing_time(Timestamp.valueOf(form.getMissing_time()))
             .build();
 
