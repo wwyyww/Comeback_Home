@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <select name = "type">
+        <option selected value="">검색 내용 선택</option>
+        <option value="name">이름</option>
+        <option value="area">주소</option>
+    </select>
+    <form action="/cases/search/submit" method="post">
+        <div class="form-group">
+            <p>
+                <label for="missing_name">실종자 이름</label>
+                <input type="text" id="missing_name" name="missing_name" placeholder="이름을 입력하세요">
+            </p>
+        </div>
+        <button type="submit">사건 조회</button>
+    </form>
+
+</div> <!-- /container -->
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="search : ${searchList}">
+                <td th:text="${search.missing_name}"></td>
+                <td th:text="${search.missing_age}"></td>
+                <td th:text="${search.missing_sex}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
