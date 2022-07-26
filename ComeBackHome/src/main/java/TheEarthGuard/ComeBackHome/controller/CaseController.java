@@ -9,7 +9,6 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +40,8 @@ public class CaseController {
     @PostMapping(value = "/cases/new/submit")
     public String uploadCaseForm(@Valid CaseFormDto form) {
         Case caseObj = Case.builder()
-            .finder_id("finderId123")
+                .user(new User())
+//            .finder_id("finderId123")
             .missing_pic(form.getMissing_pic())
             .missing_name(form.getMissing_name())
             .missing_age(form.getMissing_age())
