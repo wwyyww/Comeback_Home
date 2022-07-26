@@ -4,7 +4,6 @@ package TheEarthGuard.ComeBackHome.service;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +18,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final KakaoOAuth2 kakaoOAuth2;
+//    private final KakaoOAuth2 kakaoOAuth2;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
