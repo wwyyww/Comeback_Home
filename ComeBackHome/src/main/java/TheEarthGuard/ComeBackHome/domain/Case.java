@@ -1,11 +1,8 @@
 package TheEarthGuard.ComeBackHome.domain;
 
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,13 +14,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="cases")
-@NonNull
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Case {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long case_id;
-    private String finder_id;
+
+    @ManyToOne
+    @JoinColumn(name="finder_id")
+    private User user;
+
     private Boolean is_find;
     private Integer report_cnt;
     private Integer hit_cnt;
@@ -38,11 +38,11 @@ public class Case {
     private Timestamp missing_time;
 
     @Builder
-    public Case(Long case_id, String finder_id, String missing_pic, String missing_name, Integer missing_age,
+    public Case(Long case_id, User user, String missing_pic, String missing_name, Integer missing_age,
         Boolean missing_sex, String missing_desc, String missing_area, Double missing_lat,
         Double missing_lng, Timestamp missing_time) {
         this.case_id = case_id;
-        this.finder_id = finder_id;
+        this.user = user;
         this.is_find = false;
         this.report_cnt = 0;
         this.hit_cnt = 0;

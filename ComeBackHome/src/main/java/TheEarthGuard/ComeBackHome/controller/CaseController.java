@@ -1,15 +1,16 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseFormDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
+import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import java.sql.Timestamp;
 import java.util.List;
-import javax.validation.Valid;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,8 @@ public class CaseController {
     @PostMapping(value = "/cases/new/submit")
     public String uploadCaseForm(@Valid CaseFormDto form) {
         Case caseObj = Case.builder()
-            .finder_id("finderId123")
+                .user(new User())
+//            .finder_id("finderId123")
             .missing_pic(form.getMissing_pic())
             .missing_name(form.getMissing_name())
             .missing_age(form.getMissing_age())
@@ -54,6 +56,8 @@ public class CaseController {
         caseService.UploadCase(caseObj);
         return "redirect:/";
     }
+
+
 
     @GetMapping(value = "/cases")
     public String list(Model model) {
@@ -84,4 +88,32 @@ public class CaseController {
     public String searchPlace() {
         return "/cases/searchPlace";
     }
+
+
+
+    @GetMapping(value = "/cases/searchCase")
+    public String searchCaseForm() {
+        return "/cases/searchCaseForm";
+    }
+
+//    @PostMapping(value = "/cases/searchCase")
+//    public String searchCaseForm(Model model) {
+//        model.addAttribute("place", placeInfoDto);
+//        return "cases/searchCaseForm";
+//    }
+
+    @PostMapping(value = "/cases/search/submit")
+    public String showCaseForm(SearchFormDto form, Model model) {
+        System.out.println(form.getMissing_name());
+        Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
+        if(searchList.isPresent()) {
+            System.out.println(searchList.get());
+            System.out.println(searchList.get().getMissing_name());
+        } else {
+            System.out.println("없음");
+        }
+        model.addAttribute("searchList", searchList.get());
+        return "/cases/searchCaseForm";
+    }
+
 }

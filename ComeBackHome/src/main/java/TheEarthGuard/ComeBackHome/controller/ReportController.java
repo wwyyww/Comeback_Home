@@ -1,6 +1,8 @@
 package TheEarthGuard.ComeBackHome.controller;
 
+import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
+import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,10 @@ public class ReportController {
         Report reportObj = new Report();
 
         reportObj.setIs_alert(false);
-        reportObj.setCase_id("1"); //하드코딩
-        reportObj.setUser_id("aa"); //하드코딩
+        reportObj.setCases(new Case());
+        reportObj.setUser(new User());
+//        reportObj.setCase_id("1"); //하드코딩
+//        reportObj.setUser_id("aa"); //하드코딩
 
         reportObj.setWitness_area(form.getWitness_area());
         reportObj.setWitness_time(form.getWitness_time());
