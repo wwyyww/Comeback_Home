@@ -10,13 +10,14 @@ public class JpaReportRepository implements  ReportRepository{
     private final EntityManager em;
 
     public JpaReportRepository(EntityManager em){
+
         this.em = em;
     }
 
     @Override
-    public Report save(Report report) {
-        em.persist(report);
-        return report;
+    public Report save(Report reportObj) {
+        em.persist(reportObj);
+        return reportObj;
     }
 
     @Override
@@ -26,8 +27,9 @@ public class JpaReportRepository implements  ReportRepository{
     }
 
     @Override
+
     public Optional<Report> findByCaseId(String case_id) {
-        List<Report> result = em.createQuery("select r from Report r where r.case_id = :case_id", Report.class)
+        List<Report> result = em.createQuery("select r from Report r where r.cases.case_id = :case_id", Report.class)
             .setParameter("case_id", case_id)
             .getResultList();
         return result.stream().findAny();
@@ -35,7 +37,7 @@ public class JpaReportRepository implements  ReportRepository{
 
     @Override
     public Optional<Report> findByUserId(String user_id) {
-        List<Report> result = em.createQuery("select r from Report r where r.user_id = :user_id", Report.class)
+        List<Report> result = em.createQuery("select r from Report r where r.user.id = :user_id", Report.class)
             .setParameter("user_id", user_id)
             .getResultList();
         return result.stream().findAny();

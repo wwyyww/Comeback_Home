@@ -28,7 +28,7 @@ public class JpaCaseRepository implements CaseRepository{
 
     @Override
     public Optional<Case> findByFinderId(String finder_id) {
-        List<Case> result = em.createQuery("select c from Case c where c.finder_id = :finder_id", Case.class)
+        List<Case> result = em.createQuery("select c from Case c where c.user.id = :finder_id", Case.class)
             .setParameter("finder_id", finder_id)
             .getResultList();
         return result.stream().findAny();

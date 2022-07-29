@@ -8,20 +8,19 @@ import javax.transaction.Transactional;
 
 @Transactional
 public class ReportService {
-
     private final ReportRepository reportRepository;
 
     public ReportService(ReportRepository reportRepository) {
+
         this.reportRepository = reportRepository;
     }
 
-    /**
-     * 증언 남기기
-     */
-    public Long testify(Report report) {
-        validateDuplicateReport(report); //중복 증언 검증
-        reportRepository.save(report);
-        return report.getReport_id();
+
+    //실종 제보 등록
+    public Long UploadReport(Report reportObj){
+        System.out.println("[CASE_SERVICE] reportObj.getWitness_time" + reportObj.getWitness_time());
+        reportRepository.save(reportObj);
+        return reportObj.getReport_id();
     }
 
     private void validateDuplicateReport(Report report) {
@@ -32,28 +31,20 @@ public class ReportService {
             });
     }
 
-    /**
-     * 전체 증언 조회
-     */
+
+     // 전체 증언 조회
     public List<Report> findReports() {
 
         return reportRepository.findAll();
     }
 
-    /**
-     * 증언 하나 조회
-     */
+
+    // 증언 하나 조회
     public Optional<Report> findOne(String case_id) {
 
         return reportRepository.findByCaseId(case_id);
     }
 
-    /*
-    실종 제보 등록
-     */
-    public Long UploadReport(Report reportObj){
-        reportRepository.save(reportObj);
-        return reportObj.getReport_id();
-    }
+
 
 }
