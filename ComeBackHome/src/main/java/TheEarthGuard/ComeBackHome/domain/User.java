@@ -20,24 +20,23 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    @Email
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
     private String email;
-    @NotBlank(message = "비밀번호는 필수 입력값입니다.")
-//    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}",
-//            message = "비밀번호는 영문과 숫자 조합으로 8 ~ 16자리까지 가능합니다.")
+
     private String pw;
+
     private String name;
+
     private Integer sex;
+
     private String birth;
+
     private String phone;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
     private Integer warning_cnt;
 
     @Builder
-    public User(Long id, String email, String pw, String name, Integer sex, String birth, String phone, Role role, Integer warning_cnt) {
+    public User(Long id, String email, String pw, String name, Integer sex, String birth, String phone, String role, Integer warning_cnt) {
         this.id = id;
         this.email = email;
         this.pw = pw;
@@ -61,13 +60,9 @@ public class User implements UserDetails {
                 .phone(user.phone)
                 .birth(user.birth)
                 .sex(user.sex)
-                .role(Role.USER)
+                .role(Role.USER.toString())
                 .warning_cnt(0)
                 .build();
-    }
-
-    public String getRoleValue() {
-        return this.role.getValue();
     }
 
     @Override

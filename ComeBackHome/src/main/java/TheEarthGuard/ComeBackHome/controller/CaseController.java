@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,7 +121,7 @@ public class CaseController {
 
 
     @GetMapping(value = "/cases/searchCase")
-    public String searchCaseForm() {
+    public String searchCaseForm(SearchFormDto form) {
         return "/cases/searchCaseForm";
     }
 
@@ -142,5 +144,7 @@ public class CaseController {
         model.addAttribute("searchList", searchList.get());
         return "/cases/searchCaseForm";
     }
+
+
 
 }
