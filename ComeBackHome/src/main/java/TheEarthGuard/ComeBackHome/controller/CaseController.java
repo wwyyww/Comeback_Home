@@ -69,7 +69,7 @@ public class CaseController {
             System.out.println("ERROR!!!!!!!!");
             return "/";
         }
-        User user = userService.findByEmail("hmk9667@gmail.com");
+        User user = userService.findByEmail("test@gmail.com");
         System.out.println(user.getEmail());
 
         System.out.println("name : " + form.getMissing_name());
