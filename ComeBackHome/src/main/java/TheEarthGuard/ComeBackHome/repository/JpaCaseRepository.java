@@ -43,6 +43,14 @@ public class JpaCaseRepository implements CaseRepository{
     }
 
     @Override
+    public Optional<Case> findByMissingArea(String missing_area) {
+        List<Case> result = em.createQuery("select c from Case c where c.missing_area = :missing_area", Case.class)
+                .setParameter("missing_area", missing_area)
+                .getResultList();
+        return result.stream().findAny();
+    }
+
+    @Override
     public List<Case> findAll() {
         return em.createQuery("select c from Case c", Case.class)
             .getResultList();

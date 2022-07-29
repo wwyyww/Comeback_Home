@@ -2,56 +2,102 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
-  <form action="/cases/new/submit" method="post">
+<!--  <form action="/cases/new/submit" method="post">-->
+  <form  method="post">
     <div class="form-group">
-      <p>
+
       <label for="missing_name">실종자 이름</label>
-      <input type="text" id="missing_name" name="missing_name" placeholder="이름을 입력하세요">
-      </p>
+      <div th:if="${caseForm.missing_name}">
+        <input type="text" id="missing_name" name="missing_name" th:value="${caseForm.missing_name}" placeholder="이름을 입력하세요">
+      </div>
+      <div th:unless="${caseForm.missing_name}">
+        <input type="text" id="missing_name" name="missing_name" placeholder="이름을 입력하세요">
+      </div>
 
-      <p>
+
       <label for="missing_pic">실종자 사진</label>
-      <input type="text" id="missing_pic" name="missing_pic" placeholder="사진 경로를 입력하세요">
+      <div th:if="${caseForm.missing_pic}">
+        <input type="text" id="missing_pic" name="missing_pic" th:value="${caseForm.missing_pic}" placeholder="사진 경로를 입력하세요">
+      </div>
+      <div th:unless="${caseForm.missing_pic}">
+        <input type="text" id="missing_pic" name="missing_pic" placeholder="사진 경로를 입력하세요">
+      </div>
 <!--      사진 선택 -->
-      </p>
 
-      <p>
       <label for="missing_age">실종자 나이</label>
-      <input type="number" id="missing_age" name="missing_age" min="1" max="150" placeholder="나이를 입력하세요">
-      </p>
+      <div th:if="${caseForm.missing_age}">
+        <input type="number" id="missing_age" name="missing_age" min="1" max="150" th:value="${caseForm.missing_age}" placeholder="나이를 입력하세요">
+      </div>
+      <div th:unless="${caseForm.missing_age}">
+        <input type="number" id="missing_age" name="missing_age" min="1" max="150" placeholder="나이를 입력하세요">
+      </div>
 
-      <p>
+
+
       <label for="missing_sex">실종자 성별</label>
-      <label for="man">남자</label>
-      <input type="radio" name="missing_sex" value=true id="man">
-      <label for="woman">여자</label>
-      <input type="radio" name="missing_sex" value=false id="woman"> <br><br>
-      </p>
+      <div th:if="${not #strings.isEmpty(caseForm.missing_sex)}">
+        <div th:if="${caseForm.missing_sex.toString() == 'false'} ">
+          <label for="man">남자</label>
+          <input type="radio" name="missing_sex" value=true id="man">
+          <label for="woman">여자</label>
+          <input type="radio" name="missing_sex" value=false id="woman" checked/>
+        </div>
 
-      <p>
+        <div th:if="${caseForm.missing_sex.toString() == 'true'}">
+          <label for="man">남자</label>
+          <input type="radio" name="missing_sex" value=true id="man" checked/>
+          <label for="woman">여자</label>
+          <input type="radio" name="missing_sex" value=false id="woman">
+        </div>
+      </div>
+
+      <div th:if="${#strings.isEmpty(caseForm.missing_sex)}">
+        <label for="man">남자</label>
+        <input type="radio" name="missing_sex" value=true id="man">
+        <label for="woman">여자</label>
+        <input type="radio" name="missing_sex" value=false id="woman">
+      </div>
+
+
+
+
+
+
+
       <label for="missing_desc">실종자 정보</label>
-      <input type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
-      </p>
+      <div th:if="${caseForm.missing_desc}">
+        <input type="text" id="missing_desc" name="missing_desc" th:value="${caseForm.missing_desc}" placeholder="추가 실종자 정보를 입력하세요">
+      </div>
+      <div th:unless="${caseForm.missing_desc}">
+        <input type="text" id="missing_desc" name="missing_desc" placeholder="추가 실종자 정보를 입력하세요">
+      </div>
+
 
       <p>
       <label for="missing_area">실종 지역</label>
-        <div th:if="${place}">
-          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${place.missing_area} " readonly>
-          <input type="text" id="missing_lng" name="missing_lng" th:value="${place.missing_lng} " readonly>
-          <input type="text" id="missing_lat" name="missing_lat" th:value="${place.missing_lat} " readonly>
-    </div>
-        <div th:unless="${place}">
-          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요">
+        <div th:if="${caseForm.missing_area}">
+          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${caseForm.missing_area}" readonly>
+          <input type="hidden" id="missing_lng" name="missing_lng" th:value="${caseForm.missing_lng} " readonly>
+          <input type="hidden" id="missing_lat" name="missing_lat" th:value="${caseForm.missing_lat} " readonly>
         </div>
-        <a href="/cases/new/selectPlace">지도에서 찾기</a>        <!--  지도선택-->
+        <div th:unless="${caseForm.missing_area}">
+          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" disabled>
+        </div>
+      <button type="submit" formaction="/cases/new/selectPlace">지도에서 찾기</button><!--  지도선택-->
       </p>
 
-      <p>
+
       <label for="missing_time">실종 시간</label>
-      <input type="datetime-local" id="missing_time" name="missing_time" >
-      </p>
+
+      <div th:if="${caseForm.missing_time}">
+        <input type="datetime-local" id="missing_time" name="missing_time" th:value="${caseForm.missing_time}">
+      </div>
+      <div th:unless="${caseForm.missing_time}">
+        <input type="datetime-local" id="missing_time" name="missing_time" >
+      </div>
+
     </div>
-    <button type="submit">등록</button>
+    <button type="submit" formaction="/cases/new/submit">등록</button>
   </form>
 </div> <!-- /container -->
 </body>
