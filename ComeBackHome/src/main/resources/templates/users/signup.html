@@ -1,32 +1,38 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"><body>
 <div class="container">
-    <form action="/users/signup" method="post">
+    <form th:action="@{/users/signup}" method="post" modelAttribute="userDto">
         <div class="form-group">
             <div>
                 <label for="email">email</label>
-                <input type="text" id="email" name="email" placeholder="이메일">
+                <input type="text" id="email" name="email" th:value="${userDto.email}" placeholder="이메일">
+                <span th:text="${valid_email}"></span>
             </div>
             <div>
                 <label for="pw">password</label>
                 <input type="text" id="pw" name="pw" placeholder="비밀번호">
+                <span th:text="${valid_pw}"></span>
             </div>
             <div>
                 <label for="name">이름</label>
-                <input type="text" id="name" name="name" placeholder="이름">
+                <input type="text" id="name" name="name" th:value="${userDto.name}" placeholder="이름">
+                <span th:text="${valid_name}"></span>
             </div>
             <div>
                 <label for="phone">전화번호</label>
-                <input type="text" id="phone" name="phone" placeholder="전화번호">
+                <input type="text" id="phone" name="phone" th:value="${userDto.phone}" placeholder="전화번호">
+                <span th:text="${valid_phone}"></span>
             </div>
             <div>
                 <label for="birth">생년월일</label>
-                <input type="text" id="birth" name="birth" placeholder="생년월일">
+                <input type="date" id="birth" name="birth" th:value="${userDto.birth}" placeholder="생년월일">
+                <span th:text="${valid_birth}"></span>
             </div>
             <div>
                 <label>성별</label>
                 <input type="radio" name="sex" value="0">여자
                 <input type="radio" name="sex" value="1">남자
+                <span th:text="${valid_sex}"></span>
             </div>
         </div>
         <button type="submit">회원가입</button>
