@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class SearchFormDto {
     private String missing_name;
+    private String search_type;
 }

@@ -133,8 +133,17 @@ public class CaseController {
 
     @PostMapping(value = "/cases/search/submit")
     public String showCaseForm(SearchFormDto form, Model model) {
-        System.out.println(form.getMissing_name());
-        Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
+        Optional<Case> searchList = Optional.empty();
+        if (form.getSearch_type().equals("name")){
+            System.out.println(form.getMissing_name());
+            System.out.println(form.getSearch_type());
+            searchList = caseService.findOnebyMissingName(form.getMissing_name());
+        } else if (form.getSearch_type().equals("area")) {
+            System.out.println(form.getMissing_name());
+            System.out.println(form.getSearch_type());
+            searchList = caseService.findOnebyMissingArea(form.getMissing_name());
+        }
+        //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
         if(searchList.isPresent()) {
             System.out.println(searchList.get());
             System.out.println(searchList.get().getMissing_name());
@@ -142,6 +151,7 @@ public class CaseController {
             System.out.println("없음");
         }
         model.addAttribute("searchList", searchList.get());
+        // "redirect:/cases/searchCase";
         return "/cases/searchCaseForm";
     }
 
