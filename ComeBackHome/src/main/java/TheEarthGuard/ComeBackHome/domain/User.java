@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.Collection;
 
 @Entity
@@ -34,9 +33,10 @@ public class User implements UserDetails {
 
     private String role;
     private Integer warning_cnt;
+    private Integer fail_cnt;
 
     @Builder
-    public User(Long id, String email, String pw, String name, Integer sex, String birth, String phone, String role, Integer warning_cnt) {
+    public User(Long id, String email, String pw, String name, Integer sex, String birth, String phone, String role, Integer warning_cnt, Integer fail_cnt) {
         this.id = id;
         this.email = email;
         this.pw = pw;
@@ -46,6 +46,7 @@ public class User implements UserDetails {
         this.phone = phone;
         this.role = role;
         this.warning_cnt = warning_cnt;
+        this.fail_cnt = fail_cnt;
     }
 
     public User() {
@@ -62,6 +63,7 @@ public class User implements UserDetails {
                 .sex(user.sex)
                 .role(Role.USER.toString())
                 .warning_cnt(0)
+                .fail_cnt(0)
                 .build();
     }
 

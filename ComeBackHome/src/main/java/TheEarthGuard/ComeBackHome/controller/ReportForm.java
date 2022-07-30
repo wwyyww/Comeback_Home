@@ -8,7 +8,7 @@ public class ReportForm {
 
     private Timestamp witness_time;
 
-    private String witness_txt;
+    private String witness_desc;
 
     private String witness_pic;
 
@@ -28,12 +28,12 @@ public class ReportForm {
         this.witness_time = witness_time;
     }
 
-    public String getWitness_txt() {
-        return witness_txt;
+    public String getWitness_desc() {
+        return witness_desc;
     }
 
-    public void setWitness_txt(String witness_txt) {
-        this.witness_txt = witness_txt;
+    public void setWitness_desc(String witness_desc) {
+        this.witness_desc = witness_desc;
     }
 
     public String getWitness_pic() {

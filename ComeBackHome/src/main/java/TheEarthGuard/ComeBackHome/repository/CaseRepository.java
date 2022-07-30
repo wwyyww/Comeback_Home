@@ -11,5 +11,6 @@ public interface CaseRepository
     Optional<Case> findByCaseId(Long case_id);
     Optional<Case> findByFinderId(String finder_id);
     Optional<Case> findByMissingName(String missing_name);
+    Optional<Case> findByMissingArea(String missing_area);
     List<Case> findAll();
 }

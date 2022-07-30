@@ -2,6 +2,8 @@ package TheEarthGuard.ComeBackHome;
 
 
 
+import TheEarthGuard.ComeBackHome.security.CustomAuthFailureHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig{
 
+    @Autowired
+    private CustomAuthFailureHandler customAuthFailureHandler;
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -38,6 +42,7 @@ public class SecurityConfig{
                 .usernameParameter("email")
                 .loginPage("/users/login").permitAll()
                 .loginProcessingUrl("/login_proc")
+                .failureHandler(customAuthFailureHandler)
                 .defaultSuccessUrl("/").and()
                 .csrf().disable()
                 .cors().disable()

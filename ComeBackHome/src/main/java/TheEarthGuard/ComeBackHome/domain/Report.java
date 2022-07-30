@@ -1,9 +1,11 @@
 package TheEarthGuard.ComeBackHome.domain;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+
 
 
 @Builder
@@ -19,18 +21,23 @@ public class Report {
     private Long report_id;
 
     @ManyToOne
-    @JoinColumn(name = "cases_id")
+    @JoinColumn(name = "case_id")
     private Case cases;
 
     @ManyToOne
-    @JoinColumn(name="users_id")
+    @JoinColumn(name="user_id")
     private User user;
 
+    private String witness_title;
     private String witness_area;
-    private Timestamp witness_time; // 수정 가능성 있음
-    private String witness_txt;
-    private String witness_pic;
-    private Boolean is_alert;
+    private Double witness_lat;
+    private Double witness_lng;
 
-    // 생성자
+    private Timestamp witness_time;
+
+    private String witness_desc;
+    private String witness_pic;
+
+    @ColumnDefault("false")
+    private Boolean is_alert;
 }

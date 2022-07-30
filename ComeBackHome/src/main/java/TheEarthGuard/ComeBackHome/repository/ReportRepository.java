@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface ReportRepository {
     Report save(Report report);
-    Optional<Report> findByReportId(Long reportId);
-    Optional<Report> findByCaseId(String caseId);
-    Optional<Report> findByUserId(String userId);
+    Optional<Report> findByReportId(Long report_id);
+    Optional<Report> findByCaseId(String case_id);
+    Optional<Report> findByUserId(String user_id);
     List<Report> findAll();
 }

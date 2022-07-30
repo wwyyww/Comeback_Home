@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,18 +43,22 @@ public class CaseController {
 
     @PostMapping(value = "/cases/new")
     public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseForm") CaseFormDto caseForm,HttpServletRequest request, Model model) {
+        System.out.println(placeInfoDto.getMissing_area());
+        System.out.println(placeInfoDto.getMissing_lat());
+
         // 위의 @ModelAttribute("caseForm"), SessionAttributes  코드로 자동으로 세션으로 객체를 저장해줌
+
         // 세션 가져와서 placeInfoDto 정보 추가 후, model과 session에 저장
+//        HttpSession session = request.getSession();
+//        CaseFormDto form = (CaseFormDto) session.getAttribute("caseForm");
         caseForm.setMissing_area(placeInfoDto.getMissing_area());
         caseForm.setMissing_lat(placeInfoDto.getMissing_lat());
         caseForm.setMissing_lng(placeInfoDto.getMissing_lng());
 
-//        System.out.println(placeInfoDto.getMissing_area());
-//        System.out.println(placeInfoDto.getMissing_lat());
-//        System.out.println("getMissing_lat : " + caseForm.getMissing_lat());
-//        System.out.println("name : " + caseForm.getMissing_name());
-//        System.out.println("sex : " + caseForm.getMissing_sex());
-
+        System.out.println("getMissing_lat : " + caseForm.getMissing_lat());
+        System.out.println("name : " + caseForm.getMissing_name());
+        System.out.println("sex : " + caseForm.getMissing_sex());
+//        session.setAttribute("caseForm", caseForm);
         model.addAttribute("caseForm", caseForm);
         return "cases/createCaseForm";
     }
@@ -63,13 +69,12 @@ public class CaseController {
             System.out.println("ERROR!!!!!!!!");
             return "/";
         }
-
         User user = userService.findByEmail("hmk9667@gmail.com");
+        System.out.println(user.getEmail());
 
-//        System.out.println(user.getEmail());
-//        System.out.println("name : " + form.getMissing_name());
-//        System.out.println("missing_pic : " + form.getMissing_pic());
-//        System.out.println("missing_sex : " + form.getMissing_sex());
+        System.out.println("name : " + form.getMissing_name());
+        System.out.println("missing_pic : " + form.getMissing_pic());
+        System.out.println("missing_sex : " + form.getMissing_sex());
         
         Case caseObj = Case.builder()
             .user(user)
@@ -79,8 +84,8 @@ public class CaseController {
             .missing_sex(form.getMissing_sex())
             .missing_desc(form.getMissing_desc())
             .missing_area(form.getMissing_area())
-            .missing_lat(Double.parseDouble(form.getMissing_lat()))
-            .missing_lng(Double.parseDouble(form.getMissing_lng()))
+            .missing_lat(Double.parseDouble(form.getMissing_lat())) // 계산 필요
+            .missing_lng(Double.parseDouble(form.getMissing_lng())) // 계산 필요
             .missing_time(Timestamp.valueOf(form.getMissing_time()))
             .build();
 
@@ -104,22 +109,15 @@ public class CaseController {
             System.out.println("ERROR!!!!!!!!");
             return "/";
         }
-
         model.addAttribute("caseForm", form); // 세션으로 같이 등록됨
         return "/cases/selectPlace";
     }
 
-
     @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@Valid @ModelAttribute CaseFormDto form, Model model, Errors errors) {
-        if (errors.hasErrors()) {
-            System.out.println("ERROR!!!!!!!!");
-            return "/";
-        }
-
-        model.addAttribute("caseForm", form); // 세션으로 같이 등록됨
+    public String searchPlace() {
         return "/cases/searchPlace";
     }
+
 
 
     @GetMapping(value = "/cases/searchCase")

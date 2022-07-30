@@ -54,4 +54,8 @@ public class CaseService {
     public Optional<Case> findOnebyMissingName(String keyword){
         return caseRepository.findByMissingName(keyword);
     }
+
+    public Optional<Case> findOnebyMissingArea(String keyword){
+        return caseRepository.findByMissingArea(keyword);
+    }
 }
