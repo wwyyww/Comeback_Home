@@ -8,13 +8,33 @@
 <!--  <script src="jquery-3.5.1.min.js"></script>-->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+  <style>
+    th{
+      border:1px solid black;
+    }
+    table{
+      border-collapse: collapse;
+      border:1px solid black;
+    }
+    td{
+      border:1px solid black;
+    }
+  </style>
 </head>
 <body>
 <!--장소 선택 방식 -->
-<div class="place_option">
-  <a href="/cases/new/selectPlace"><button>장소 직접 선택하기</button></a>
-  <a href="/cases/new/searchPlace"><button>장소 검색하기</button></a>
-</div>
+<!--<div class="place_option">-->
+<!--  <a href="/cases/new/selectPlace"><button>장소 직접 선택하기</button></a>-->
+<!--  <a href="/cases/new/searchPlace"><button>장소 검색하기</button></a>-->
+<!--</div>-->
+
+<!--장소 선택 방식 -->
+<!--<div class="place_option">-->
+<!--  <form  method="post">-->
+<!--    <button type="submit" formaction="/cases/new/selectPlace">장소 직접 선택하기</button>-->
+<!--    <button type="submit" formaction="/cases/new/searchPlace">장소 검색하기</button>-->
+<!--  </form>-->
+<!--</div>-->
 
 <!--장소 검색-->
 <div class="search" style="">
@@ -22,12 +42,31 @@
   <input id="submit" type="button" value="주소 검색" />
 </div>
 
+<div class="places">
+  <table id ="results">
+<!--    <tr>-->
+<!--      <td>test</td>-->
+<!--      <td>이상없음</td>-->
+<!--    </tr>-->
+  </table>
+
+</div>
 
 <!-- 지도 표기 -->
 <div id="map" style="width:100%;height:350px;"></div>
 
-</div>
-<p><em>지도를 클릭해주세요!</em></p>
+
+<p><em>지도를 클릭/선택해주세요!</em></p>
+<form action="/cases/new" method="post">
+  <div className="form-group">
+    <div id="clickLatlng"></div>
+    <input type="hidden" id="missing_lat" name="missing_lat">
+    <input type="hidden" id="missing_lng" name="missing_lng">
+    <input type="text" id="missing_area" name="missing_area">
+    <button type="submit">등록</button>
+  </div>
+</form>
+
 <!--<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>-->
 <script>
   /**
@@ -35,10 +74,17 @@
    * <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&submodules=geocoder"><\/script>
    */
 
+  var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
   var map = new naver.maps.Map("map", {
-    center: new naver.maps.LatLng(37.3595316, 127.1052133),
+    center: position,
     zoom: 15,
     mapTypeControl: true
+  });
+
+  var marker = new naver.maps.Marker({
+    position: position,
+    map: map
   });
 
   var infoWindow = new naver.maps.InfoWindow({
@@ -90,6 +136,8 @@
       ].join('\n'));
 
       infoWindow.open(map, latlng);
+
+      missing_area.value = address.jibunAddress;
     });
   }
 
@@ -110,7 +158,46 @@
 
       var htmlAddresses = [],
           item = response.v2.addresses[0],
-          point = new naver.maps.Point(item.x, item.y);
+          point = new naver.maps.Point(item.x, item.y),
+          places = response.v2.addresses;
+
+      // console.log("Result : "+  JSON.stringify(response.v2) );
+      // console.log("Result2 : "+  JSON.stringify(response.v2.addresses));
+      // console.log("places : "+  JSON.stringify(places) );
+      // let $table = document.createElement('table');
+      var $table = document.getElementById('results');
+      while($table.hasChildNodes()){
+        $table.removeChild($table.firstChild);
+      }
+
+      // console.log("types 1 : "+  typeof(places) );
+      // console.log("types 2 : "+  typeof(JSON.stringify(places)));
+
+      var len = response.v2.meta.totalCount;
+      // console.log("len : "+  len);
+      // for (const place in places){
+      for (let i=0; i<parseInt(len); i++) {
+        // console.log("place : "+  places[i]);
+        let $tr = document.createElement('tr');
+        let $td = document.createElement('td');
+        // $td.innerHTML = place[];
+
+        if (places[i].roadAddress) {
+          // htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
+          $td.innerHTML += '[도로명 주소] ' + places[i].roadAddress;
+          // console.log('[도로명 주소] ' + places[i].roadAddress);
+        }
+
+        if (places[i].jibunAddress) {
+          $td.innerHTML += "\n[지번 주소] " + places[i].jibunAddress;
+          // htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
+          // console.log('[지번 주소] ' + places[i].jibunAddress);
+        }
+
+        $tr.appendChild($td);
+        $table.appendChild($tr);
+      }
+      // document.body.appendChild($table);
 
       if (item.roadAddress) {
         htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
@@ -138,7 +225,21 @@
 
   function initGeocoder() {
     map.addListener('click', function(e) {
-      searchCoordinateToAddress(e.coord);
+
+      marker.setPosition(e.coord);
+
+      // 선택한 위치 마커 찍기
+      var message = marker.position.toString();
+      var resultDiv = document.getElementById('clickLatlng');
+      resultDiv.innerHTML =  message;
+
+      var missing_lat = document.getElementById('missing_lat');
+      var missing_lng = document.getElementById('missing_lng');
+      var missing_area = document.getElementById('missing_area');
+      missing_lat.value = marker.position.lat().toString();
+      missing_lng.value = marker.position.lng().toString();
+
+      searchCoordinateToAddress(marker.position);
     });
 
     $('#address').on('keydown', function(e) {
