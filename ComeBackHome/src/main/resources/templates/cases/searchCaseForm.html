@@ -4,18 +4,65 @@
 <div class="container">
     <form action="/cases/search/submit" method="post">
         <div class="form-group">
-            <p>
-                <label for="missing_name">실종자 이름</label>
-                <input type="text" id="missing_name" name="missing_name" placeholder="이름을 입력하세요">
-            </p>
+                <!--<label for="missing_name">실종자 이름</label>-->
+                <input type="text" id="missing_name" name="missing_name" placeholder="검색 내용을 입력하세요">
+                <select name = "search_type" id = "search_type">
+                    <option selected value="">검색 내용 선택</option>
+                    <option value="name">이름</option>
+                    <option value="area">주소</option>
+                </select>
         </div>
-        <select name = "search_type" id = "search_type">
-            <option selected value="">검색 내용 선택</option>
-            <option value="name">이름</option>
-            <option value="area">주소</option>
-        </select>
-        <button type="submit">사건 조회</button>
+        <div>
+            <table>
+                <tbody>
+                <tr>
+                    <td>성별</td>
+                    <td>
+                        <span>
+                            <label>
+                                여성 <input type="checkbox" name="missing_sex" id="woman" value="woman">
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                남성 <input type="checkbox" name="missing_sex" id="man" value="man">
+                            </label>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>연령대</td>
+                    <td><input type="checkbox" name="age" id="age00" value="age00">10세 이하
+                        <span><input type="checkbox" name="missing_age" id="age01" value="age01">10대</span>
+                        <span><input type="checkbox" name="missing_age" id="age02" value="age02">20대</span>
+                        <span><input type="checkbox" name="missing_age" id="age03" value="age03">30대</span>
+                        <span><input type="checkbox" name="missing_age" id="age04" value="age04">40대</span>
+                        <span><input type="checkbox" name="missing_age" id="age05" value="age05">50대</span>
+                        <span><input type="checkbox" name="missing_age" id="age06" value="age06">60대</span>
+                        <span><input type="checkbox" name="missing_age" id="age07" value="age07">70대</span>
+                        <span><input type="checkbox" name="missing_age" id="age08" value="age08">80세 이상</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>실종 지역</td>
+                    <td>
+                        <span><input type="checkbox" name="area[]" id="area00"> 서울</span>
+                        <span><input type="checkbox" name="area[]" id="area01"> 경기도</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>실종 기간</td>
+                    <td>
+                        <span><input type="datetime-local" id="missing_time1" name="missing_time" ></span>
+                        <span><input type="datetime-local" id="missing_time2" name="missing_time" ></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <button type="submit">사건 조회</button> <button type="reset">조건 초기화</button>
     </form>
+
 
 
 </div> <!-- /container -->
@@ -25,7 +72,7 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>이름</th>
+                <th>사건 조회</th>
             </tr>
             </thead>
             <tbody>
