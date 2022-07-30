@@ -48,13 +48,14 @@ public class UserDto {
     public User toUser(String encryptPw) {
         return User.builder()
                 .email(this.email)
-                .pw(this.pw)
+                .pw(encryptPw)
                 .name(this.name)
                 .phone(this.phone)
                 .birth(this.birth)
                 .sex(this.sex)
                 .role(Role.USER.toString())
                 .warning_cnt(0)
+                .fail_cnt(0)
                 .build();
     }
 
