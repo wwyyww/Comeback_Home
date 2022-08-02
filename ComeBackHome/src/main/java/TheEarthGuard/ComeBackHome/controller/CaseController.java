@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,7 +67,7 @@ public class CaseController {
             System.out.println("ERROR!!!!!!!!");
             return "/";
         }
-        User user = userService.findByEmail("hmk9667@gmail.com");
+        User user = userService.findByEmail("test@gmail.com");
         System.out.println(user.getEmail());
 
         System.out.println("name : " + form.getMissing_name());
@@ -103,21 +101,25 @@ public class CaseController {
     }
 
 
-    @PostMapping(value = "/cases/new/selectPlace")
-    public String selectPlace(@Valid @ModelAttribute CaseFormDto form, Model model, Errors errors) {
+//    @PostMapping(value = "/cases/new/selectPlace")
+//    public String selectPlace(@Valid @ModelAttribute CaseFormDto form, Model model, Errors errors) {
+//        if (errors.hasErrors()) {
+//            System.out.println("ERROR!!!!!!!!");
+//            return "/";
+//        }
+//        model.addAttribute("caseForm", form); // 세션으로 같이 등록됨
+//        return "/cases/selectPlace";
+//    }
+
+    @PostMapping(value = "/cases/new/searchPlace")
+    public String searchPlace(@Valid @ModelAttribute CaseFormDto form, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             return "/";
         }
         model.addAttribute("caseForm", form); // 세션으로 같이 등록됨
-        return "/cases/selectPlace";
-    }
-
-    @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace() {
         return "/cases/searchPlace";
     }
-
 
 
     @GetMapping(value = "/cases/searchCase")
