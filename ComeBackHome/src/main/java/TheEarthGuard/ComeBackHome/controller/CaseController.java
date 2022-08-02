@@ -135,15 +135,33 @@ public class CaseController {
 
     @PostMapping(value = "/cases/search/submit")
     public String showCaseForm(SearchFormDto form, Model model) {
-        System.out.println(form.getMissing_name());
-        Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
-        if(searchList.isPresent()) {
-            System.out.println(searchList.get());
-            System.out.println(searchList.get().getMissing_name());
+        Optional<List<Case>> caseList = Optional.empty();
+        Optional<List<String>> sex = form.getMissing_sex();
+        Optional<List<String>> age = form.getMissing_age();
+        Optional<List<String>> area = form.getMissing_area();
+        System.out.println(sex);
+        System.out.println(age);
+        System.out.println(area);
+        if (form.getSearch_type().equals("name")){
+            System.out.println(form.getMissing_name());
+            System.out.println(form.getSearch_type());
+            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
+        } else if (form.getSearch_type().equals("area")) {
+            System.out.println(form.getMissing_name());
+            System.out.println(form.getSearch_type());
+            caseList = caseService.findbyMissingArea(form.getMissing_name());
+        } else {
+
+        }
+        //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
+        if(caseList.isPresent()) {
+            System.out.println(caseList.get());
+            //System.out.println(caseList.get().getMissing_name());
+            model.addAttribute("searchList", caseList.get());
         } else {
             System.out.println("없음");
         }
-        model.addAttribute("searchList", searchList.get());
+        // "redirect:/cases/searchCase";
         return "/cases/searchCaseForm";
     }
 

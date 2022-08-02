@@ -51,11 +51,12 @@ public class CaseService {
     /**
      * 사건 검색
      */
-    public Optional<Case> findOnebyMissingName(String keyword){
-        return caseRepository.findByMissingName(keyword);
+    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.findByMissingName(keyword, sex, age, area);
     }
 
-    public Optional<Case> findOnebyMissingArea(String keyword){
+    public Optional<List<Case>> findbyMissingArea(String keyword){
         return caseRepository.findByMissingArea(keyword);
     }
+
 }
