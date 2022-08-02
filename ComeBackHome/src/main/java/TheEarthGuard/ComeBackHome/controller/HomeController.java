@@ -18,7 +18,6 @@ public class HomeController {
             log.info("사용자 이메일 : "+user.getEmail());
         }
 
-
         return "home";
     }
 

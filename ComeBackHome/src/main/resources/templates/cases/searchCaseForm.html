@@ -20,41 +20,49 @@
                     <td>
                         <span>
                             <label>
-                                여성 <input type="checkbox" name="missing_sex" id="woman" value="woman">
+                                여성 <input type="checkbox" name="missing_sex" id="woman" value="0">
                             </label>
                         </span>
                         <span>
                             <label>
-                                남성 <input type="checkbox" name="missing_sex" id="man" value="man">
+                                남성 <input type="checkbox" name="missing_sex" id="man" value="1">
                             </label>
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <td>연령대</td>
-                    <td><input type="checkbox" name="age" id="age00" value="age00">10세 이하
-                        <span><input type="checkbox" name="missing_age" id="age01" value="age01">10대</span>
-                        <span><input type="checkbox" name="missing_age" id="age02" value="age02">20대</span>
-                        <span><input type="checkbox" name="missing_age" id="age03" value="age03">30대</span>
-                        <span><input type="checkbox" name="missing_age" id="age04" value="age04">40대</span>
-                        <span><input type="checkbox" name="missing_age" id="age05" value="age05">50대</span>
-                        <span><input type="checkbox" name="missing_age" id="age06" value="age06">60대</span>
-                        <span><input type="checkbox" name="missing_age" id="age07" value="age07">70대</span>
-                        <span><input type="checkbox" name="missing_age" id="age08" value="age08">80세 이상</span>
+                    <td><input type="checkbox" name="age" id="age00" value="0">10세 이하
+                        <span><input type="checkbox" name="missing_age" id="age01" value="10">10대</span>
+                        <span><input type="checkbox" name="missing_age" id="age02" value="20">20대</span>
+                        <span><input type="checkbox" name="missing_age" id="age03" value="30">30대</span>
+                        <span><input type="checkbox" name="missing_age" id="age04" value="40">40대</span>
+                        <span><input type="checkbox" name="missing_age" id="age05" value="50">50대</span>
+                        <span><input type="checkbox" name="missing_age" id="age06" value="60">60대</span>
+                        <span><input type="checkbox" name="missing_age" id="age07" value="70">70대</span>
+                        <span><input type="checkbox" name="missing_age" id="age08" value="80">80세 이상</span>
                     </td>
                 </tr>
                 <tr>
                     <td>실종 지역</td>
                     <td>
-                        <span><input type="checkbox" name="area[]" id="area00"> 서울</span>
-                        <span><input type="checkbox" name="area[]" id="area01"> 경기도</span>
+                        <span><input type="checkbox" name="missing_area" id="area00" value="서울"> 서울</span>
+                        <span><input type="checkbox" name="missing_area" id="area01" value="경기"> 경기도</span>
+                        <span><input type="checkbox" name="missing_area" id="area02" value="강원"> 강원도</span>
+                        <span><input type="checkbox" name="missing_area" id="area03" value="전남"> 전라남도</span>
+                        <span><input type="checkbox" name="missing_area" id="area04" value="전북"> 전라북도</span>
+                        <span><input type="checkbox" name="missing_area" id="area05" value="경북"> 경상북도</span>
+                        <span><input type="checkbox" name="missing_area" id="area06" value="경남"> 경상남도</span>
+                        <span><input type="checkbox" name="missing_area" id="area07" value="충남"> 충청남도</span>
+                        <span><input type="checkbox" name="missing_area" id="area08" value="충북"> 충청북도</span>
                     </td>
                 </tr>
                 <tr>
                     <td>실종 기간</td>
                     <td>
-                        <span><input type="datetime-local" id="missing_time1" name="missing_time" ></span>
-                        <span><input type="datetime-local" id="missing_time2" name="missing_time" ></span>
+                        <span><input type="date" id="missing_time1" name="missing_time" ></span>
+                        <span>  ~  </span>
+                        <span><input type="date" id="missing_time2" name="missing_time" ></span>
                     </td>
                 </tr>
                 </tbody>

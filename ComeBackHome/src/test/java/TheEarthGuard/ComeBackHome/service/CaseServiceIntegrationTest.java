@@ -1,14 +1,8 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
-import java.sql.Timestamp;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -27,50 +21,50 @@ public class CaseServiceIntegrationTest {
 
     @Autowired
     CaseRepository caseRepository;
-
-    @Test
-    public void 사건_등록하기() throws Exception {
-        //Given
-        String finder_id = "test@gmail.com";
-
-        User user = new User();
-        user.setEmail(finder_id);
-        user.setPw("1234");
-        userService.signUp(user);
-
-
-        String missing_pic = "/picture1.png";
-        String missing_name = "홍길동";
-        Integer missing_age = 18;
-        Boolean missing_sex = true;
-        String missing_desc = "홍길동씨를 찾습니다. 나이는 n살, 사는 지역은 m으로...";
-        String missing_area = "한양구";
-        Double missing_lat = 32.123245;
-        Double missing_lng = 18.123245;
-        Timestamp missing_time = Timestamp.valueOf("1880-12-12 01:24:23");
-
-        //When
-        Case caseObj = Case.builder()
-            .user(user)
-            .missing_pic(missing_pic)
-            .missing_name(missing_name)
-            .missing_age(missing_age)
-            .missing_sex(missing_sex)
-            .missing_desc(missing_desc)
-            .missing_area(missing_area)
-            .missing_lat(missing_lat)
-            .missing_lng(missing_lng)
-            .missing_time(missing_time)
-            .build();
-
-        Long case_id = caseService.UploadCase(caseObj);
-        System.out.println("[TEST] Case caseId " + caseObj.getCase_id());
-
-        //Then
-        Case findCase = caseRepository.findByCaseId(case_id).get();
-        assertEquals(caseObj.getCase_id(), findCase.getCase_id());
-    }
-
+//
+//    @Test
+//    public void 사건_등록하기() throws Exception {
+//        //Given
+//        String finder_id = "test@gmail.com";
+//
+//        User user = new User();
+//        user.setEmail(finder_id);
+//        user.setPw("1234");
+//        userService.signUp(user);
+//
+//
+//        String missing_pic = "/picture1.png";
+//        String missing_name = "홍길동";
+//        Integer missing_age = 18;
+//        Boolean missing_sex = true;
+//        String missing_desc = "홍길동씨를 찾습니다. 나이는 n살, 사는 지역은 m으로...";
+//        String missing_area = "한양구";
+//        Double missing_lat = 32.123245;
+//        Double missing_lng = 18.123245;
+//        Timestamp missing_time = Timestamp.valueOf("1880-12-12 01:24:23");
+//
+//        //When
+//        Case caseObj = Case.builder()
+//            .user(user)
+//            .missing_pic(missing_pic)
+//            .missing_name(missing_name)
+//            .missing_age(missing_age)
+//            .missing_sex(missing_sex)
+//            .missing_desc(missing_desc)
+//            .missing_area(missing_area)
+//            .missing_lat(missing_lat)
+//            .missing_lng(missing_lng)
+//            .missing_time(missing_time)
+//            .build();
+//
+//        Long case_id = caseService.UploadCase(caseObj);
+//        System.out.println("[TEST] Case caseId " + caseObj.getCase_id());
+//
+//        //Then
+//        Case findCase = caseRepository.findByCaseId(case_id).get();
+//        assertEquals(caseObj.getCase_id(), findCase.getCase_id());
+//    }
+//
 
 //    @Test
 //    public void 사건_실종자이름_검색하기() throws Exception {//Given
