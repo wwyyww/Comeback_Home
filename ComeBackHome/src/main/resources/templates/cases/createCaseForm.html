@@ -3,7 +3,7 @@
 <body>
 <div class="container">
 <!--  <form action="/cases/new/submit" method="post">-->
-  <form  method="post">
+  <form  method="post" enctype="multipart/form-data" >
     <div class="form-group">
 
       <label for="missing_name">실종자 이름</label>
@@ -15,14 +15,16 @@
       </div>
 
       <label for="missing_pic">실종자 사진</label>
-      <div th:if="${caseForm.missing_pic}">
-        <input type="text" id="missing_pic" name="missing_pic" th:value="${caseForm.missing_pic}" placeholder="사진 경로를 입력하세요">
-      </div>
-      <div th:unless="${caseForm.missing_pic}">
-        <input type="text" id="missing_pic" name="missing_pic" placeholder="사진 경로를 입력하세요">
-      </div>
+<!--      <div th:if="${caseForm.missing_pic}">-->
+<!--        <input type="file" id="missing_pic" name="missing_pic" multiple="multiple" th:value="${caseForm.missing_pic}" placeholder="사진 경로를 입력하세요">-->
+<!--      </div>-->
+<!--      <div th:unless="${caseForm.missing_pic}">-->
+<!--        <input type="file" id="missing_pic" name="missing_pic" multiple="multiple"  placeholder="사진 경로를 입력하세요">-->
+<!--      </div>-->
+      <input type="file" id="missing_pic" name="missing_pic" multiple="multiple" placeholder="사진 경로를 입력하세요">
 <!--      사진 선택 -->
 
+      <br>
       <label for="missing_age">실종자 나이</label>
       <div th:if="${caseForm.missing_age}">
         <input type="number" id="missing_age" name="missing_age" min="1" max="150" th:value="${caseForm.missing_age}" placeholder="나이를 입력하세요">
@@ -69,7 +71,7 @@
 
       <label for="missing_area">실종 지역</label>
         <div th:if="${caseForm.missing_area}">
-          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${caseForm.missing_area}" readonly>
+          <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${caseForm.missing_area}" style="width: 20%" readonly>
           <input type="hidden" id="missing_lng" name="missing_lng" th:value="${caseForm.missing_lng} " readonly>
           <input type="hidden" id="missing_lat" name="missing_lat" th:value="${caseForm.missing_lat} " readonly>
         </div>
@@ -81,11 +83,13 @@
 
       <br>
       <label for="missing_time">실종 시간</label>
-      <div th:if="${caseForm.missing_time}">
-        <input type="datetime-local" id="missing_time" name="missing_time" th:value="${caseForm.missing_time}">
+      <div th:if="${caseForm.missing_time_start}">
+        <input type="datetime-local" id="missing_time_start" name="missing_time_start" th:value="${caseForm.missing_time_start}"> ~
+        <input type="datetime-local" id="missing_time_end" name="missing_time_end" th:value="${caseForm.missing_time_end}">
       </div>
-      <div th:unless="${caseForm.missing_time}">
-        <input type="datetime-local" id="missing_time" name="missing_time" >
+      <div th:unless="${caseForm.missing_time_start}">
+        <input type="datetime-local" id="missing_time_start" name="missing_time_start" > ~
+        <input type="datetime-local" id="missing_time_end" name="missing_time_end" >
       </div>
 
     </div>
