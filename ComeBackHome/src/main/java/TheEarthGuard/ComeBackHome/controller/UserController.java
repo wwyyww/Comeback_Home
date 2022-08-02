@@ -64,6 +64,14 @@ public class UserController {
         return "/users/login";
     }
 
+    @GetMapping("/users/loginfail")
+    public String loginFail(@RequestParam(value = "error", required = false) String error,
+                            @RequestParam(value = "exception", required = false) String exception, Model model) {
+        model.addAttribute("error", error);
+        model.addAttribute("exception", exception);
+        return "/users/login";
+    }
+
     @GetMapping("/users/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

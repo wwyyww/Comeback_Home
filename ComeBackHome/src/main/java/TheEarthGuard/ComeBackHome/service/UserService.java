@@ -5,7 +5,6 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.UserAdapter;
 import TheEarthGuard.ComeBackHome.dto.UserDto;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +24,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
 //    private final KakaoOAuth2 kakaoOAuth2;
@@ -42,7 +40,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
-        System.out.println("EMAIL : " + email);
         return userRepository.findByEmail(email);
     }
     public Optional<User> findById(Long id){
@@ -61,12 +58,12 @@ public class UserService implements UserDetailsService {
         return validatorResult;
     }
 
-    public void checkEmail(User user) {
-        boolean emailDuplicate = userRepository.existsByEmail(user.getEmail());
-        if (emailDuplicate) {
-            throw new IllegalStateException("이미 존재하는 이메일입니다.");
-        }
+    public void addFailCnt(User user) {
+        User targetUser = findByEmail(user.getEmail());
+        targetUser.updateFailCount(targetUser.getFail_cnt()+1);
+        userRepository.saveAndFlush(targetUser);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
