@@ -5,6 +5,7 @@ package TheEarthGuard.ComeBackHome;
 
 import TheEarthGuard.ComeBackHome.security.CustomAuthFailureHandler;
 import TheEarthGuard.ComeBackHome.security.CustomAuthSuccessHandler;
+import TheEarthGuard.ComeBackHome.service.CustomOAuth2UserService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class SecurityConfig{
 
     private final UserService userService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, CustomOAuth2UserService customOAuth2UserService) {
         this.userService = userService;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
@@ -65,7 +68,8 @@ public class SecurityConfig{
                 .and()
                 .csrf().disable()
                 .cors().disable()
-                .headers().frameOptions().disable().and();
+                .headers().frameOptions().disable().and()
+                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
 
 
 
