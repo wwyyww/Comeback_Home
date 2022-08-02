@@ -67,6 +67,10 @@ public class User implements UserDetails {
                 .build();
     }
 
+    public void updateFailCount(Integer fail_cnt) {
+        this.fail_cnt = fail_cnt;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
