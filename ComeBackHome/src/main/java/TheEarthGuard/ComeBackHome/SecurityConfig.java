@@ -42,11 +42,6 @@ public class SecurityConfig{
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
     throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
@@ -68,13 +63,13 @@ public class SecurityConfig{
                 .and()
                 .csrf().disable()
                 .cors().disable()
-                .headers().frameOptions().disable().and()
-                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
-
+                .headers().frameOptions().disable().and();
 
 
         return http.build();
     }
+
+
 
 
 }
