@@ -67,6 +67,21 @@ public class User implements UserDetails {
                 .build();
     }
 
+    public void updateFailCount(Integer fail_cnt) {
+        this.fail_cnt = fail_cnt;
+    }
+
+    public User update(String name) {
+        this.name = name;
+
+        return this;
+    }
+//    public User updateSocialUser(String name, String email) {
+//        this.name = name;
+//        this.email = email;
+//        return this;
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

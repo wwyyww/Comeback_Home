@@ -42,7 +42,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
-        System.out.println("EMAIL : " + email);
         return userRepository.findByEmail(email);
     }
     public Optional<User> findById(Long id){
@@ -61,12 +60,12 @@ public class UserService implements UserDetailsService {
         return validatorResult;
     }
 
-    public void checkEmail(User user) {
-        boolean emailDuplicate = userRepository.existsByEmail(user.getEmail());
-        if (emailDuplicate) {
-            throw new IllegalStateException("이미 존재하는 이메일입니다.");
-        }
+    public void addFailCnt(User user) {
+        User targetUser = findByEmail(user.getEmail());
+        targetUser.updateFailCount(targetUser.getFail_cnt()+1);
+        userRepository.saveAndFlush(targetUser);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

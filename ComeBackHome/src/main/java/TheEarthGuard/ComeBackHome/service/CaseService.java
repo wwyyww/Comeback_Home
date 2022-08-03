@@ -2,11 +2,17 @@ package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
+import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.CaseRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 @Transactional
 public class CaseService {
@@ -19,21 +25,24 @@ public class CaseService {
     /**
      * 사건 등록하기
      */
-    public Long UploadCase(Case caseObj) {
-        System.out.println("[CASE_SERVICE] caseObj.getMissing_time" + caseObj.getMissing_time());
-//        System.out.println("[TEST] UploadCase Finder_id " + caseObj.getFinder_id());
-//        validateDuplicateCase(caseObj); //중복 사건 검증
-        caseRepository.save(caseObj);
-        return caseObj.getCase_id();
+    public Long UploadCase(CaseRequestDto caseDto, User user) {
+        Case newCase = caseDto.toCase(user);
+        caseRepository.save(newCase);
+        return newCase.getCase_id();
     }
 
-    // 수정 필요함.
-    private void validateDuplicateCase(Case caseObj) {
-        caseRepository.findByCaseId(caseObj.getCase_id())
-            .ifPresent(m -> {
-                throw new IllegalStateException("이미 존재하는 사건입니다.");
-            });
+    //유효성 검사
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+
+        return validatorResult;
     }
+
 
     /**
      * 전체 사건 조회
@@ -52,11 +61,12 @@ public class CaseService {
     /**
      * 사건 검색
      */
-    public Optional<Case> findOnebyMissingName(String keyword){
-        return caseRepository.findByMissingName(keyword);
+    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.findByMissingName(keyword, sex, age, area);
     }
 
-    public Optional<Case> findOnebyMissingArea(String keyword){
+    public Optional<List<Case>> findbyMissingArea(String keyword){
         return caseRepository.findByMissingArea(keyword);
     }
+
 }
