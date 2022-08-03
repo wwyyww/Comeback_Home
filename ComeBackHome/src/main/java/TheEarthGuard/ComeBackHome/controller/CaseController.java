@@ -7,6 +7,7 @@ import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,6 +89,23 @@ public class CaseController {
             System.out.println("ERROR!!!!!!!!");
             // 에러 페이지 수정 필요
             return "cases/createCaseForm";
+        }
+
+        // 임시 파일 저장
+        //String uploadFolder= "D:\\ComeBackHome\\tmpImg";
+        File uploadFolder = new File("D:\\ComeBackHome\\tmpImg");
+        if (! uploadFolder.exists()){
+            uploadFolder.mkdirs();
+        }
+        System.out.println("file 명 : " + file.getOriginalFilename());
+        System.out.println("file 사이즈 : " + file.getSize());
+
+        File saveFile = new File(uploadFolder, file.getOriginalFilename());
+
+        try{
+            file.transferTo(saveFile);
+        }catch (Exception e){
+
         }
 
         model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
