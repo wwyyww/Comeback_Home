@@ -24,8 +24,13 @@ public class CaseResponseDto {
     private String missing_area;
     private Double missing_lng;
     private Double missing_lat;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime missing_time;
+    private LocalDateTime missing_time_start;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime missing_time_end;
+
 
     private List<ReportResponseDto> reports;
 
@@ -35,14 +40,15 @@ public class CaseResponseDto {
         this.hit_cnt = cases.getHit_cnt();
         this.report_cnt = cases.getReport_cnt();
         this.missing_name = cases.getMissing_name();
-        this.missing_pic = cases.getMissing_pic();
+//        this.missing_pic = cases.getMissing_pic();
         this.missing_age = cases.getMissing_age();
         this.missing_sex = cases.getMissing_sex();
         this.missing_desc = cases.getMissing_desc();
         this.missing_area = cases.getMissing_area();
         this.missing_lat = cases.getMissing_lat();
         this.missing_lng = cases.getMissing_lng();
-        this.missing_time = cases.getMissing_time();
+        this.missing_time_start= cases.getMissing_time_start();
+        this.missing_time_end = cases.getMissing_time_end();
         this.name = cases.getUser().getName();
         this.reports = cases.getReports().stream().map(ReportResponseDto::new).collect(Collectors.toList());
     }
