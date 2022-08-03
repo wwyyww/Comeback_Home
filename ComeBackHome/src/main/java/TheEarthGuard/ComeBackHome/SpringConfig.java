@@ -1,8 +1,8 @@
 package TheEarthGuard.ComeBackHome;
 
-import TheEarthGuard.ComeBackHome.repository.*;
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
+import TheEarthGuard.ComeBackHome.repository.JpaCaseRepository;
 import TheEarthGuard.ComeBackHome.service.CaseService;
-import TheEarthGuard.ComeBackHome.service.ReportService;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -23,10 +23,10 @@ public class SpringConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public ReportService reportService() {
-        return new ReportService(reportRepository());
-    }
+//    @Bean
+//    public ReportService reportService() {
+//        return new ReportService(reportRepository());
+//    }
 
     @Bean
     public CaseService caseService() {
@@ -37,10 +37,10 @@ public class SpringConfig {
 //    public UserService memberService() {
 //        return new UserService(memberRepository());
 //    }
-    @Bean
-    public ReportRepository reportRepository() {
-        return new JpaReportRepository(em);
-    }
+//    @Bean
+//    public ReportRepository reportRepository() {
+//        return new JpaReportRepository(em);
+//    }
     @Bean
     public CaseRepository caseRepository() {
         return new JpaCaseRepository(em);
