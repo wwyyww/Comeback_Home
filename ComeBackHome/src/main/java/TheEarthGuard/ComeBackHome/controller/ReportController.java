@@ -3,13 +3,20 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.ReportFormDto;
 import TheEarthGuard.ComeBackHome.dto.ReportPlaceInfoDto;
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
+import TheEarthGuard.ComeBackHome.repository.ReportRepository;
+import TheEarthGuard.ComeBackHome.repository.UserRepository;
+import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,38 +68,38 @@ public class ReportController {
     }
 
     //게시판 등록
-    @PostMapping(value = "/reports/new/submit")
-    public String createReport(@Valid @ModelAttribute ReportFormDto form, Errors errors){
-        if (errors.hasErrors()) {
-            System.out.println("ERROR!!!!!!!!");
-            return "/";
-        }
-
-        User user = userService.findByEmail("test@gmail.com");
-        System.out.println(user.getEmail());
-
-        Case caseObj= caseService.findCases().get(1);
-        System.out.println(caseObj.getMissing_name());
-
-        System.out.println("title: " + form.getWitness_title());
-        System.out.println("witness_pic: " + form.getWitness_pic());
-
-        Report reportObj = Report.builder()
-                .user(user)
-                .cases(caseObj)
-                .witness_pic(form.getWitness_pic())
-                .witness_title(form.getWitness_title())
-                .witness_desc(form.getWitness_desc())
-                .witness_area(form.getWitness_area())
-                .witness_lat(Double.parseDouble(form.getWitness_lat())) // 계산 필요
-                .witness_lng(Double.parseDouble(form.getWitness_lng()))// 계산 필요
-                .witness_time(Timestamp.valueOf(form.getWitness_time()))
-                .build();
-
-        reportService.UploadReport(reportObj);
-        return "redirect:/";
-
-    }
+//    @PostMapping(value = "/reports/new/submit")
+//    public String createReport(@Valid @ModelAttribute ReportFormDto form, Errors errors){
+//        if (errors.hasErrors()) {
+//            System.out.println("ERROR!!!!!!!!");
+//            return "/";
+//        }
+//
+//        User user = userService.findByEmail("test@gmail.com");
+//        System.out.println(user.getEmail());
+//
+//        Case caseObj= caseService.findCases().get(1);
+//        System.out.println(caseObj.getMissing_name());
+//
+//        System.out.println("title: " + form.getWitness_title());
+//        System.out.println("witness_pic: " + form.getWitness_pic());
+//
+//        Report reportObj = Report.builder()
+//                .user(user)
+//                .cases(caseObj)
+//                .witness_pic(form.getWitness_pic())
+//                .witness_title(form.getWitness_title())
+//                .witness_desc(form.getWitness_desc())
+//                .witness_area(form.getWitness_area())
+//                .witness_lat(Double.parseDouble(form.getWitness_lat())) // 계산 필요
+//                .witness_lng(Double.parseDouble(form.getWitness_lng()))// 계산 필요
+//                .witness_time(Timestamp.valueOf(form.getWitness_time()))
+//                .build();
+//
+//        reportService.UploadReport(reportObj);
+//        return "redirect:/";
+//
+//    }
 
     @GetMapping(value = "/reports")
     public String list(Model model) {
@@ -114,6 +121,39 @@ public class ReportController {
     @GetMapping(value = "/reports/new/searchPlace")
     public String searchPlace() {
         return "/reports/searchPlace";
+    }
+
+
+//    //연동(최신)
+//    @GetMapping(value = "/cases/{cases_id}/report")
+//    public List<Report> getCaseReports(@PathVariable Long cases_id){
+//        Case cases = caseService.findOne(cases_id).get();
+//        return
+//
+//    }
+
+    @PostMapping(value="/cases/{cases_id}/report")
+    public String addReport(@PathVariable("cases_id") Long cases_id, @CurrentUser User user, @ModelAttribute ReportRequestDto reportRequestDto, Model model, Errors errors){
+        if(errors.hasErrors()){
+            System.out.println("Error!!");
+            return "/";
+        }
+
+        String username=user.getUsername();
+
+        Optional<Case> cases = caseService.findOne(cases_id);
+
+        reportRequestDto.setUser(user);
+        reportRequestDto.setCases(cases.get());
+
+        reportService.UploadReport(reportRequestDto);
+
+        List<Report> reports = 
+
+
+
+
+
     }
 
 }

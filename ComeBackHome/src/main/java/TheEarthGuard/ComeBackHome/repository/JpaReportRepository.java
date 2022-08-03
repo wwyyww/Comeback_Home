@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 
-public class JpaReportRepository implements  ReportRepository{
+public class JpaReportRepository implements ReportRepository{
 
     private final EntityManager em;
 

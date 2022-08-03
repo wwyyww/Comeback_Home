@@ -1,10 +1,10 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.dto.CaseFormDto;
-import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
-import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
+import TheEarthGuard.ComeBackHome.dto.*;
+import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import java.sql.Timestamp;
@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @SessionAttributes({"caseForm"})
@@ -84,7 +81,7 @@ public class CaseController {
             .missing_area(form.getMissing_area())
             .missing_lat(Double.parseDouble(form.getMissing_lat())) // 계산 필요
             .missing_lng(Double.parseDouble(form.getMissing_lng())) // 계산 필요
-            .missing_time(Timestamp.valueOf(form.getMissing_time()))
+            .missing_time(form.getMissing_time())
             .build();
 
         caseService.UploadCase(caseObj);
@@ -148,5 +145,12 @@ public class CaseController {
     }
 
 
+    //실종글 상세 보기
+//    @GetMapping(value="cases/detail/{cases_id}")
+//    public String detail(@PathVariable Long cases_id, @CurrentUser User user, Model model) {
+//        Optional<Case> cases = caseService.findOne(cases_id);
+//        List<Report> reports = cases.get().getReports();
+//
+//    }
 
 }
