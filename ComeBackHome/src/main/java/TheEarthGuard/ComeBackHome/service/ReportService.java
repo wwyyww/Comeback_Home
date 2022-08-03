@@ -1,6 +1,7 @@
 package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Report;
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,9 @@ public class ReportService {
 
 
     //실종 제보 등록
-    public Long UploadReport(Report reportObj){
+    public Long UploadReport(ReportRequestDto reportObj){
         System.out.println("[CASE_SERVICE] reportObj.getWitness_time" + reportObj.getWitness_time());
-        reportRepository.save(reportObj);
+        reportRepository.save(reportObj.toEntity());
         return reportObj.getReport_id();
     }
 
