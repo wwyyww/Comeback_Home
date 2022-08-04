@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ReportResponseDto {
-    private Long report_id;
+    private Long id;
 
     private String missing_name; //실종자의 이름
 
@@ -27,7 +27,7 @@ public class ReportResponseDto {
 
     //Entity -> DTO
     public ReportResponseDto(Report report){
-        this.report_id = report.getReport_id();
+        this.id = report.getId();
         this.witness_title = report.getWitness_title();
         this.witness_area = report.getWitness_area();
         this.witness_desc = report.getWitness_desc();

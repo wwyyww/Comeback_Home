@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Report extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long report_id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "case_id")
@@ -41,10 +41,10 @@ public class Report extends BaseTimeEntity{
     private Boolean is_alert;
 
     @Builder
-    public Report(Long report_id, Case cases, User user,
+    public Report(Long id, Case cases, User user,
                   String witness_title, String witness_area, Double witness_lat, Double witness_lng,
                   Timestamp witness_time, String witness_desc, String witness_pic, Boolean is_alert) {
-        this.report_id = report_id;
+        this.id = id;
         this.cases = cases;
         this.user = user;
         this.witness_title = witness_title;

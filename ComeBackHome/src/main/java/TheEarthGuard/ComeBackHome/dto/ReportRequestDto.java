@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ReportRequestDto {
 
-    private Long report_id;
+    private Long id;
     private Case cases;
     private User user;
     private String witness_title;
@@ -32,7 +32,7 @@ public class ReportRequestDto {
 
     public Report toEntity(){
         Report report=Report.builder()
-                .report_id(report_id)
+                .id(id)
                 .witness_title(witness_title)
                 .witness_area(witness_area)
                 .witness_desc(witness_desc)
@@ -40,6 +40,7 @@ public class ReportRequestDto {
                 .witness_lng(Double .valueOf(witness_lng))
                 .witness_pic(witness_pic)
                 .witness_time(Timestamp.valueOf(witness_time))
+                .is_alert(false)
                 .user(user)
                 .cases(cases)
                 .build();
