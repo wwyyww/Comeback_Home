@@ -1,17 +1,18 @@
 package TheEarthGuard.ComeBackHome.domain;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
-
-import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Case extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long case_id;
 
     @ManyToOne
@@ -42,6 +43,8 @@ public class Case extends BaseTimeEntity{
     private String missing_name;
     private Integer missing_age;
     private Boolean missing_sex;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String missing_desc;
     private String missing_area;
     private String missing_region;

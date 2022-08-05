@@ -1,11 +1,8 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.dto.*;
-import TheEarthGuard.ComeBackHome.security.CurrentUser;
-import TheEarthGuard.ComeBackHome.dto.CaseRequestDto;
+import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
@@ -20,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,13 +38,12 @@ public class CaseController {
 
     @GetMapping(value = "/cases/new")
     public String createCaseForm(Model model) {
-//        model.addAttribute("caseForm", new CaseRequestDto());
-        model.addAttribute("caseDto",  new CaseRequestDto());
+        model.addAttribute("caseDto",  new CaseSaveRequestDto());
         return "cases/createCaseForm";
     }
 
     @PostMapping(value = "/cases/new")
-    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseRequestDto caseDto,HttpServletRequest request, Model model) {
+    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,HttpServletRequest request, Model model) {
         // 위의 @ModelAttribute("caseForm"), SessionAttributes  코드로 자동으로 세션으로 객체를 저장해줌
         // 세션 가져와서 placeInfoDto 정보 추가 후, model과 session에 저장
         caseDto.setMissing_area(placeInfoDto.getMissing_area());
@@ -60,7 +55,7 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/new/submit")
-    public String uploadCaseForm(@Valid CaseRequestDto caseDto, Errors errors, Model model) {
+    public String uploadCaseForm(@Valid CaseSaveRequestDto caseDto, Errors errors, Model model) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             model.addAttribute("caseDto", caseDto);
@@ -72,7 +67,6 @@ public class CaseController {
 
             return "cases/createCaseForm";
         }
-
             User user = userService.findByEmail("test@gmail.com");
             System.out.println(user.getEmail());
 
@@ -88,7 +82,7 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@ModelAttribute CaseRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
+    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             // 에러 페이지 수정 필요

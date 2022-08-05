@@ -1,11 +1,9 @@
 package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.dto.CaseRequestDto;
+import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +23,8 @@ public class CaseService {
     /**
      * 사건 등록하기
      */
-    public Long UploadCase(CaseRequestDto caseDto, User user) {
-        Case newCase = caseDto.toCase(user);
+    public Long UploadCase(CaseSaveRequestDto caseDto, User user) {
+        Case newCase = caseDto.toEntity(user);
         caseRepository.save(newCase);
         return newCase.getCase_id();
     }

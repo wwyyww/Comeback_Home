@@ -13,19 +13,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CaseRequestDto {
+public class CaseSaveRequestDto {
 
     @NotBlank(message = "실종자 이름은 필수 입력값입니다.")
-
     private String missing_name;
 
     @NotNull(message = "실종자 나이는 필수 입력값입니다.")
     private Integer missing_age;
 
-
     @NotNull(message = "실종자 성별은 필수 입력값입니다.")
     private Boolean missing_sex;
 
+    @NotBlank(message = "실종 설명은 필수 입력값입니다.")
     private String missing_desc;
 
     @NotBlank(message = "실종 지역은 필수 입력값입니다.")
@@ -44,7 +43,7 @@ public class CaseRequestDto {
     private LocalDateTime missing_time_end;
 
 
-    public Case toCase(User user){
+    public Case toEntity(User user){
         return Case.builder()
             .user(user)
             .missing_pic_path("file_path")
