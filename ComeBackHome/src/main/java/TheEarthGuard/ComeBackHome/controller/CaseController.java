@@ -1,13 +1,18 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.*;
+import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.dto.CaseRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +29,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@SessionAttributes({"caseForm"})
+@SessionAttributes({"caseDto"})
 public class CaseController {
     private final CaseService caseService;
     private UserService userService;
@@ -36,64 +42,43 @@ public class CaseController {
 
     @GetMapping(value = "/cases/new")
     public String createCaseForm(Model model) {
-        model.addAttribute("caseForm", new CaseRequestDto());
+//        model.addAttribute("caseForm", new CaseRequestDto());
+        model.addAttribute("caseDto",  new CaseRequestDto());
         return "cases/createCaseForm";
     }
 
     @PostMapping(value = "/cases/new")
-    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseForm") CaseRequestDto caseForm,HttpServletRequest request, Model model) {
-//        System.out.println(placeInfoDto.getMissing_area());
-//        System.out.println(placeInfoDto.getMissing_lat());
-
+    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseRequestDto caseDto,HttpServletRequest request, Model model) {
         // 위의 @ModelAttribute("caseForm"), SessionAttributes  코드로 자동으로 세션으로 객체를 저장해줌
         // 세션 가져와서 placeInfoDto 정보 추가 후, model과 session에 저장
-        caseForm.setMissing_area(placeInfoDto.getMissing_area());
-        caseForm.setMissing_lat(placeInfoDto.getMissing_lat());
-        caseForm.setMissing_lng(placeInfoDto.getMissing_lng());
+        caseDto.setMissing_area(placeInfoDto.getMissing_area());
+        caseDto.setMissing_lat(placeInfoDto.getMissing_lat());
+        caseDto.setMissing_lng(placeInfoDto.getMissing_lng());
 
-//        System.out.println("getMissing_lat : " + caseForm.getMissing_lat());
-//        System.out.println("name : " + caseForm.getMissing_name());
-//        System.out.println("sex : " + caseForm.getMissing_sex());
-
-        model.addAttribute("caseForm", caseForm);
+        model.addAttribute("caseDto", caseDto);
         return "cases/createCaseForm";
     }
 
     @PostMapping(value = "/cases/new/submit")
-    public String uploadCaseForm(@Valid @ModelAttribute CaseRequestDto form, Errors errors) {
+    public String uploadCaseForm(@Valid CaseRequestDto caseDto, Errors errors, Model model) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
-            return "/";
+            model.addAttribute("caseDto", caseDto);
+
+            Map<String, String> validatorResult = caseService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "cases/createCaseForm";
         }
-        User user = userService.findByEmail("test@gmail.com");
-        System.out.println(user.getEmail());
 
-        System.out.println("name : " + form.getMissing_name());
-//        System.out.println("missing_pic : " + form.getMissing_pic());
-        System.out.println("missing_sex : " + form.getMissing_sex());
-        
-        Case caseObj = Case.builder()
-            .user(user)
-            .missing_pic_path("file_path")
-            .missing_pic_name("file_name")
-            .missing_name(form.getMissing_name())
-            .missing_age(form.getMissing_age())
-            .missing_sex(form.getMissing_sex())
-            .missing_desc(form.getMissing_desc())
-            .missing_area(form.getMissing_area())
-            .missing_region(form.getMissing_area().substring(0,2)) // 지역명 앞 2글자만
-            .missing_lat(Double.parseDouble(form.getMissing_lat()))
-            .missing_lng(Double.parseDouble(form.getMissing_lng()))
-            .missing_time_start(form.getMissing_time_start())
-            .missing_time_end(form.getMissing_time_end())
-            .build();
+            User user = userService.findByEmail("test@gmail.com");
+            System.out.println(user.getEmail());
 
-        System.out.println(user.getEmail());
-        caseService.UploadCase(caseObj);
-        return "redirect:/";
+            caseService.UploadCase(caseDto, user);
+            return "redirect:/";
     }
-
-
 
     @GetMapping(value = "/cases")
     public String list(Model model) {
@@ -102,17 +87,32 @@ public class CaseController {
         return "cases/caseList";
     }
 
-
-
     @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@Valid @ModelAttribute CaseRequestDto form, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
+    public String searchPlace(@ModelAttribute CaseRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
-            return "/";
+            // 에러 페이지 수정 필요
+            return "cases/createCaseForm";
         }
-        System.out.println("file :" + file.getOriginalFilename());
 
-        model.addAttribute("caseForm", form); // 세션으로 같이 등록됨
+        // 임시 파일 저장
+        //String uploadFolder= "D:\\ComeBackHome\\tmpImg";
+        File uploadFolder = new File("D:\\ComeBackHome\\tmpImg");
+        if (! uploadFolder.exists()){
+            uploadFolder.mkdirs();
+        }
+        System.out.println("file 명 : " + file.getOriginalFilename());
+        System.out.println("file 사이즈 : " + file.getSize());
+
+        File saveFile = new File(uploadFolder, file.getOriginalFilename());
+
+        try{
+            file.transferTo(saveFile);
+        }catch (Exception e){
+
+        }
+
+        model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
         return "/cases/searchPlace";
     }
 
@@ -156,5 +156,12 @@ public class CaseController {
     }
 
 
+    //실종글 상세 보기
+//    @GetMapping(value="cases/detail/{cases_id}")
+//    public String detail(@PathVariable Long cases_id, @CurrentUser User user, Model model) {
+//        Optional<Case> cases = caseService.findOne(cases_id);
+//        List<Report> reports = cases.get().getReports();
+//
+//    }
 
 }
