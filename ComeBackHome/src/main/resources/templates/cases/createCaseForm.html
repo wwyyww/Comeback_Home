@@ -1,7 +1,27 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div class="container">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
+
+<!--<head>-->
+<!--  <meta charset="utf-8">-->
+<!--  <title>ComeBackHome</title>-->
+<!--  <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">-->
+<!--&lt;!&ndash;  <link rel="stylesheet" th:href="@{static/plugins/bootstrap/bootstrap.min.css}">&ndash;&gt;-->
+<!--&lt;!&ndash;  &lt;!&ndash;	icon&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <link rel="stylesheet" th:href="@{static/plugins/themify-icons/themify-icons.css}">&ndash;&gt;-->
+<!--&lt;!&ndash;  &lt;!&ndash;Favicon&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <link rel="icon" th:href="@{static/images/earthguard.png}" type="image/x-icon">&ndash;&gt;-->
+<!--&lt;!&ndash;  &lt;!&ndash; fonts &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">&ndash;&gt;-->
+<!--&lt;!&ndash;  &lt;!&ndash; Main Stylesheet &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <link th:href="@{static/assets/style.css}" rel="stylesheet" media="screen" />&ndash;&gt;-->
+<!--</head>-->
+
+<!--<body>-->
+<div layout:fragment="content" class="container">
   <form  method="post" enctype="multipart/form-data" >
     <div class="form-group">
       <div>
@@ -59,5 +79,5 @@
 <!--    <button type="submit" th:action="@{/cases/new/submit}">등록</button>-->
   </form>
 </div> <!-- /container -->
-</body>
+<!--</body>-->
 </html>

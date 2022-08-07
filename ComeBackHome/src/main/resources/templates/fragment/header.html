@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- header -->
+<header th:fragment="headerFragment" class="shadow-bottom sticky-top bg-white">
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container">
+            <a class="navbar-brand px-2 text-dark" href="/">ComeBackHome</a>
+            <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation"
+                    aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse text-center" id="navigation">
+                <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="faq">지도보기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/cases/new">실종자 등록하기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/cases/searchCase">제보하기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/users/login">로그인</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+</html>
