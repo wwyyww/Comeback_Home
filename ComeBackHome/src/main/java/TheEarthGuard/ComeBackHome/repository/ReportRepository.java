@@ -1,11 +1,17 @@
 package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Report;
+import TheEarthGuard.ComeBackHome.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
+
+    Optional<List<Report>> findAllByUser(User user);
 
 //    @Query("select r from Report r where r.cases.case_id = :case_id")
 //    List<Report> findReportsCaseId(@Param("case_id") Long case_id);

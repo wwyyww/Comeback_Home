@@ -3,16 +3,24 @@
 <body>
 <div class="container">
   <div>
-    <table>
+    <table class="table table-bordered">
+      <!-- CONTENTS !-->
       <thead>
       <tr>
-        <th>#</th>
-        <th>이름</th>
+        <th class="col-md-1">번호</th>
+        <th class="col-md-4">글제목</th>
+        <th class="col-md-3">작성자</th>
+        <th class="col-md-2">작성일</th>
+        <th class="col-md-2">수정일</th>
       </tr>
       </thead>
+
       <tbody>
+      <!-- CONTENTS !-->
       <tr th:each="report : ${reports}">
-        <td th:text="${report.reportId}"></td>
+        <td th:text="${report.getId()}"></td>
+        <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
+        <td th:text="${report.getUser().getName()}"></td>
       </tr>
       </tbody>
     </table>
