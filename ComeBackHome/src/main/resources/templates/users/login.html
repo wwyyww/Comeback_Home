@@ -1,7 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div class="container">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
+
+<div layout:fragment="content" class="container">
     <h1>로그인</h1>
     <div th:if="${param.error}">
         <p th:text="${exception}" class="alert alert-danger"></p>
@@ -19,11 +22,10 @@
     </form>
     <a class="p-2" href="https://kauth.kakao.com/oauth/authorize?client_id=a758e9f7b1f0c72d192b378bfb4b9b98
 &redirect_uri=http://localhost:8080/users/kakao&response_type=code">
-        <img th:src="@{/images/kakao_login_medium_narrow.png}" style="height:40px"/>
+        <img th:src="@{/static/images/kakao_login_medium_narrow.png}" style="height:40px"/>
     </a>
     <a href="/oauth2/authorization/google"><p>구글로그인</p></a>
 
     <br/>
 </div>
-</body>
 </html>
