@@ -29,7 +29,7 @@
     </p>
 
     <h4>회원 관련</h4>
-    <p>
+    <p sec:authorize="!isAuthenticated()">
       <a href="/users/signup">회원가입</a>
       <a href="/users/login">로그인</a>
     </p>

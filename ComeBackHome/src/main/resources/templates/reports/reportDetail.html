@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 상세 페이지</title>
+</head>
+<style>
+    .layout {
+        width: 500px;
+        margin: 0 auto;
+        margin-top: 40px;
+    }
+
+    .layout input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+<body>
+<table class ="table table-bordered">
+    <thead>
+    <caption>제보 상세보기</caption>
+    </thead>
+    <tbody>
+    <tr>
+        <th>제목</th>
+        <td th:text="${report.getWitness_title()}"></td>
+    </tr>
+    <tbody>
+    <tr>
+        <th>작성자</th>
+        <td th:text="${report.getUser().getName()}"></td>
+    </tr>
+    <tr>
+        <th>목격 지역</th>
+        <td th:text="${report.getWitness_area()}"></td>
+    </tr>
+    <tr>
+        <th>본문 내용</th>
+        <td th:text="${report.getWitness_desc()}"></td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${report.getUser().getId() == user.getId()}">
+    <a th:href="@{/reports/delete/{id}(id=${report.getId()})}">글 삭제</a>
+    <a th:href="@{/reports/update/{id}(id=${report.getId()})}">글 수정</a>
+</div>
+
+</body>
+</html>

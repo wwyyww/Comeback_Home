@@ -29,7 +29,7 @@ public class ReportService {
 
     //실종 제보 등록
     @Transactional
-    public Long UploadReport(Long user_id, Long case_id, ReportRequestDto reportObj){
+    public Long uploadReport(Long user_id, Long case_id, ReportRequestDto reportObj){
         System.out.println("[CASE_SERVICE] reportObj.getWitness_time" + reportObj.getWitness_time());
         Optional<User> user = userRepository.findById(user_id);
         Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
@@ -42,6 +42,17 @@ public class ReportService {
         return reportObj.getId();
     }
 
+    @Transactional
+    public void deleteReport(Long id, User user) {
+        Optional<Report> report = reportRepository.findById(id);
+        if (user.getId() == report.get().getId()) {
+            reportRepository.deleteById(id);
+        }else{
+            new IllegalArgumentException("제보 삭제 실패 : 사용자가 일치하지 않음");
+        }
+    }
+
+
 //    private void validateDuplicateReport(Report report) {
 //        // 수정 필요함 : 해당 유저가 해당 사건에 대해 등록한 적이 있는지 확인해야됨
 //        reportRepository.findByCaseId(String.valueOf(report.getCases().getCase_id()))
@@ -50,10 +61,18 @@ public class ReportService {
 //            });
 //    }
 
+    public Report getReportDetail(Long id) {
+        return reportRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 제보입니다."));
+    }
 
-     // 전체 증언 조회
+
+    //사용자가 작성한 제보 조회
+    public List<Report> getReportsListByUser(User user) {
+        return reportRepository.findAllByUser(user).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+    }
+
+    //전체 증언 조회
     public List<Report> findReports() {
-
         return reportRepository.findAll();
     }
 

@@ -40,7 +40,7 @@ public class ReportRequestDto {
                 .witness_lng(Double .valueOf(witness_lng))
                 .witness_pic(witness_pic)
                 .witness_time(Timestamp.valueOf(witness_time))
-                .is_alert(false)
+                .is_alert(Boolean.FALSE)
                 .user(user)
                 .cases(cases)
                 .build();
