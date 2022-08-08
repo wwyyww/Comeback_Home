@@ -11,8 +11,10 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ReportService {
     private final ReportRepository reportRepository;
@@ -30,7 +32,6 @@ public class ReportService {
     //실종 제보 등록
     @Transactional
     public Long uploadReport(Long user_id, Long case_id, ReportRequestDto reportObj){
-        System.out.println("[CASE_SERVICE] reportObj.getWitness_time" + reportObj.getWitness_time());
         Optional<User> user = userRepository.findById(user_id);
         Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
                 new IllegalArgumentException("제보 작성 실패 : 존재하지 않는 게시글"));
@@ -43,9 +44,23 @@ public class ReportService {
     }
 
     @Transactional
+    public Long updateReport(Long user_id, Long case_id, ReportRequestDto reportObj){
+        Optional<User> user = userRepository.findById(user_id);
+        Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
+                new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
+        Optional<Report> report = reportRepository.findById(reportObj.getId());
+        reportObj.setUser(user.get());
+        reportObj.setCases(findCase);
+        Report updateReport = reportObj.toEntity();
+        updateReport.setCreatedTime(report.get().getCreatedTime());
+        reportRepository.save(updateReport);
+        return reportObj.getId();
+    }
+
+    @Transactional
     public void deleteReport(Long id, User user) {
         Optional<Report> report = reportRepository.findById(id);
-        if (user.getId() == report.get().getId()) {
+        if (user.getId() == report.get().getUser().getId()) {
             reportRepository.deleteById(id);
         }else{
             new IllegalArgumentException("제보 삭제 실패 : 사용자가 일치하지 않음");
