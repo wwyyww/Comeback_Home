@@ -2,6 +2,7 @@ package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
+import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import java.util.HashMap;
@@ -57,14 +58,21 @@ public class CaseService {
     /**
      * 전체 사건 조회
      */
-    public List<Case> findCases() {
+    public List<Case> getCaseList() {
         return caseRepository.findAll();
     }
 
     /**
-     * 사건 하나 조회
+     *  사건 하나 조회 (사용자 id 기반)
      */
-    public Optional<Case> findOne(Long case_id) {
+    public Optional<Case> findCaseByUser(User user) {
+        return caseRepository.findByUserId(user.getId());
+    }
+
+    /**
+     * 사건 하나 조회 (사건 id 기반)
+     */
+    public Optional<Case> findCase(Long case_id) {
         return caseRepository.findByCaseId(case_id);
     }
 

@@ -5,6 +5,7 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
+import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileHandler;
 import TheEarthGuard.ComeBackHome.service.UserService;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -38,30 +40,27 @@ public class CaseController {
         this.userService = userService;
     }
 
+    // 처음 사건 등록할 때
     @GetMapping(value = "/cases/new")
     public String createCaseForm(Model model) {
         model.addAttribute("caseDto",  new CaseSaveRequestDto());
         return "cases/createCaseForm";
     }
 
+    //실종위치 찍고나서 사건글 이어서 작성할 때
     @PostMapping(value = "/cases/new")
     public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,HttpServletRequest request, Model model) {
-        // 위의 @ModelAttribute("caseForm"), SessionAttributes  코드로 자동으로 세션으로 객체를 저장해줌
-        // 세션 가져와서 placeInfoDto 정보 추가 후, model과 session에 저장
         caseDto.setMissing_area(placeInfoDto.getMissing_area());
         caseDto.setMissing_lat(placeInfoDto.getMissing_lat());
         caseDto.setMissing_lng(placeInfoDto.getMissing_lng());
-
-        if(!caseDto.getMissing_pic().isEmpty()) {
-            System.out.println("사진 있음");
-        }
 
         model.addAttribute("caseDto", caseDto);
         return "cases/createCaseForm";
     }
 
+    // 사건 등록
     @PostMapping(value = "/cases/new/submit")
-    public String uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, Errors errors, Model model) throws Exception {
+    public String uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @CurrentUser User user, Errors errors, Model model) throws Exception {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!" + errors);
             model.addAttribute("caseDto", caseDto);
@@ -74,21 +73,15 @@ public class CaseController {
             return "cases/createCaseForm";
         }
 
-        User user = userService.findByEmail("test@gmail.com");
-        caseDto.setUser(user);
+        User currentUser = userService.findByEmail(user.getEmail());
+        caseDto.setUser(currentUser);
 
         caseService.UploadCase(caseDto, caseDto.getMissing_pic());
 
         return "redirect:/";
     }
 
-    @GetMapping(value = "/cases")
-    public String list(Model model) {
-        List<Case> cases = caseService.findCases();
-        model.addAttribute("cases", cases);
-        return "cases/caseList";
-    }
-
+    // 장소 검색
     @PostMapping(value = "/cases/new/searchPlace")
     public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
         if (errors.hasErrors()) {
@@ -97,13 +90,33 @@ public class CaseController {
             return "cases/createCaseForm";
         }
 
-        // 사진 임시 저장
-        if(!caseDto.getMissing_pic().isEmpty()) {
-            System.out.println("사진 있음");
-        }
-
         model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
         return "/cases/searchPlace";
+    }
+
+    // 모든 사건 조회
+    @GetMapping(value = "/cases")
+    public String caseList(Model model) {
+        List<Case> cases = caseService.getCaseList();
+        model.addAttribute("cases", cases);
+        return "cases/caseList";
+    }
+
+    // 로그인 한 사용자의 사건 리스트로 조회
+    @GetMapping(value = "/mypage/cases")
+    public String caseList(Model model, @CurrentUser User user) {
+        Optional<Case> cases = caseService.findCaseByUser(user);
+        cases.ifPresent(CaseList -> model.addAttribute("cases", CaseList));
+        return "cases/caseList";
+    }
+
+    // 사건 상세보기
+    @GetMapping(value = "/cases/detail/{id}")
+    public String caseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+        Optional<Case> caseDto = caseService.findCase(id);
+        model.addAttribute("case", caseDto.get());
+        model.addAttribute("user", user);
+        return "/cases/caseDetail";
     }
 
 

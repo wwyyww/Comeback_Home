@@ -1,8 +1,6 @@
 package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import org.springframework.util.CollectionUtils;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,9 +29,9 @@ public class JpaCaseRepository implements CaseRepository{
     }
 
     @Override
-    public Optional<Case> findByFinderId(String finder_id) {
-        List<Case> result = em.createQuery("select c from Case c where c.user.id = :finder_id", Case.class)
-            .setParameter("finder_id", finder_id)
+    public Optional<Case> findByUserId(Long user_id) {
+        List<Case> result = em.createQuery("select c from Case c where c.user.id = :user_id", Case.class)
+            .setParameter("user_id", user_id)
             .getResultList();
         return result.stream().findAny();
     }
