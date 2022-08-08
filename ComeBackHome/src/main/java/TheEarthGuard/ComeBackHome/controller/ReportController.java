@@ -48,7 +48,7 @@ public class ReportController {
 
     //실종위치 찍고나서 제보글 이어서 작성할 때
     @PostMapping(value="/reports/new")
-    public String updateReportForm(@ModelAttribute ReportPlaceInfoDto reportPlaceInfoDto, @ModelAttribute("reportForm") ReportFormDto reportForm, HttpServletRequest request, Model model){
+    public String createFormPlace(@ModelAttribute ReportPlaceInfoDto reportPlaceInfoDto, @ModelAttribute("reportForm") ReportFormDto reportForm, HttpServletRequest request, Model model){
 
         reportForm.setWitness_area(reportPlaceInfoDto.getWitness_area());
         reportForm.setWitness_lat(reportPlaceInfoDto.getWitness_lat());
@@ -103,8 +103,20 @@ public class ReportController {
 
     //제보 수정하기
     @GetMapping(value = "/reports/update/{id}")
-    public String updateReport(@PathVariable("id") Long id, @CurrentUser User user) {
-        return "redirect:/reports";
+    public String updateReportForm(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("reportForm", reportService.getReportDetail(id));
+        return "/reports/reportUpdate";
+    }
+
+    @PostMapping(value = "/reports/update/{id}")
+    public String updateReport(@Valid @ModelAttribute ReportRequestDto form, @PathVariable("id") Long id,
+                               @CurrentUser User user, Errors errors) {
+        if (errors.hasErrors()) {
+            log.info("error!!");
+            return "redirect:/reports";
+        }
+        reportService.uploadReport(user.getId(), 1L, form);
+        return "redirect:/reports/detail/{id}";
     }
 
 
