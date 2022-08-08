@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -34,7 +33,6 @@ public class CaseController {
     private FileHandler fileHandler;
 
 
-    @Autowired
     public CaseController(CaseService caseService, UserService userService) {
         this.caseService = caseService;
         this.userService = userService;
@@ -50,9 +48,11 @@ public class CaseController {
     //실종위치 찍고나서 사건글 이어서 작성할 때
     @PostMapping(value = "/cases/new")
     public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,HttpServletRequest request, Model model) {
-        caseDto.setMissing_area(placeInfoDto.getMissing_area());
-        caseDto.setMissing_lat(placeInfoDto.getMissing_lat());
-        caseDto.setMissing_lng(placeInfoDto.getMissing_lng());
+        caseDto.setMissingArea(placeInfoDto.getMissingArea());
+        caseDto.setMissingLat(placeInfoDto.getMissingLat());
+        caseDto.setMissingLng(placeInfoDto.getMissingLng());
+
+        System.out.println("getMissingArea!!!!!!!!" + placeInfoDto.getMissingArea());
 
         model.addAttribute("caseDto", caseDto);
         return "cases/createCaseForm";
@@ -76,14 +76,14 @@ public class CaseController {
         User currentUser = userService.findByEmail(user.getEmail());
         caseDto.setUser(currentUser);
 
-        caseService.UploadCase(caseDto, caseDto.getMissing_pic());
+        caseService.UploadCase(caseDto, caseDto.getMissingPics());
 
         return "redirect:/";
     }
 
     // 장소 검색
     @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
+    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missingPics") MultipartFile file, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             // 에러 페이지 수정 필요
@@ -104,8 +104,8 @@ public class CaseController {
 
     // 로그인 한 사용자의 사건 리스트로 조회
     @GetMapping(value = "/mypage/cases")
-    public String caseList(Model model, @CurrentUser User user) {
-        Optional<Case> cases = caseService.findCaseByUser(user);
+    public String caseListByUser(Model model, @CurrentUser User user) {
+        Optional<List<Case>> cases = caseService.findCaseByUser(user);
         cases.ifPresent(CaseList -> model.addAttribute("cases", CaseList));
         return "cases/caseList";
     }
@@ -118,6 +118,15 @@ public class CaseController {
         model.addAttribute("user", user);
         return "/cases/caseDetail";
     }
+
+    // 사건 삭제하기
+    @GetMapping(value = "/cases/delete/{id}")
+    public String deleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
+        caseService.deleteCase(id, user);
+        return "redirect:/cases";
+    }
+
+
 
 
     @GetMapping(value = "/cases/searchCase")
@@ -138,11 +147,11 @@ public class CaseController {
         if (form.getSearch_type().equals("name")){
             System.out.println(form.getMissing_name());
             System.out.println(form.getSearch_type());
-            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
+//            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
         } else if (form.getSearch_type().equals("area")) {
             System.out.println(form.getMissing_name());
             System.out.println(form.getSearch_type());
-            caseList = caseService.findbyMissingArea(form.getMissing_name());
+//            caseList = caseService.findbyMissingArea(form.getMissing_name());
         } else {
 
         }

@@ -29,56 +29,57 @@ import lombok.Setter;
 public class Case extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long case_id;
+    private Long caseId;
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name="finder_id")
+    @JoinColumn(name="finderId")
     private User user;
-    private Boolean is_find;
-    private Integer report_cnt;
-    private Integer hit_cnt;
+    @JoinColumn(name="isFind")
+    private Boolean isFind;
+    private Integer reportCnt;
+    private Integer hitCnt;
 
-    private String missing_name;
-    private Integer missing_age;
-    private Boolean missing_sex;
+    private String missingName;
+    private Integer missingAge;
+    private Boolean missingSex;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String missing_desc;
-    private String missing_area;
-    private String missing_region;
-    private Double missing_lat;
-    private Double missing_lng;
-    private LocalDateTime missing_time_start;
-    private LocalDateTime missing_time_end;
+    private String missingDesc;
+    private String missingArea;
+    private String missingRegion;
+    private Double missingLat;
+    private Double missingLng;
+    private LocalDateTime missingTimeStart;
+    private LocalDateTime missingTimeEnd;
     @OneToMany(mappedBy = "cases", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("createdTime desc")
     private List<Report> reports;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<FileEntity> missing_pics;
+    private List<FileEntity> missingPics;
 
     @Builder
-    public Case(Long case_id, User user, Boolean is_find, Integer report_cnt, Integer hit_cnt,
-        String missing_name,
-        Integer missing_age, Boolean missing_sex, String missing_desc, String missing_area,
-        String missing_region, Double missing_lat, Double missing_lng,
-        LocalDateTime missing_time_start, LocalDateTime missing_time_end, List<Report> reports, List<FileEntity> missing_pics) {
-        this.case_id = case_id;
+    public Case(Long caseId, User user, Boolean isFind, Integer reportCnt, Integer hitCnt,
+        String missingName, Integer missingAge, Boolean missingSex, String missingDesc,
+        String missingArea, String missingRegion, Double missingLat, Double missingLng,
+        LocalDateTime missingTimeStart, LocalDateTime missingTimeEnd,
+        List<Report> reports, List<FileEntity> missingPics) {
+        this.caseId = caseId;
         this.user = user;
-        this.is_find = false;
-        this.report_cnt = 0;
-        this.hit_cnt = 0;
-        this.missing_name = missing_name;
-        this.missing_age = missing_age;
-        this.missing_sex = missing_sex;
-        this.missing_desc = missing_desc;
-        this.missing_area = missing_area;
-        this.missing_region = missing_region;
-        this.missing_lat = missing_lat;
-        this.missing_lng = missing_lng;
-        this.reports = reports;
-        this.missing_time_start = missing_time_start;
-        this.missing_time_end = missing_time_end;
+        this.isFind = false;
+        this.reportCnt = 0;
+        this.hitCnt = 0;
+        this.missingName = missingName;
+        this.missingAge = missingAge;
+        this.missingSex = missingSex;
+        this.missingDesc = missingDesc;
+        this.missingArea = missingArea;
+        this.missingRegion = missingRegion;
+        this.missingLat = missingLat;
+        this.missingLng = missingLng;
+        this.missingTimeStart = missingTimeStart;
+        this.missingTimeEnd = missingTimeEnd;
     }
+
 }

@@ -20,47 +20,47 @@ public class CaseSaveRequestDto {
     private User user;
 
     @NotBlank(message = "실종자 이름은 필수 입력값입니다.")
-    private String missing_name;
+    private String missingName;
 
     @NotNull(message = "실종자 나이는 필수 입력값입니다.")
-    private Integer missing_age;
+    private Integer missingAge;
 
     @NotNull(message = "실종자 성별은 필수 입력값입니다.")
-    private Boolean missing_sex;
+    private Boolean missingSex;
 
     @NotBlank(message = "실종 설명은 필수 입력값입니다.")
-    private String missing_desc;
+    private String missingDesc;
 
     @NotBlank(message = "실종 지역은 필수 입력값입니다.")
-    private String missing_area;
+    private String missingArea;
     @NotBlank(message = "실종 지역은 필수 입력값입니다.")
-    private String missing_lng;
+    private String missingLng;
     @NotBlank(message = "실종 지역은 필수 입력값입니다.")
-    private String missing_lat;
+    private String missingLat;
 
     @NotNull(message = "실종 추정 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime missing_time_start;
+    private LocalDateTime missingTimeStart;
 
     @NotNull(message = "실종 추정 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime missing_time_end;
+    private LocalDateTime missingTimeEnd;
 
-    private List<MultipartFile> missing_pic;
+    private List<MultipartFile> missingPics;
 
     public Case toEntity(){
         return Case.builder()
             .user(this.user)
-            .missing_name(this.missing_name)
-            .missing_age(this.missing_age)
-            .missing_sex(this.missing_sex)
-            .missing_desc(this.missing_desc)
-            .missing_area(this.missing_area)
-            .missing_region(this.missing_area.substring(0,2)) // 지역명 앞 2글자만
-            .missing_lat(Double.parseDouble(this.missing_lat))
-            .missing_lng(Double.parseDouble(this.missing_lng))
-            .missing_time_start(this.missing_time_start)
-            .missing_time_end(this.missing_time_end)
+            .missingName(this.missingName)
+            .missingAge(this.missingAge)
+            .missingSex(this.missingSex)
+            .missingDesc(this.missingDesc)
+            .missingArea(this.missingArea)
+            .missingRegion(this.missingArea.substring(0,2)) // 지역명 앞 2글자만
+            .missingLat(Double.parseDouble(this.missingLat))
+            .missingLng(Double.parseDouble(this.missingLng))
+            .missingTimeStart(this.missingTimeStart)
+            .missingTimeEnd(this.missingTimeEnd)
             .build();
     }
 }

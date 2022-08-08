@@ -19,11 +19,18 @@
       <tbody>
       <!-- CONTENTS !-->
       <tr th:each="case : ${cases}">
-        <td th:text="${case.getCase_id()}"></td>
-        <td><a th:href="@{/cases/detail/{id} (id=${case.getCase_id()})}" th:text="${case.getMissing_name()}"></a></td>
-        <td th:text="${case.getMissing_age()}"></td>
-        <td th:text="${case.getMissing_region()}"></td>
-        <td th:text="${case.getUser().getId()}"></td>
+        <td th:text="${case.getCaseId()}"></td>
+        <td><a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" th:text="${case.getMissingName()}"></a></td>
+        <td>
+          <p>
+            <span th:text="${case.getMissingAge()} + '살 '"/>
+            <span th:if="${case.getMissingSex() == false}">(여자)</span>
+            <span th:if="${case.getMissingSex() == true}">(남자)</span>
+          </p>
+        </td>
+        <td th:text="${case.getMissingRegion()}"></td>
+        <td th:text="${case.getUser().getName()}"></td>
+        <td th:text="${case.getCreatedTime()}"></td>
       </tr>
       </tbody>
     </table>

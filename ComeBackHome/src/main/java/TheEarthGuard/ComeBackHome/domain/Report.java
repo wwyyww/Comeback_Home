@@ -1,12 +1,19 @@
 package TheEarthGuard.ComeBackHome.domain;
 
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 
 @Entity
@@ -20,7 +27,7 @@ public class Report extends BaseTimeEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "case_id")
+    @JoinColumn(name = "caseId")
     private Case cases;
 
     @ManyToOne

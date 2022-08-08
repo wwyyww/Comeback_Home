@@ -30,7 +30,7 @@
   <tbody>
   <tr>
     <th>실종자 이름</th>
-    <td th:text="${case.getMissing_name()}"></td>
+    <td th:text="${case.getMissingName()}"></td>
   </tr>
   <tbody>
   <tr>
@@ -39,32 +39,37 @@
   </tr>
   <tr>
     <th>실종자 나이</th>
-    <td th:text="${case.getMissing_age()}"></td>
+    <td th:text="${case.getMissingAge()} + '살'"></td>
   </tr>
   <tr>
-    <th>실종자 성별/th>
-    <td th:text="${case.getMissing_sex()}"></td>
+    <th>실종자 성별</th>
+    <td th:if="${case.getMissingSex() == false}">여자</td>
+    <td th:if="${case.getMissingSex() == true}">남자</td>
   </tr>
   <tr>
-    <th>실종자 정보/th>
-    <td th:text="${case.getMissing_desc()}"></td>
+    <th>실종자 정보</th>
+    <td th:text="${case.getMissingDesc()}"></td>
   </tr>
   <tr>
-    <th>실종자 지역/th>
-    <td th:text="${case.getMissing_area()}"></td>
+    <th>실종자 지역</th>
+    <td th:text="${case.getMissingArea()}"></td>
   </tr>
   <tr>
-    <th>실종 시간/th>
-    <td th:text="${case.getMissing_time_start()}"></td>
-    <td th:text="${case.getMissing_time_end()}"></td>
+    <th>실종 시간</th>
+    <td>
+      <p>
+      <span th:text="${case.getMissingTimeStart()}"></span> ~
+      <span th:text="${case.getMissingTimeEnd()}"></span>
+      </p>
+    </td>
   </tr>
   </tbody>
 </table>
 
 <a href="/reports/new">제보하기</a>
 <div th:if="${case.getUser().getId() == user.getId()}">
-  <a th:href="@{/cases/delete/{id}(id=${case.getCase_id()})}">글 삭제</a>
-  <a th:href="@{/cases/update/{id}(id=${case.getCase_id()})}">글 수정</a>
+  <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
+  <a th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
 </div>
 
 </body>

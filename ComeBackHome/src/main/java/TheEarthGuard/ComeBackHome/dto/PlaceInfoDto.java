@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlaceInfoDto {
-    private String missing_lat;
-    private String missing_lng;
-    private String missing_area;
+    private String missingLat;
+    private String missingLng;
+    private String missingArea;
 }

@@ -1,13 +1,9 @@
 package TheEarthGuard.ComeBackHome.dto;
 
-import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
-import TheEarthGuard.ComeBackHome.domain.User;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 public class ReportResponseDto {
@@ -34,7 +30,7 @@ public class ReportResponseDto {
         this.witness_lat = report.getWitness_lat();
         this.witness_lng = report.getWitness_lng();
         this.name = report.getUser().getName();
-        this.missing_name = report.getCases().getMissing_name();
+        this.missing_name = report.getCases().getMissingName();
 
     }
 
