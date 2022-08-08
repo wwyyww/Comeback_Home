@@ -1,5 +1,6 @@
 package TheEarthGuard.ComeBackHome.dto;
 
+import TheEarthGuard.ComeBackHome.domain.BaseTimeEntity;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReportRequestDto {
+public class ReportRequestDto extends BaseTimeEntity {
 
     private Long id;
     private Case cases;

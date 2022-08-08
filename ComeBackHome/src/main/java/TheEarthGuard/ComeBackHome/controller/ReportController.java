@@ -104,6 +104,8 @@ public class ReportController {
     //제보 수정하기
     @GetMapping(value = "/reports/update/{id}")
     public String updateReportForm(Model model, @PathVariable("id") Long id) {
+        Report report = reportService.getReportDetail(id);
+
         model.addAttribute("reportForm", reportService.getReportDetail(id));
         return "/reports/reportUpdate";
     }
@@ -115,7 +117,10 @@ public class ReportController {
             log.info("error!!");
             return "redirect:/reports";
         }
-        reportService.uploadReport(user.getId(), 1L, form);
+        Report report = reportService.getReportDetail(id);
+
+        log.info(String.valueOf(form.getCreatedTime()));
+        reportService.updateReport(user.getId(), 1L, form);
         return "redirect:/reports/detail/{id}";
     }
 
