@@ -74,10 +74,6 @@
         <button type="submit">사건 조회</button> <button type="reset">조건 초기화</button>
     </form>
 
-
-
-</div> <!-- /container -->
-<div class="container">
     <div>
         <table>
             <thead>
@@ -91,9 +87,32 @@
                 <td th:text="${search.missing_name}"></td>
                 <td th:text="${search.missing_age}"></td>
                 <td th:text="${search.missing_sex}"></td>
+                <td th:text="${search.createdTime}"></td>
+                <td th:text="${search.missing_area}"></td>
             </tr>
             </tbody>
         </table>
     </div>
-</div>
+
+</div> <!-- /container -->
+<!--<div class="container">-->
+<!--    <div>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>#</th>-->
+<!--                <th>사건 조회</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="search : ${searchList}">-->
+<!--                <td th:text="${search.missing_name}"></td>-->
+<!--                <td th:text="${search.missing_age}"></td>-->
+<!--                <td th:text="${search.missing_sex}"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+<!--</div>-->
+
 </html>
