@@ -3,6 +3,7 @@ package TheEarthGuard.ComeBackHome;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.JpaCaseRepository;
 import TheEarthGuard.ComeBackHome.service.CaseService;
+import TheEarthGuard.ComeBackHome.service.FileHandler;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,7 @@ public class SpringConfig {
 
     @Bean
     public CaseService caseService() {
-        return new CaseService(caseRepository());
+        return new CaseService(caseRepository(), new FileHandler());
     }
 
 //    @Bean
