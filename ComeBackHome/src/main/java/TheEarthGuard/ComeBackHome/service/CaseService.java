@@ -1,7 +1,7 @@
 package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import java.util.HashMap;
@@ -11,20 +11,32 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 public class CaseService {
     private final CaseRepository caseRepository;
+    private final FileHandler fileHandler;
 
-    public CaseService(CaseRepository caseRepository) {
+    public CaseService(CaseRepository caseRepository,
+        FileHandler fileHandler) {
         this.caseRepository = caseRepository;
+        this.fileHandler = fileHandler;
     }
 
     /**
      * 사건 등록하기
      */
-    public Long UploadCase(CaseSaveRequestDto caseDto, User user) {
-        Case newCase = caseDto.toEntity(user);
+    public Long UploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
+        Case newCase = caseDto.toEntity();
+
+        List<FileEntity> missing_pictures = fileHandler.parseFileInfo(files);
+        System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
+        if(!missing_pictures.isEmpty()) {
+            System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
+            newCase.setMissing_pics(missing_pictures);
+        }
+
         caseRepository.save(newCase);
         return newCase.getCase_id();
     }
