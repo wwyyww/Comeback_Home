@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="utf-8">
+    <title>ComeBackHome</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <th:block th:replace="fragment/config :: configFragment"></th:block>
+</head>
+<body>
+    <th:block th:replace="fragment/header :: headerFragment"></th:block>
+
+    <th:block layout:fragment="content"></th:block>
+
+    <th:block th:replace="fragment/footer :: footerFragment"></th:block>
+
+
+    <!-- ** JS Plugins Needed for the Project ** -->
+    <!-- jquiry -->
+    <script src="/static/plugins/jquery/jquery-1.12.4.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="/static/plugins/bootstrap/bootstrap.min.js"></script>
+    <!-- match-height JS -->
+    <script src="/static/plugins/match-height/jquery.matchHeight-min.js"></script>
+    <!-- Main Script -->
+    <script src="/static/assets/script.js"></script>
+</body>
+</html>

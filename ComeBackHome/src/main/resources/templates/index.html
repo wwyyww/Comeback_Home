@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<meta charset="utf-8">
+	<title>ComeBackHome</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8"></script>
+	<link rel="stylesheet" th:href="@{static/plugins/bootstrap/bootstrap.min.css}">
+<!--	icon-->
+	<link rel="stylesheet" th:href="@{static/plugins/themify-icons/themify-icons.css}">
+	<!--Favicon-->
+	<link rel="icon" th:href="@{static/images/earthguard.png}" type="image/x-icon">
+	<!-- fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+	<!-- Main Stylesheet -->
+	<link th:href="@{static/assets/style.css}" rel="stylesheet" media="screen" />
+</head>
+
+<body>
+	<!-- header -->
+	<header class="banner overlay bg-cover" >
+		<nav class="navbar navbar-expand-md navbar-dark">
+			<div class="container">
+				<a class="navbar-brand px-2" href="index.html">ComeBackHome</a>
+				<button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation"
+					aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse text-center" id="navigation">
+					<ul class="navbar-nav ml-auto">
+
+						<li class="nav-item">
+							<a class="nav-link text-dark" href="faq.html">지도보기</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" href="cases/createCaseForm.html">실종자 등록하기</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" href="cases/caseList.html">제보하기</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" href="users/login.html">로그인</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- banner -->
+		<div class="container section">
+			<div class="row">
+				<div class="col-lg-8 text-center mx-auto">
+					<h1 class="text-white mb-3">실종자를 찾아주세요!</h1>
+					<p class="text-white mb-4">지도를 기반으로 실종자 정보를 보려면, 지도보기를 눌러주세요.</p>
+					<div class="position-relative">
+						<input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
+							class="ti-search search-icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /banner -->
+	</header>
+	<!-- /header -->
+
+	<!-- topics -->
+	<section class="section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<!-- topic-item -->
+				<div class="col-lg-4 col-sm-6 mb-4">
+					<a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
+						<i class="ti-panel icon text-primary d-block mb-4"></i>
+						<h3 class="mb-3 mt-0">현재 실종자 수 표현</h3>
+						<p class="mb-0">현재 실종자 수</p>
+					</a>
+				</div>
+				<div class="col-lg-4 col-sm-6 mb-4">
+					<a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
+						<i class="ti-credit-card icon text-primary d-block mb-4"></i>
+						<h3 class="mb-3 mt-0">현재 제보 수 표현</h3>
+						<p class="mb-0">현재 제보 수</p>
+					</a>
+				</div>
+				<div class="col-lg-4 col-sm-6 mb-4">
+					<a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
+						<i class="ti-package icon text-primary d-block mb-4"></i>
+						<h3 class="mb-3 mt-0">사용자 수 표현</h3>
+						<p class="mb-0">사용자 수 말고 더 좋은건 없나?</p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /topics -->
+
+	<!-- call to action -->
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="section px-3 bg-white shadow text-center">
+						<h2 class="mb-4">실종신고 112</h2>
+						<h2 class="mb-4">문의 earthguard@gmail.com</h2>
+						<p class="mb-4">간절히 가족과 지인을 찾는 이들을 위해 허위 신고/제보는 자제 부탁드립니다.</p>
+						<a href="contact.html" class="btn btn-primary">contact us</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /call to action -->
+
+	<!-- footer -->
+	<footer class="section pb-4">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-8 text-md-left text-center">
+					<p class="mb-md-0 mb-4">Copyright © 2020 Designed and Developed by <a
+							href="https://themefisher.com/">themefisher</a></p>
+				</div>
+				<div class="col-md-4 text-md-right text-center">
+					<ul class="list-inline">
+						<li class="list-inline-item"><a class="text-color d-inline-block p-2" href="#"><i
+									class="ti-facebook"></i></a></li>
+						<li class="list-inline-item"><a class="text-color d-inline-block p-2" href="#"><i
+									class="ti-twitter-alt"></i></a></li>
+						<li class="list-inline-item"><a class="text-color d-inline-block p-2" href="#"><i class="ti-github"></i></a>
+						</li>
+						<li class="list-inline-item"><a class="text-color d-inline-block p-2" href="#"><i
+									class="ti-linkedin"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- /footer -->
+
+	<!-- ** JS Plugins Needed for the Project ** -->
+	<!-- jquiry -->
+	<script src="plugins/jquery/jquery-1.12.4.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="plugins/bootstrap/bootstrap.min.js"></script>
+	<!-- match-height JS -->
+	<script src="plugins/match-height/jquery.matchHeight-min.js"></script>
+	<!-- Main Script -->
+	<script src="../static/assets/script.js"></script>
+</body>
+
+</html>
