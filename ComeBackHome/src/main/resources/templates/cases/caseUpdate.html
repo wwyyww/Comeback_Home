@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>타이틀</title>
+</head>
+<body>
+<div class="container">
+  <form th:action="@{/cases/update/{id}(id = ${case.getCaseId()})}" method="post">
+    <div class="form-group">
+      <div>
+        <label for="missingName">실종자 이름</label>
+        <input type="text" id="missingName" name="missingName" th:value="${case.missingName}" placeholder="이름을 입력하세요">
+        <span th:text="${valid_missingName}"></span>
+      </div>
+
+      <div>
+        <label for="missingPics">실종자 사진</label>
+        <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
+      </div>
+
+      <div>
+        <label for="missingAge">실종자 나이</label>
+        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${case.missingAge}" placeholder="나이를 입력하세요">
+        <span th:text="${valid_missingAge}"></span>
+      </div>
+
+      <div>
+        <label for="missingSex">실종자 성별</label>
+        <label for="man">남자</label>
+        <input type="radio" name="missingSex" value=true id="man" th:checked="${case.missingSex eq true}">
+        <label for="woman">여자</label>
+        <input type="radio" name="missingSex" value=false id="woman" th:checked="${case.missingSex eq false}"/>
+        <span th:text="${valid_missingSex}"></span>
+      </div>
+
+      <div>
+        <label for="missingDesc">실종자 정보</label>
+        <input type="text" id="missingDesc" name="missingDesc" th:value="${case.missingDesc}" placeholder="추가 실종자 정보를 입력하세요">
+        <span th:text="${valid_missingDesc}"></span>
+      </div>
+
+      <div>
+        <label for="missingArea">실종 지역</label>
+        <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" th:value="${case.missingArea}" style="width: 20%" readonly>
+        <input type="hidden" id="missingLng" name="missingLng" th:value="${case.missingLng} " readonly>
+        <input type="hidden" id="missingLat" name="missingLat" th:value="${case.missingLat} " readonly>
+        <span th:text="${valid_missingArea}"></span>
+        <!--        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>-->
+        <button type="submit" formaction="/cases/new/searchPlace">지도에서 찾기</button>
+      </div>
+
+      <div>
+        <label for="missingTimeStart">실종 시간</label>
+        <input type="datetime-local" id="missingTimeStart" name="missingTimeStart" th:value="${case.missingTimeStart}"> ~
+        <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" th:value="${case.missingTimeEnd}">
+        <span th:text="${valid_missingTimeStart}"></span>
+        <span th:text="${valid_missingTimeEnd}"></span>
+      </div>
+
+    </div>
+    <button type="submit">수정</button>
+  </form>
+</div> <!-- /container -->
+</body>
+</html>

@@ -29,6 +29,7 @@ public class CaseService {
     /**
      * 사건 등록하기
      */
+    @Transactional
     public Long UploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
         Case newCase = caseDto.toEntity();
 
@@ -55,37 +56,37 @@ public class CaseService {
         return validatorResult;
     }
 
-
     /**
-     * 전체 사건 조회
+     * 사건  수정하기
      */
-    public List<Case> getCaseList() {
-        return caseRepository.findAll();
-    }
-
-    /**
-     *  사건 하나 조회 (사용자 id 기반)
-     */
-    public Optional<List<Case>> findCaseByUser(User user) {
-        return caseRepository.findByUser(user);
-    }
-
-    /**
-     * 사건 하나 조회 (사건 id 기반)
-     */
-    public Optional<Case> findCase(Long case_id) {
-        return caseRepository.findByCaseId(case_id);
-    }
-
-    /**
-     * 사건 검색
-     */
-//    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-//        return caseRepository.findByMissingNameFilter(keyword, sex, age, area);
-//    }
+//    @Transactional
+//    public Long UpdateCase(CaseSaveRequestDto caseDto, Long case_id, List<MultipartFile> files) throws Exception{
+//        Optional<User> user = userRepository.findById(user_id);
+//        Case findCase = caseRepository.findByCaseId(case_id).orElseThrow(() ->
+//            new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
 //
-//    public Optional<List<Case>> findbyMissingArea(String keyword){
-//        return caseRepository.findByMissingAreaFilter(keyword);
+//        Optional<Report> report = reportRepository.findById(reportObj.getId());
+//        reportObj.setUser(user.get());
+//        reportObj.setCases(findCase);
+//        Report updateReport = reportObj.toEntity();
+//        updateReport.setCreatedTime(report.get().getCreatedTime());
+//        reportRepository.save(updateReport);
+//        return reportObj.getId();
+//
+//
+//
+//
+//        Case newCase = caseDto.toEntity();
+//
+//        List<FileEntity> missing_pictures = fileHandler.parseFileInfo(files);
+//        System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
+//        if(!missing_pictures.isEmpty()) {
+//            System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
+//            newCase.setMissingPics(missing_pictures);
+//        }
+//
+//        caseRepository.save(newCase);
+//        return newCase.getCaseId();
 //    }
 
     /**
@@ -100,4 +101,39 @@ public class CaseService {
             new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
         }
     }
+
+    /**
+     * 전체 사건 조회
+     */
+    public List<Case> getCaseList() {
+        return caseRepository.findAll();
+    }
+
+    /**
+     *  특정 사용자가 등록한 사건들 조회 (사용자 id 기반)
+     */
+    public Optional<List<Case>> findCaseByUser(User user) {
+        return caseRepository.findByUser(user);
+    }
+
+    /**
+     * 사건 하나 조회 (사건 id 기반)
+     */
+    public Optional<Case> findCase(Long case_id) {
+        return caseRepository.findByCaseId(case_id);
+    }
+
+
+
+    /**
+     * 사건 검색
+     */
+//    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+//        return caseRepository.findByMissingNameFilter(keyword, sex, age, area);
+//    }
+//
+//    public Optional<List<Case>> findbyMissingArea(String keyword){
+//        return caseRepository.findByMissingAreaFilter(keyword);
+//    }
+
 }

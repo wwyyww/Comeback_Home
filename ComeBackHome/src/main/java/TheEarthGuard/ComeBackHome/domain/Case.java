@@ -33,9 +33,8 @@ public class Case extends BaseTimeEntity{
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name="finderId")
+    @JoinColumn(name="finder_id") // finder_id
     private User user;
-    @JoinColumn(name="isFind")
     private Boolean isFind;
     private Integer reportCnt;
     private Integer hitCnt;
