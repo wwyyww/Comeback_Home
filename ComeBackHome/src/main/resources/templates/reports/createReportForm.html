@@ -48,7 +48,7 @@
       <div th:unless="${reportForm.witness_area}">
         <input type="text" id="witness_area" name="witness_area" placeholder="지역을 입력하세요" disabled>
       </div>
-      <button type="submit" formaction="/reports/new/searchPlace">지도에서 찾기</button>
+      <button type="submit" th:formaction="@{/reports/new/{id}/searchPlace(id=${reportForm.getCases().getCaseId()})}">지도에서 찾기</button>
       </p>
 
 
@@ -61,7 +61,7 @@
       </div>
 
     </div>
-    <button type="submit" formaction="/reports/new/submit">등록</button>
+    <button type="submit" th:formaction="@{/reports/new/{id}/submit(id=${reportForm.getCases().getCaseId()})}">등록</button>
   </form>
 </div> <!-- /container -->
 </body>

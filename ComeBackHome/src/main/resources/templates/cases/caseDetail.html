@@ -66,10 +66,37 @@
   </tbody>
 </table>
 
-<a href="/reports/new">제보하기</a>
+<a th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
 <div th:if="${case.getUser().getId() == user.getId()}">
   <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
   <a th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
+</div>
+
+<div th:if="${case.getUser().getId() == user.getId()}">
+  <table class="table table-bordered">
+    제보 목록
+    <!-- CONTENTS !-->
+    <thead>
+    <tr>
+      <th class="col-md-1">번호</th>
+      <th class="col-md-4">글제목</th>
+      <th class="col-md-3">작성자</th>
+      <th class="col-md-2">작성일</th>
+      <th class="col-md-2">수정일</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <!-- CONTENTS !-->
+    <tr th:each="report : ${reports}">
+      <td th:text="${report.getId()}"></td>
+      <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
+      <td th:text="${report.getUser().getName()}"></td>
+      <!--        <td th:text="${#dates.format(report.getCreatedTime(), 'yyyy-MM-dd')}"></td>-->
+    </tr>
+    </tbody>
+  </table>
+
 </div>
 
 </body>

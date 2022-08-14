@@ -1,13 +1,9 @@
 package TheEarthGuard.ComeBackHome.domain;
 
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.util.List;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +42,9 @@ public class Report extends BaseTimeEntity{
 
     @ColumnDefault("false")
     private Boolean is_alert;
+
+    @OneToMany(mappedBy = "reports", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Warn> warns;
 
     @Builder
     public Report(Long id, Case cases, User user,

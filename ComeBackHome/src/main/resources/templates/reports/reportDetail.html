@@ -47,7 +47,14 @@
     </tr>
     </tbody>
 </table>
-<div th:if="${report.getUser().getId() == user.getId()}">
+
+<form th:action="@{/reports/warn/{id}(id=${report.getId()})}" method="post">
+    <button type="submit">사용자 신고하기</button>
+</form>
+
+
+
+    <div th:if="${report.getUser().getId() == user.getId()}">
     <a th:href="@{/reports/delete/{id}(id=${report.getId()})}">글 삭제</a>
     <a th:href="@{/reports/update/{id}(id=${report.getId()})}">글 수정</a>
 </div>

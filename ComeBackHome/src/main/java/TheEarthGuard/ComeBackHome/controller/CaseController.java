@@ -1,6 +1,7 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
@@ -8,6 +9,7 @@ import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileHandler;
+import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +33,13 @@ public class CaseController {
     private final CaseService caseService;
     private UserService userService;
     private FileHandler fileHandler;
+    private final ReportService reportService;
 
 
-    public CaseController(CaseService caseService, UserService userService) {
+    public CaseController(CaseService caseService, UserService userService, ReportService reportService) {
         this.caseService = caseService;
         this.userService = userService;
+        this.reportService = reportService;
     }
 
     // 처음 사건 등록할 때
@@ -116,6 +120,11 @@ public class CaseController {
         Optional<Case> caseDto = caseService.findCase(id);
         model.addAttribute("case", caseDto.get());
         model.addAttribute("user", user);
+        if (user.getId() == caseDto.get().getUser().getId()) {
+            List<Report> reports = reportService.getReportsListByCase(caseDto.get());
+            model.addAttribute("reports", reports);
+            return "/cases/caseDetail";
+        }
         return "/cases/caseDetail";
     }
 
