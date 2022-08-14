@@ -3,6 +3,7 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.CaseListResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
@@ -12,16 +13,23 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileHandler;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.UrlResource;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,7 +48,7 @@ public class CaseController {
     private UserService userService;
     private FileHandler fileHandler;
     private final ReportService reportService;
-
+    private ModelMapper modelMapper;
 
 
     public CaseController(CaseService caseService, UserService userService, FileHandler fileHandler, ReportService reportService) {
@@ -103,8 +111,13 @@ public class CaseController {
     // 모든 사건 조회
     @GetMapping(value = "/cases")
     public String caseList(Model model) {
-        List<Case> cases = caseService.getCaseList();
-        model.addAttribute("cases", cases);
+        List<Case> caseEntityList = caseService.getCaseList();
+
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+            caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        model.addAttribute("cases", caseDtoList);
         return "cases/caseList";
     }
 
@@ -121,16 +134,16 @@ public class CaseController {
     // 사건 상세보기
     @GetMapping(value = "/cases/detail/{id}")
     public String caseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        Optional<Case> caseDto = caseService.findCase(id);
-        if(caseDto.isPresent()) {
-            model.addAttribute("case", new CaseResponseDto(caseDto.get(), caseDto.get().getUser()));
-            model.addAttribute("missing_pics", caseDto.get().getMissingPics());
+        Optional<Case> caseEntity = caseService.findCase(id);
+
+        if(caseEntity.isPresent()) {
+            model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
         }
         model.addAttribute("user", user);
-        if (user.getId() == caseDto.get().getUser().getId()) {
-            List<Report> reports = reportService.getReportsListByCase(caseDto.get());
+
+        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+            List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
             model.addAttribute("reports", reports);
-            return "/cases/caseDetail";
         }
         return "/cases/caseDetail";
     }
@@ -142,20 +155,23 @@ public class CaseController {
         return "redirect:/cases";
     }
 
-    // 사진 출력
+    // 사진 출력 (URL로도 접근가능)
     @ResponseBody
     @GetMapping("/images/{filepath}/{filename}")
-    public UrlResource processImg(@PathVariable String filepath, @PathVariable String filename) throws MalformedURLException {//
-        return new UrlResource("file:" + fileHandler.createPath(filepath, filename));
-    }
+    public ResponseEntity<byte[]> getFile(@PathVariable String filepath, @PathVariable String filename){
+        File file = new File(fileHandler.createPath(filepath, filename));
+        ResponseEntity<byte[]> result = null;
 
-    // 사진 출력 (썸네일)
-//    @ResponseBody
-//    @GetMapping("/images/{filepath}/{filename}")
-//    public UrlResource processThumbImg(@PathVariable String filepath, @PathVariable String filename) throws MalformedURLException {//
-//        return new UrlResource("file:" + fileHandler.createThumbPath(filepath, filename));
-////        return URLEncoder.encode("file:" + fileHandler.createThumbPath(filepath, filename),"UTF-8");
-//    }
+        try{
+            HttpHeaders header = new HttpHeaders();
+
+            header.add("Content-type", Files.probeContentType(file.toPath()));
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header, HttpStatus.OK);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
     // 사건 수정하기

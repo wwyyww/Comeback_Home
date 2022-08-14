@@ -102,7 +102,7 @@ public class FileHandler {
     }
 
     public String createThumbPath(String filepath, String filename) {
-        return fileDirPath + "\\" + filepath + "\\_s" + filename;
+        return fileDirPath + "\\" + filepath + "\\s_" + filename;
 //        return URLEncoder.encode(folderPath + "/s_" +uuid + "_" +fileName,"UTF-8");
     }
 
