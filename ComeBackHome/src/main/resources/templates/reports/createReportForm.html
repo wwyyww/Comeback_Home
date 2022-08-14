@@ -7,7 +7,7 @@
 <body>
 <div class="container">
   <!--  <form action="/cases/new/submit" method="post">-->
-  <form  method="post">
+  <form  method="post" enctype="multipart/form-data">
     <div class="form-group">
 
       <label for="witness_title">제보 제목</label>
@@ -19,12 +19,9 @@
       </div>
 
 
-      <label for="witness_pic">제보 사진</label>
-      <div th:if="${reportForm.witness_pic}">
-        <input type="text" id="witness_pic" name="witness_pic" th:value="${reportForm.witness_pic}" placeholder="사진 경로를 입력하세요">
-      </div>
-      <div th:unless="${reportForm.witness_pic}">
-        <input type="text" id="witness_pic" name="witness_pic" placeholder="사진 경로를 입력하세요">
+      <div>
+        <label for="witnessPics">제보 사진</label>
+        <input type="file" id="witnessPics" name="witnessPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
       </div>
 
 

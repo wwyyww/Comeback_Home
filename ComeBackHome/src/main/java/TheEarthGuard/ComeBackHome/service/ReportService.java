@@ -1,9 +1,6 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import TheEarthGuard.ComeBackHome.domain.Case;
-import TheEarthGuard.ComeBackHome.domain.Report;
-import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.domain.Warn;
+import TheEarthGuard.ComeBackHome.domain.*;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.ReportRepository;
@@ -15,6 +12,7 @@ import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -23,36 +21,49 @@ public class ReportService {
     private final UserRepository userRepository;
     private final CaseRepository caseRepository;
     private final WarnRepository warnRepository;
+    private final FileHandler fileHandler;
 
-    public ReportService(ReportRepository reportRepository, UserRepository userRepository, CaseRepository caseRepository, WarnRepository warnRepository) {
+
+    public ReportService(ReportRepository reportRepository, UserRepository userRepository, CaseRepository caseRepository, WarnRepository warnRepository, FileHandler fileHandler) {
 
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
         this.caseRepository = caseRepository;
         this.warnRepository = warnRepository;
+        this.fileHandler = fileHandler;
     }
 
 
     //실종 제보 등록
     @Transactional
-    public Long uploadReport(Long user_id, Long case_id, ReportRequestDto reportObj){
+    public Long uploadReport(Long user_id, Long case_id, ReportRequestDto reportObj, List<MultipartFile> files) throws Exception {
+        Report newReport = new Report();
+
         Optional<User> user = userRepository.findById(user_id);
         Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
                 new IllegalArgumentException("제보 작성 실패 : 존재하지 않는 게시글"));
+        List<FileEntity> witPics = fileHandler.parseFileInfo(files);
 
         reportObj.setUser(user.get());
         reportObj.setCases(findCase);
+        newReport = reportObj.toEntity();
 
-        reportRepository.save(reportObj.toEntity());
-        return reportObj.getId();
+        if(!witPics.isEmpty()) {
+            System.out.println("[ReportService-witnessPics] 파일 있음!" + witPics);
+            newReport.setWitnessPics(witPics);
+        }
+
+        reportRepository.save(newReport);
+        return newReport.getId();
     }
 
     @Transactional
-    public Long updateReport(Long user_id, Long case_id, ReportRequestDto reportObj) throws IllegalAccessException {
+    public Long updateReport(Long user_id, Long report_id, ReportRequestDto reportObj) throws IllegalAccessException {
         Optional<User> user = userRepository.findById(user_id);
-        Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
+        Optional<Report> report = reportRepository.findById(report_id);
+
+        Case findCase=caseRepository.findByCaseId(report.get().getCases().getCaseId()).orElseThrow(() ->
                 new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
-        Optional<Report> report = reportRepository.findById(reportObj.getId());
 
         if (report.get().getUser().getId() != user.get().getId()) {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
@@ -63,7 +74,7 @@ public class ReportService {
         updateReport.setCreatedTime(report.get().getCreatedTime());
         reportRepository.save(updateReport);
 
-        return reportObj.getId();
+        return report_id;
     }
 
     @Transactional

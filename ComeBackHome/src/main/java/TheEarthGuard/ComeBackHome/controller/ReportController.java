@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -70,7 +71,7 @@ public class ReportController {
 
     //제보 제출
     @PostMapping(value = "/reports/new/{id}/submit")
-    public String createReport(@Valid @ModelAttribute ReportRequestDto form, @PathVariable("id") Long id, @CurrentUser User user,Errors errors){
+    public String createReport(@Valid @ModelAttribute ReportRequestDto form, @PathVariable("id") Long id, @CurrentUser User user,Errors errors) throws Exception {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             return "/";
@@ -78,16 +79,16 @@ public class ReportController {
 
         User currentUser = userService.findByEmail(user.getEmail());
         if (currentUser != null) {
-            reportService.uploadReport(currentUser.getId(), id, form);
+            reportService.uploadReport(currentUser.getId(), id, form, form.getWitnessPics());
         }else{
             return "/users/login";
         }
 
-        return "redirect:/";
+        return "redirect:/cases";
 
     }
 
-    @GetMapping(value = "/reports")
+    @GetMapping(value = "/mypage/reports")
     public String reportList(Model model, @CurrentUser User user) {
         List<Report> reports = reportService.getReportsListByUser(user);
         model.addAttribute("reports", reports);
@@ -97,7 +98,9 @@ public class ReportController {
     //제보 상세보기
     @GetMapping(value = "/reports/detail/{id}")
     public String reportDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        model.addAttribute("report", reportService.getReportDetail(id));
+        Report reportDto = reportService.getReportDetail(id);
+        model.addAttribute("report", reportDto);
+        model.addAttribute("witness_pics", reportDto.getWitnessPics());
         model.addAttribute("user", user);
         return "reports/reportDetail";
     }
@@ -108,9 +111,9 @@ public class ReportController {
         Report report = reportService.getReportDetail(id);
         if (user.getId() == report.getUser().getId()) {
             reportService.deleteReport(id, user);
-            return "/reports/reportUpdate";
+            return "redirect:/cases";
         }
-        return "redirect:/reports";
+        return "redirect:/cases";
     }
 
     //제보 수정하기
@@ -121,7 +124,7 @@ public class ReportController {
             model.addAttribute("reportForm", reportService.getReportDetail(id));
             return "/reports/reportUpdate";
         }
-        return "redirect:/reports";
+        return "redirect:/cases";
     }
 
     @PostMapping(value = "/reports/update/{id}")
@@ -129,7 +132,7 @@ public class ReportController {
                                @CurrentUser User user, Errors errors) throws IllegalAccessException {
         if (errors.hasErrors()) {
             log.info("error!!");
-            return "redirect:/reports";
+            return "redirect:/cases";
         }
         Report report = reportService.getReportDetail(id);
         reportService.updateReport(user.getId(), id, form);
@@ -150,8 +153,7 @@ public class ReportController {
 
     //지도로 목격위치 찍는 부분
     @PostMapping(value="/reports/new/{id}/searchPlace")
-    public String searchPlace(@Valid @ModelAttribute ReportRequestDto form, Model model,
-                              @PathVariable("id") Long id, Errors errors) {
+    public String searchPlace(@ModelAttribute ReportRequestDto form, @RequestParam("witnessPics") MultipartFile file, Model model, @PathVariable("id") Long id, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             return "/reports/createReportForm";
@@ -163,33 +165,5 @@ public class ReportController {
         return "/reports/searchPlace";
     }
 
-
-//    //연동(최신)
-//    @GetMapping(value = "/cases/{cases_id}/report")
-//    public List<Report> getCaseReports(@PathVariable Long cases_id){
-//        Case cases = caseService.findOne(cases_id).get();
-//        return
-//
-//    }
-
-    @PostMapping(value="/cases/{cases_id}/report")
-    public String addReport(@PathVariable("cases_id") Long cases_id, @CurrentUser User user, @ModelAttribute ReportRequestDto reportRequestDto, Model model, Errors errors){
-        if(errors.hasErrors()){
-            System.out.println("Error!!");
-            return "/";
-        }
-
-//        String username=user.getUsername();
-//        Optional<Case> cases = caseService.findOne(cases_id);
-//        reportRequestDto.setUser(user);
-//        reportRequestDto.setCases(cases.get());
-
-        reportService.uploadReport(user.getId(), 1L, reportRequestDto);
-//        reportService.uploadReport(user.getId(), case_id, reportRequestDto);
-
-
-        return "reports/createReportForm";
-
-    }
 
 }

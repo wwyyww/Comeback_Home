@@ -45,6 +45,12 @@
         <th>본문 내용</th>
         <td th:text="${report.getWitness_desc()}"></td>
     </tr>
+
+    <tr>
+        <th>제보 사진</th>
+        <img th:each="imageFile  : ${witness_pics}"
+             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+    </tr>
     </tbody>
 </table>
 
