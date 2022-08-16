@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,6 @@ public class CaseController {
     private UserService userService;
     private FileHandler fileHandler;
     private final ReportService reportService;
-    private ModelMapper modelMapper;
 
 
     public CaseController(CaseService caseService, UserService userService, FileHandler fileHandler, ReportService reportService) {
@@ -155,6 +153,7 @@ public class CaseController {
         return "redirect:/cases";
     }
 
+
     // 사진 출력 (URL로도 접근가능)
     @ResponseBody
     @GetMapping("/images/{filepath}/{filename}")
@@ -230,7 +229,7 @@ public class CaseController {
         } else {
             System.out.println("없음");
         }
-        // "redirect:/cases/searchCase";
+
         return "/cases/searchCaseForm";
     }
 

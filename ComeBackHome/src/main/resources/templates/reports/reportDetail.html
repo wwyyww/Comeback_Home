@@ -54,10 +54,10 @@
     </tbody>
 </table>
 
-<form th:action="@{/reports/warn/{id}(id=${report.getId()})}" method="post">
-    <button type="submit">사용자 신고하기</button>
-</form>
-
+<!--<form th:action="@{/reports/warn/{id}(id=${report.getId()})}" method="post">-->
+<!--    <button type="submit">사용자 신고하기</button>-->
+<!--</form>-->
+<a th:href="@{/reports/detail/{id}/warn (id=${report.getId()})}">사용자 신고하기</a>
 
 
     <div th:if="${report.getUser().getId() == user.getId()}">

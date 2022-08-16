@@ -70,6 +70,8 @@
 
 
 <div th:if="${user != null}">
+
+  <a th:href="@{/cases/detail/{id}/warn (id=${case.getCaseId()})}">사건 신고하기</a>
   <a th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
   <div th:if="${case.getUserId() == user.getId()}">
     <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>

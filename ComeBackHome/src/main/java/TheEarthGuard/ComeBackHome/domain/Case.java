@@ -36,7 +36,7 @@ public class Case extends BaseTimeEntity{
     @JoinColumn(name="finder_id") // finder_id
     private User user;
     private Boolean isFind;
-    private Integer reportCnt;
+//    private Integer warningCnt;
     private Integer hitCnt;
 
     private String missingName;
@@ -51,6 +51,9 @@ public class Case extends BaseTimeEntity{
     private Double missingLng;
     private LocalDateTime missingTimeStart;
     private LocalDateTime missingTimeEnd;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Warn> warns;
+
     @OneToMany(mappedBy = "cases", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("createdTime desc")
     private List<Report> reports;
@@ -59,15 +62,14 @@ public class Case extends BaseTimeEntity{
     private List<FileEntity> missingPics;
 
     @Builder
-    public Case(Long caseId, User user, Boolean isFind, Integer reportCnt, Integer hitCnt,
+    public Case(Long caseId, User user, Boolean isFind, Integer hitCnt,
         String missingName, Integer missingAge, Boolean missingSex, String missingDesc,
         String missingArea, String missingRegion, Double missingLat, Double missingLng,
-        LocalDateTime missingTimeStart, LocalDateTime missingTimeEnd,
-        List<Report> reports, List<FileEntity> missingPics) {
+        LocalDateTime missingTimeStart, LocalDateTime missingTimeEnd)
+    {
         this.caseId = caseId;
         this.user = user;
         this.isFind = false;
-        this.reportCnt = 0;
         this.hitCnt = 0;
         this.missingName = missingName;
         this.missingAge = missingAge;

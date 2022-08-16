@@ -19,7 +19,6 @@ public class CaseResponseDto {
 
     private Long caseId;
     private Boolean isFind;
-    private Integer reportCnt;
     private Integer hitCnt;
 
     private String missingName;
@@ -46,7 +45,6 @@ public class CaseResponseDto {
         this.userName = user.getUsername();
         this.caseId = caseEntity.getCaseId();
         this.isFind = caseEntity.getIsFind();
-        this.reportCnt = caseEntity.getReportCnt();
         this.hitCnt = caseEntity.getHitCnt();
         this.missingName = caseEntity.getMissingName();
         this.missingAge = caseEntity.getMissingAge();
