@@ -113,7 +113,7 @@ public class CaseService {
      *  특정 사용자가 등록한 사건들 조회 (사용자 id 기반)
      */
     public Optional<List<Case>> findCaseByUser(User user) {
-        return caseRepository.findByUser(user);
+        return caseRepository.findAllByUser(user);
     }
 
     /**

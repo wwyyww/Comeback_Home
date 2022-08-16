@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin userlist</title>
+    <link rel="stylesheet" href="/static/css/admin/admin_userlist.css">
+    <link rel="stylesheet" href="/static/css/admin/admin_nav.css">
+</head>
+<body>
+<nav th:replace="admin/admin_nav :: navFragment"></nav>
+<section>
+    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/userList}">
+        <select name="searchCondition" class="search-mode search-item" form="search-form">
+            <option value="userid">아이디</option>
+            <option value="username">이름</option>
+        </select>
+        <input type="text" name="searchKeyword" class="search-input search-item">
+        <input type="submit" class="search-submit search-item" value="검색">
+    </form>
+    <div class="user-box">
+
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" class="checkbox-selectall"></th>
+                <th>기본정보</th>
+                <th>이메일</th>
+                <th>등급</th>
+                <th>휴대전화</th>
+                <th>로그인 실패 횟수</th>
+                <th>신고 횟수</th>
+                <th>상세보기</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${userList}">
+                <td><input type="checkbox" class="checkbox-select"></td>
+                <td th:text = "${user.name} + '(' + ${user.id}+ ')'">채창완(sejchae)</td>
+                <td th:text = "${user.email}">abc@gmail.com</td>
+                <td th:text = "${user.role}">일반회원</td>
+                <td th:text = "${user.phone}">010-1234-5678</td>
+                <td th:text = "${user.fail_cnt}">11</td>
+                <td th:text = "${user.warning_cnt}">2</td>
+                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${user.id}')|"></td>
+                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${user.id}')|"></td>
+                <input type="hidden" th:value="${user.id}">
+            </tr>
+            </tbody>
+
+
+        </table>
+
+
+        <div class="bottombtn-box">
+            <input type="button" value="전체선택" class="selectallbtn bottombtn" th:onclick="|checkall()|">
+            <input type="button" value="선택삭제" class="bottom-deletebtn bottombtn" th:onclick="|deleteCheckedUsers()|">
+
+        </div>
+
+    </div>
+</section>
+<script src="/static/js/admin/admin_nav.js"></script>
+
+</body>
+</html>

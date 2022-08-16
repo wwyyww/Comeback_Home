@@ -1,6 +1,6 @@
 package TheEarthGuard.ComeBackHome.domain;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
 
@@ -35,7 +35,7 @@ public class Report extends BaseTimeEntity{
     private Double witness_lat;
     private Double witness_lng;
 
-    private Timestamp witness_time;
+    private LocalDateTime witness_time;
 
     private String witness_desc;
 
@@ -51,7 +51,7 @@ public class Report extends BaseTimeEntity{
     @Builder
     public Report(Long id, Case cases, User user,
                   String witness_title, String witness_area, Double witness_lat, Double witness_lng,
-                  Timestamp witness_time, String witness_desc, Boolean is_alert) {
+                  LocalDateTime witness_time, String witness_desc, Boolean is_alert) {
         this.id = id;
         this.cases = cases;
         this.user = user;

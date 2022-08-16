@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<div layout:fragment="content" class="container">
+    <form th:action="@{/mypage/edit}" method="post" modelAttribute="userDto">
+        <div class="form-group">
+            <div>
+                <label for="email">email</label>
+                <input type="text" id="email" name="email" readonly th:value="${userDto.email}" placeholder="이메일">
+            </div>
+            <div>
+                <label for="pw">password</label>
+                <input type="password" id="pw" name="pw" placeholder="비밀번호">
+                <span th:text="${valid_pw}"></span>
+            </div>
+            <div>
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" th:value="${userDto.name}" placeholder="이름">
+                <span th:text="${valid_name}"></span>
+            </div>
+            <div>
+                <label for="phone">전화번호</label>
+                <input type="text" id="phone" name="phone" th:value="${userDto.phone}" placeholder="전화번호">
+                <span th:text="${valid_phone}"></span>
+            </div>
+            <div>
+                <label for="birth">생년월일</label>
+                <input type="date" id="birth" name="birth" th:value="${userDto.birth}" placeholder="생년월일">
+                <span th:text="${valid_birth}"></span>
+            </div>
+            <div>
+                <label>성별</label>
+                <input type="radio" name="sex" value="0">여자
+                <input type="radio" name="sex" value="1">남자
+                <span th:text="${valid_sex}"></span>
+            </div>
+        </div>
+        <button type="submit">수정완료</button>
+    </form>
+</div>
+
+
+</body>

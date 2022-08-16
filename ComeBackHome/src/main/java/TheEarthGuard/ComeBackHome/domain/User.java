@@ -75,10 +75,13 @@ public class User implements UserDetails {
         this.warning_cnt = warning_cnt;
     }
 
-    public User update(String name) {
-        this.name = name;
 
-        return this;
+
+    public void update(String email, String name, String birth, String phone) {
+        this.email = email;
+        this.name = name;
+        this.birth = birth;
+        this.phone = phone;
     }
 //    public User updateSocialUser(String name, String email) {
 //        this.name = name;

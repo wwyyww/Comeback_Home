@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,6 @@ public class CaseController {
     private UserService userService;
     private FileHandler fileHandler;
     private final ReportService reportService;
-    private ModelMapper modelMapper;
 
 
     public CaseController(CaseService caseService, UserService userService, FileHandler fileHandler, ReportService reportService) {
@@ -124,10 +122,16 @@ public class CaseController {
     // 로그인 한 사용자의 사건 리스트로 조회
     @GetMapping(value = "/mypage/cases")
     public String caseListByUser(Model model, @CurrentUser User user) {
-        Optional<List<Case>> caseList = caseService.findCaseByUser(user);
-        if(caseList.isPresent()){
-            model.addAttribute("cases", caseList);
+        Optional<List<Case>> caseEntityList = caseService.findCaseByUser(user);
+
+        if (caseEntityList.isPresent()) {
+            List<CaseListResponseDto> caseDtoList = caseEntityList.get().stream().map(
+                    caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+            ).collect(Collectors.toList());
+            model.addAttribute("cases", caseDtoList);
+
         }
+
         return "cases/caseList";
     }
 

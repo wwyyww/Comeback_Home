@@ -1,12 +1,12 @@
 package TheEarthGuard.ComeBackHome.dto;
 
-import TheEarthGuard.ComeBackHome.domain.BaseTimeEntity;
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
-public class ReportRequestDto extends BaseTimeEntity {
-    
+public class ReportResponseDto {
+
+    private Long id;
     private Case cases;
     private User user;
 
@@ -26,8 +26,8 @@ public class ReportRequestDto extends BaseTimeEntity {
 
     @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
-    private String witness_lat;
-    private String witness_lng;
+    private Double witness_lat;
+    private Double witness_lng;
 
     @NotBlank(message = "제보 내용은 필수 입력값입니다.")
     private String witness_desc;
@@ -36,21 +36,19 @@ public class ReportRequestDto extends BaseTimeEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime witness_time;
 
-    private List<MultipartFile> witnessPics;
+    private List<FileEntity> witnessPics;
 
-    public Report toEntity(){
-        Report report=Report.builder()
-                .witness_title(this.witness_title)
-                .witness_area(this.witness_area)
-                .witness_desc(this.witness_desc)
-                .witness_lat(Double.valueOf(this.witness_lat))
-                .witness_lng(Double .valueOf(this.witness_lng))
-                .witness_time(this.witness_time)
-                .is_alert(Boolean.FALSE)
-                .user(this.user)
-                .cases(this.cases)
-                .build();
 
-        return report;
+    public ReportResponseDto(Report report, User user) {
+        this.cases = report.getCases();
+        this.user = user;
+        this.id = report.getId();
+        this.witness_title = report.getWitness_title();
+        this.witness_area = report.getWitness_area();
+        this.witness_lat = report.getWitness_lat();
+        this.witness_lng = report.getWitness_lng();
+        this.witness_desc = report.getWitness_desc();
+        this.witness_time = report.getWitness_time();
+        this.witnessPics = report.getWitnessPics();
     }
 }

@@ -5,6 +5,7 @@ import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.ReportPlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
@@ -99,8 +100,8 @@ public class ReportController {
     @GetMapping(value = "/reports/detail/{id}")
     public String reportDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report reportDto = reportService.getReportDetail(id);
-        model.addAttribute("report", reportDto);
-        model.addAttribute("witness_pics", reportDto.getWitnessPics());
+        ReportResponseDto responseDto = new ReportResponseDto(reportDto, user);
+        model.addAttribute("report", responseDto);
         model.addAttribute("user", user);
         return "reports/reportDetail";
     }
@@ -120,8 +121,9 @@ public class ReportController {
     @GetMapping(value = "/reports/update/{id}")
     public String updateReportForm(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
+        ReportResponseDto responseDto = new ReportResponseDto(report, user);
         if (user.getId() == report.getUser().getId()) {
-            model.addAttribute("reportForm", reportService.getReportDetail(id));
+            model.addAttribute("reportForm", responseDto);
             return "/reports/reportUpdate";
         }
         return "redirect:/cases";
