@@ -43,8 +43,12 @@
             <a class="nav-link text-dark" href="/cases/searchCase">제보하기</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/users/login">로그인</a>
+            <a sec:authorize="!isAuthenticated()" class="nav-link text-dark" href="/users/login">로그인</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/logout">로그아웃</a>
           </li>
+<!--          <li sec:authorize="!isAuthenticated()" class="nav-item">-->
+<!--            <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님, 환영합니다.-->
+<!--          </li>-->
         </ul>
       </div>
     </div>
@@ -74,16 +78,6 @@
       <a href="/reports/new">증언 하기</a>
       <a href="/reports">증언 목록</a>
     </p>
-
-    <h4>회원 관련</h4>
-    <p sec:authorize="!isAuthenticated()">
-      <a href="/users/signup">회원가입</a>
-      <a href="/users/login">로그인</a>
-    </p>
-
-    <div sec:authorize="isAuthenticated()">
-      <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님 환영합니다.
-    </div>
   </div>
 
   <!-- /banner -->
