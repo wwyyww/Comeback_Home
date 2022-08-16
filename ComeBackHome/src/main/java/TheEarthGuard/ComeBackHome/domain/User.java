@@ -71,6 +71,10 @@ public class User implements UserDetails {
         this.fail_cnt = fail_cnt;
     }
 
+    public void updateWarnCount(Integer warning_cnt) {
+        this.warning_cnt = warning_cnt;
+    }
+
     public User update(String name) {
         this.name = name;
 

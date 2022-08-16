@@ -60,9 +60,9 @@
     <p><em>지도를 클릭/선택해주세요!</em></p>
     <form action="/cases/new" method="post">
       <div className="form-group">
-        <input type="hidden" id="missing_lat" name="missing_lat">
-        <input type="hidden" id="missing_lng" name="missing_lng">
-        <input type="text" id="missing_area" name="missing_area" style="width:30%">
+        <input type="hidden" id="missingLat" name="missingLat">
+        <input type="hidden" id="missingLng" name="missingLng">
+        <input type="text" id="missingArea" name="missingArea" style="width:30%">
         <button type="submit">선택 완료</button>
       </div>
     </form>
@@ -134,8 +134,8 @@
       infoWindow.open(map, latlng);
 
       // 선택한 지역 출력
-      var missing_area = document.getElementById('missing_area');
-      missing_area.value = address.jibunAddress;
+      var missingArea = document.getElementById('missingArea');
+      missingArea.value = address.jibunAddress;
     });
   }
 
@@ -233,10 +233,10 @@
     infoWindow.open(map, point);
     marker.setPosition(point);
 
-    var missing_lat = document.getElementById('missing_lat');
-    var missing_lng = document.getElementById('missing_lng');
-    missing_lat.value = point.x.toString();
-    missing_lng.value = point.y.toString();
+    var missingLat = document.getElementById('missingLat');
+    var missingLng = document.getElementById('missingLng');
+    missingLat.value = point.x.toString();
+    missingLng.value = point.y.toString();
   }
 
   function initGeocoder() {
@@ -244,10 +244,10 @@
     map.addListener('click', function(e) {
       marker.setPosition(e.coord);
 
-      var missing_lat = document.getElementById('missing_lat');
-      var missing_lng = document.getElementById('missing_lng');
-      missing_lat.value = marker.position.lat().toString();
-      missing_lng.value = marker.position.lng().toString();
+      var missingLat = document.getElementById('missingLat');
+      var missingLng = document.getElementById('missingLng');
+      missingLat.value = marker.position.lat().toString();
+      missingLng.value = marker.position.lng().toString();
 
       searchCoordinateToAddress(marker.position);
     });

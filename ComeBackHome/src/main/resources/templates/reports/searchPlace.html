@@ -58,7 +58,7 @@
 
         <!-- 선택한 장소 표기 -->
         <p><em>지도를 클릭/선택해주세요!</em></p>
-        <form action="/reports/new" method="post">
+        <form th:action="@{/reports/new/{id}(id=${reportForm.getCases().getCaseId()})}" method="post" >
             <div className="form-group">
                 <input type="hidden" id="witness_lat" name="witness_lat">
                 <input type="hidden" id="witness_lng" name="witness_lng">

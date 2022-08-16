@@ -1,12 +1,15 @@
 package TheEarthGuard.ComeBackHome.domain;
 
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.*;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 
 @Entity
@@ -20,7 +23,7 @@ public class Report extends BaseTimeEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "case_id")
+    @JoinColumn(name = "caseId")
     private Case cases;
 
     @ManyToOne
@@ -35,15 +38,20 @@ public class Report extends BaseTimeEntity{
     private Timestamp witness_time;
 
     private String witness_desc;
-    private String witness_pic;
 
     @ColumnDefault("false")
     private Boolean is_alert;
 
+    @OneToMany(mappedBy = "reports", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Warn> warns;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    private List<FileEntity> witnessPics;
+
     @Builder
     public Report(Long id, Case cases, User user,
                   String witness_title, String witness_area, Double witness_lat, Double witness_lng,
-                  Timestamp witness_time, String witness_desc, String witness_pic, Boolean is_alert) {
+                  Timestamp witness_time, String witness_desc, Boolean is_alert) {
         this.id = id;
         this.cases = cases;
         this.user = user;
@@ -53,7 +61,6 @@ public class Report extends BaseTimeEntity{
         this.witness_lng = witness_lng;
         this.witness_time = witness_time;
         this.witness_desc = witness_desc;
-        this.witness_pic = witness_pic;
         this.is_alert = is_alert;
     }
 }

@@ -1,7 +1,9 @@
 package TheEarthGuard.ComeBackHome.controller;
 
+import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.UserDto;
 import TheEarthGuard.ComeBackHome.security.CheckEmailValidator;
+import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -82,10 +84,10 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/users/kakao")
-    public String kakao(String code) {
+    @GetMapping("/users/mypage")
+    public String myPage(@CurrentUser User user) {
 
-        return "redirect:/";
+        return "/users/mypage";
     }
 
 }

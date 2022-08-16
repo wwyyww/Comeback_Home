@@ -1,43 +1,61 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.CaseListResponseDto;
+import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileHandler;
+import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Controller
 @SessionAttributes({"caseDto"})
 public class CaseController {
     private final CaseService caseService;
     private UserService userService;
     private FileHandler fileHandler;
+    private final ReportService reportService;
+    private ModelMapper modelMapper;
 
 
-    @Autowired
-    public CaseController(CaseService caseService, UserService userService) {
+    public CaseController(CaseService caseService, UserService userService, FileHandler fileHandler, ReportService reportService) {
         this.caseService = caseService;
         this.userService = userService;
+        this.fileHandler = fileHandler;
+        this.reportService = reportService;
     }
 
     // 처음 사건 등록할 때
@@ -50,9 +68,9 @@ public class CaseController {
     //실종위치 찍고나서 사건글 이어서 작성할 때
     @PostMapping(value = "/cases/new")
     public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,HttpServletRequest request, Model model) {
-        caseDto.setMissing_area(placeInfoDto.getMissing_area());
-        caseDto.setMissing_lat(placeInfoDto.getMissing_lat());
-        caseDto.setMissing_lng(placeInfoDto.getMissing_lng());
+        caseDto.setMissingArea(placeInfoDto.getMissingArea());
+        caseDto.setMissingLat(placeInfoDto.getMissingLat());
+        caseDto.setMissingLng(placeInfoDto.getMissingLng());
 
         model.addAttribute("caseDto", caseDto);
         return "cases/createCaseForm";
@@ -62,34 +80,30 @@ public class CaseController {
     @PostMapping(value = "/cases/new/submit")
     public String uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @CurrentUser User user, Errors errors, Model model) throws Exception {
         if (errors.hasErrors()) {
-            System.out.println("ERROR!!!!!!!!" + errors);
+            log.info("error!!" + errors);
             model.addAttribute("caseDto", caseDto);
 
             Map<String, String> validatorResult = caseService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));
             }
-
             return "cases/createCaseForm";
         }
-
         User currentUser = userService.findByEmail(user.getEmail());
         caseDto.setUser(currentUser);
-
-        caseService.UploadCase(caseDto, caseDto.getMissing_pic());
+        caseService.UploadCase(caseDto, caseDto.getMissingPics());
 
         return "redirect:/";
     }
 
     // 장소 검색
     @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missing_pic") MultipartFile file, Model model, Errors errors) {
+    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missingPics") MultipartFile file, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             // 에러 페이지 수정 필요
             return "cases/createCaseForm";
         }
-
         model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
         return "/cases/searchPlace";
     }
@@ -97,28 +111,90 @@ public class CaseController {
     // 모든 사건 조회
     @GetMapping(value = "/cases")
     public String caseList(Model model) {
-        List<Case> cases = caseService.getCaseList();
-        model.addAttribute("cases", cases);
+        List<Case> caseEntityList = caseService.getCaseList();
+
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+            caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        model.addAttribute("cases", caseDtoList);
         return "cases/caseList";
     }
 
     // 로그인 한 사용자의 사건 리스트로 조회
     @GetMapping(value = "/mypage/cases")
-    public String caseList(Model model, @CurrentUser User user) {
-        Optional<Case> cases = caseService.findCaseByUser(user);
-        cases.ifPresent(CaseList -> model.addAttribute("cases", CaseList));
+    public String caseListByUser(Model model, @CurrentUser User user) {
+        Optional<List<Case>> caseList = caseService.findCaseByUser(user);
+        if(caseList.isPresent()){
+            model.addAttribute("cases", caseList);
+        }
         return "cases/caseList";
     }
 
     // 사건 상세보기
     @GetMapping(value = "/cases/detail/{id}")
     public String caseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        Optional<Case> caseDto = caseService.findCase(id);
-        model.addAttribute("case", caseDto.get());
+        Optional<Case> caseEntity = caseService.findCase(id);
+
+        if(caseEntity.isPresent()) {
+            model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
+        }
         model.addAttribute("user", user);
+
+        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+            List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
+            model.addAttribute("reports", reports);
+        }
         return "/cases/caseDetail";
     }
 
+    // 사건 삭제하기
+    @GetMapping(value = "/cases/delete/{id}")
+    public String deleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
+        caseService.deleteCase(id, user);
+        return "redirect:/cases";
+    }
+
+    // 사진 출력 (URL로도 접근가능)
+    @ResponseBody
+    @GetMapping("/images/{filepath}/{filename}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String filepath, @PathVariable String filename){
+        File file = new File(fileHandler.createPath(filepath, filename));
+        ResponseEntity<byte[]> result = null;
+
+        try{
+            HttpHeaders header = new HttpHeaders();
+
+            header.add("Content-type", Files.probeContentType(file.toPath()));
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header, HttpStatus.OK);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    // 사건 수정하기
+    @GetMapping(value = "/cases/update/{id}")
+    public String updateCaseForm(Model model, @PathVariable("id") Long caseId) {
+        Optional<Case> caseDto = caseService.findCase(caseId);
+        if(caseDto.isPresent()){
+            model.addAttribute("case", new CaseResponseDto(caseDto.get(), caseDto.get().getUser()));
+        }
+        return "/cases/caseUpdate";
+    }
+
+    @PostMapping(value = "/cases/update/{id}")
+    public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
+        @CurrentUser User user, Errors errors) {
+        if (errors.hasErrors()) {
+            log.info("error!!");
+            return "redirect:/cases";
+        }
+
+//        caseService.updateReport(caseDto, caseId, user);
+        return "redirect:/reports/detail/{id}";
+    }
 
     @GetMapping(value = "/cases/searchCase")
     public String searchCaseForm(SearchFormDto form) {
@@ -138,11 +214,11 @@ public class CaseController {
         if (form.getSearch_type().equals("name")){
             System.out.println(form.getMissing_name());
             System.out.println(form.getSearch_type());
-            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
+//            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
         } else if (form.getSearch_type().equals("area")) {
             System.out.println(form.getMissing_name());
             System.out.println(form.getSearch_type());
-            caseList = caseService.findbyMissingArea(form.getMissing_name());
+//            caseList = caseService.findbyMissingArea(form.getMissing_name());
         } else {
 
         }
@@ -157,14 +233,5 @@ public class CaseController {
         // "redirect:/cases/searchCase";
         return "/cases/searchCaseForm";
     }
-
-
-    //실종글 상세 보기
-//    @GetMapping(value="cases/detail/{cases_id}")
-//    public String detail(@PathVariable Long cases_id, @CurrentUser User user, Model model) {
-//        Optional<Case> cases = caseService.findOne(cases_id);
-//        List<Report> reports = cases.get().getReports();
-//
-//    }
 
 }

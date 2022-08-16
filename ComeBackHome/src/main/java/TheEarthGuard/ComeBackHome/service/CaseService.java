@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
+@Service
 public class CaseService {
     private final CaseRepository caseRepository;
     private final FileHandler fileHandler;
@@ -28,6 +29,7 @@ public class CaseService {
     /**
      * 사건 등록하기
      */
+    @Transactional
     public Long UploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
         Case newCase = caseDto.toEntity();
 
@@ -35,11 +37,11 @@ public class CaseService {
         System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
         if(!missing_pictures.isEmpty()) {
             System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
-            newCase.setMissing_pics(missing_pictures);
+            newCase.setMissingPics(missing_pictures);
         }
 
         caseRepository.save(newCase);
-        return newCase.getCase_id();
+        return newCase.getCaseId();
     }
 
     //유효성 검사
@@ -54,6 +56,51 @@ public class CaseService {
         return validatorResult;
     }
 
+    /**
+     * 사건  수정하기
+     */
+//    @Transactional
+//    public Long UpdateCase(CaseSaveRequestDto caseDto, Long case_id, List<MultipartFile> files) throws Exception{
+//        Optional<User> user = userRepository.findById(user_id);
+//        Case findCase = caseRepository.findByCaseId(case_id).orElseThrow(() ->
+//            new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
+//
+//        Optional<Report> report = reportRepository.findById(reportObj.getId());
+//        reportObj.setUser(user.get());
+//        reportObj.setCases(findCase);
+//        Report updateReport = reportObj.toEntity();
+//        updateReport.setCreatedTime(report.get().getCreatedTime());
+//        reportRepository.save(updateReport);
+//        return reportObj.getId();
+//
+//
+//
+//
+//        Case newCase = caseDto.toEntity();
+//
+//        List<FileEntity> missing_pictures = fileHandler.parseFileInfo(files);
+//        System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
+//        if(!missing_pictures.isEmpty()) {
+//            System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
+//            newCase.setMissingPics(missing_pictures);
+//        }
+//
+//        caseRepository.save(newCase);
+//        return newCase.getCaseId();
+//    }
+
+    /**
+     * 사건 삭제
+     */
+    @Transactional
+    public void deleteCase(Long id, User user) {
+        Optional<Case> caseEntity = caseRepository.findByCaseId(id);
+        if (user.getId() == caseEntity.get().getUser().getId()) {
+            caseRepository.deleteById(id);
+        }else{
+            new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
+        }
+    }
 
     /**
      * 전체 사건 조회
@@ -63,10 +110,10 @@ public class CaseService {
     }
 
     /**
-     *  사건 하나 조회 (사용자 id 기반)
+     *  특정 사용자가 등록한 사건들 조회 (사용자 id 기반)
      */
-    public Optional<Case> findCaseByUser(User user) {
-        return caseRepository.findByUserId(user.getId());
+    public Optional<List<Case>> findCaseByUser(User user) {
+        return caseRepository.findByUser(user);
     }
 
     /**
@@ -76,15 +123,17 @@ public class CaseService {
         return caseRepository.findByCaseId(case_id);
     }
 
+
+
     /**
      * 사건 검색
      */
-    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.findByMissingName(keyword, sex, age, area);
-    }
-
-    public Optional<List<Case>> findbyMissingArea(String keyword){
-        return caseRepository.findByMissingArea(keyword);
-    }
+//    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+//        return caseRepository.findByMissingNameFilter(keyword, sex, age, area);
+//    }
+//
+//    public Optional<List<Case>> findbyMissingArea(String keyword){
+//        return caseRepository.findByMissingAreaFilter(keyword);
+//    }
 
 }

@@ -30,41 +30,77 @@
   <tbody>
   <tr>
     <th>실종자 이름</th>
-    <td th:text="${case.getMissing_name()}"></td>
+    <td th:text="${case.getMissingName()}"></td>
   </tr>
   <tbody>
+<!--  <tr th:each="pic : ${missing_pics}">-->
   <tr>
     <th>실종자 사진</th>
-<!--    <td th:text="${report.getUser().getName()}"></td>-->
+    <img th:each="imageFile  : ${case.getMissingPics()}"
+         th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
   </tr>
   <tr>
     <th>실종자 나이</th>
-    <td th:text="${case.getMissing_age()}"></td>
+    <td th:text="${case.getMissingAge()} + '살'"></td>
   </tr>
   <tr>
-    <th>실종자 성별/th>
-    <td th:text="${case.getMissing_sex()}"></td>
+    <th>실종자 성별</th>
+    <td th:if="${case.getMissingSex() == false}">여자</td>
+    <td th:if="${case.getMissingSex() == true}">남자</td>
   </tr>
   <tr>
-    <th>실종자 정보/th>
-    <td th:text="${case.getMissing_desc()}"></td>
+    <th>실종자 정보</th>
+    <td th:text="${case.getMissingDesc()}"></td>
   </tr>
   <tr>
-    <th>실종자 지역/th>
-    <td th:text="${case.getMissing_area()}"></td>
+    <th>실종자 지역</th>
+    <td th:text="${case.getMissingArea()}"></td>
   </tr>
   <tr>
-    <th>실종 시간/th>
-    <td th:text="${case.getMissing_time_start()}"></td>
-    <td th:text="${case.getMissing_time_end()}"></td>
+    <th>실종 시간</th>
+    <td>
+      <p>
+      <span th:text="${case.getMissingTimeStart()}"></span> ~
+      <span th:text="${case.getMissingTimeEnd()}"></span>
+      </p>
+    </td>
   </tr>
   </tbody>
 </table>
 
-<a href="/reports/new">제보하기</a>
-<div th:if="${case.getUser().getId() == user.getId()}">
-  <a th:href="@{/cases/delete/{id}(id=${case.getCase_id()})}">글 삭제</a>
-  <a th:href="@{/cases/update/{id}(id=${case.getCase_id()})}">글 수정</a>
+
+<div th:if="${user != null}">
+  <a th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
+  <div th:if="${case.getUserId() == user.getId()}">
+    <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
+    <a th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
+  </div>
+
+  <div th:if="${case.getUserId() == user.getId()}">
+    <table class="table table-bordered">
+      제보 목록
+      <!-- CONTENTS !-->
+      <thead>
+      <tr>
+        <th class="col-md-1">번호</th>
+        <th class="col-md-4">글제목</th>
+        <th class="col-md-3">작성자</th>
+        <th class="col-md-2">작성일</th>
+        <th class="col-md-2">수정일</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <!-- CONTENTS !-->
+      <tr th:each="report : ${reports}">
+        <td th:text="${report.getId()}"></td>
+        <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
+        <td th:text="${report.getUser().getName()}"></td>
+        <!--        <td th:text="${#dates.format(report.getCreatedTime(), 'yyyy-MM-dd')}"></td>-->
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 </body>

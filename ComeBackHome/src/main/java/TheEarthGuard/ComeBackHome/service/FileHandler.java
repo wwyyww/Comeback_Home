@@ -20,16 +20,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileHandler {
 
-    public FileHandler(){};
+//    @Value("${file.dir}/")
+    private final String fileDirPath = "D:\\ComeBackHome";
 
+//    public FileHandler(){};
+
+    // 파일 저장
     public List<FileEntity> parseFileInfo(List<MultipartFile> files) throws Exception {
         List<FileEntity> fileList = new ArrayList<>();
-        String uploadFolder = "D:\\ComeBackHome"; //parent 폴더
+//        String uploadFolder = "D:\\ComeBackHome"; //parent 폴더
 
         if (!CollectionUtils.isEmpty(files)) {
             // 파일 저장 디렉토리 있는지 확인
             String uploadFolderPath = getFolder(); // child 폴더
-            File uploadPath = new File(uploadFolder, uploadFolderPath);
+            File uploadPath = new File(fileDirPath, uploadFolderPath);
 
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
@@ -93,11 +97,22 @@ public class FileHandler {
         return fileList;
     }
 
+    public String createPath(String filepath, String filename) {
+        return fileDirPath + "\\" + filepath + "\\" + filename;
+    }
+
+    public String createThumbPath(String filepath, String filename) {
+        return fileDirPath + "\\" + filepath + "\\s_" + filename;
+//        return URLEncoder.encode(folderPath + "/s_" +uuid + "_" +fileName,"UTF-8");
+    }
+
     private String getFolder() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         Date date = new Date();
         String str = sdf.format(date);
-        return str.replace("-", File.separator);
+//        return str.replace("-", File.separator);
+        return str;
     }
 
     private Boolean checkImageType(File file){

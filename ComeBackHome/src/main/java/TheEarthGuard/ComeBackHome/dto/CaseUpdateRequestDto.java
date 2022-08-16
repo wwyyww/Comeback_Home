@@ -1,22 +1,19 @@
 package TheEarthGuard.ComeBackHome.dto;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Setter
-@NoArgsConstructor
-public class CaseSaveRequestDto {
-
+public class CaseUpdateRequestDto {
+    private Long caseId;
     private User user;
 
     @NotBlank(message = "실종자 이름은 필수 입력값입니다.")
@@ -46,7 +43,7 @@ public class CaseSaveRequestDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime missingTimeEnd;
 
-    private List<MultipartFile> missingPics;
+    private List<FileEntity> missingPics;
 
     public Case toEntity(){
         return Case.builder()
@@ -64,4 +61,3 @@ public class CaseSaveRequestDto {
             .build();
     }
 }
-

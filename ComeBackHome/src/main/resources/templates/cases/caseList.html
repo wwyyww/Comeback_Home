@@ -8,6 +8,7 @@
       <thead>
       <tr>
         <th class="col-md-1">번호</th>
+        <th class="col-md-2">사진</th>
         <th class="col-md-4">실종자 이름</th>
         <th class="col-md-3">실종자 정보 (나이/성별)</th>
         <th class="col-md-3">지역</th>
@@ -19,12 +20,23 @@
       <tbody>
       <!-- CONTENTS !-->
       <tr th:each="case : ${cases}">
-        <td th:text="${case.getCase_id()}"></td>
-        <td><a th:href="@{/cases/detail/{id} (id=${case.getCase_id()})}" th:text="${case.getMissing_name()}"></a></td>
-        <td th:text="${case.getMissing_age()}"></td>
-        <td th:text="${case.getMissing_region()}"></td>
-        <td th:text="${case.getUser().getId()}"></td>
-      </tr>
+        <td th:text="${case.getCaseId()}"></td>
+        <td>
+          <img th:each="imageFile  : ${case.getMissingPicThumb()}"
+               th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
+        </td>
+        <td><a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" th:text="${case.getMissingName()}"></a></td>
+        <td>
+          <p>
+            <span th:text="${case.getMissingAge()} + '살 '"/>
+            <span th:if="${case.getMissingSex() == false}">(여자)</span>
+            <span th:if="${case.getMissingSex() == true}">(남자)</span>
+          </p>
+        </td>
+        <td th:text="${case.getMissingRegion()}"></td>
+        <td th:text="${case.getUserName()}"></td>
+        <td th:text="${case.getCreatedTime()}"></td>
+        </tr>
       </tbody>
     </table>
   </div>
