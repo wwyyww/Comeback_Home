@@ -97,7 +97,7 @@ public class ReportService {
 
         //2. warn 테이블에 저장
         Warn warn = new Warn();
-        warn.setReports(report.get());
+//        warn.setReports(report.get());
         warn.setWarnSender(user);
         warn.setWarnReason("신고 이유");
         warnRepository.save(warn);

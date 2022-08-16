@@ -83,7 +83,7 @@
 //        if (area != null){
 //            List<String> areaList = area.get().stream().map(s -> "%"+s+"%").collect(Collectors.toList());
 //            System.out.println(areaList);
-//            result = em.createQuery("select c from Case c where c.missing_area in (:area)", Case.class)
+//            result = em.createQuery("select c from Case c where c.missing_region in (:area)", Case.class)
 //                    .setParameter("area", areaList)
 //                    .getResultList();
 //        }

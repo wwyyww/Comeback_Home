@@ -25,16 +25,11 @@ public class Warn extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String warnReason;
 
-    @ManyToOne
-    @JoinColumn(name = "reportId")
-    private Report reports;
-
     @Builder
-    public Warn(Long id, User warnSender, LocalDateTime warnDate, String warnReason, Report reports) {
+    public Warn(Long id, User warnSender, LocalDateTime warnDate, String warnReason) {
         this.id = id;
         this.warnSender = warnSender;
         this.warnReason = warnReason;
-        this.reports = reports;
     }
 
     public Warn() {

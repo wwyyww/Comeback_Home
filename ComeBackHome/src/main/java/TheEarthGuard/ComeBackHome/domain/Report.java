@@ -42,7 +42,7 @@ public class Report extends BaseTimeEntity{
     @ColumnDefault("false")
     private Boolean is_alert;
 
-    @OneToMany(mappedBy = "reports", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Warn> warns;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

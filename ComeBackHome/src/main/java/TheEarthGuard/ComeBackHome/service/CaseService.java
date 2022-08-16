@@ -3,8 +3,12 @@ package TheEarthGuard.ComeBackHome.service;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.domain.Warn;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
+import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
+import TheEarthGuard.ComeBackHome.repository.UserRepository;
+import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class CaseService {
     private final CaseRepository caseRepository;
     private final FileHandler fileHandler;
+    private final UserRepository userRepository;
+    private final WarnRepository warnRepository;
 
-    public CaseService(CaseRepository caseRepository,
+    public CaseService(CaseRepository caseRepository, UserRepository userRepository, WarnRepository warnRepository,
         FileHandler fileHandler) {
         this.caseRepository = caseRepository;
+        this.userRepository = userRepository;
+        this.warnRepository = warnRepository;
         this.fileHandler = fileHandler;
     }
 
@@ -100,6 +108,30 @@ public class CaseService {
         }else{
             new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
         }
+    }
+
+    /**
+     * 사건 신고
+     */
+    @Transactional
+    public void warnCase(Long caseId, User user, WarnDto form) {
+        Optional<Case> caseEntity = caseRepository.findById(caseId);
+        User caseUser = caseEntity.get().getUser();
+
+        // 사건 등록자 신고
+        caseUser.updateWarnCount(caseUser.getWarning_cnt()+1);
+        userRepository.saveAndFlush(caseUser);
+
+        // 신고 객체 생성
+        Warn warn = Warn.builder()
+            .warnSender(caseUser)
+            .warnReason(form.getWarnReason())
+            .build();
+        warnRepository.save(warn);
+
+        // 사건에 신고 객체 추가
+        caseEntity.get().getWarns().add(warn);
+
     }
 
     /**

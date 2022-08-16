@@ -28,10 +28,10 @@
         <label for="missingSex">실종자 성별</label>
         <label for="man">남자</label>
         <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
-        <label for="woman">여자</label>
-        <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
-        <span th:text="${valid_missingSex}"></span>
-      </div>
+      <label for="woman">여자</label>
+      <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
+      <span th:text="${valid_missingSex}"></span>
+    </div>
 
       <div>
         <label for="missingDesc">실종자 정보</label>

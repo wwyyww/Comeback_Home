@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
+
+<div layout:fragment="content" class="container">
+  <ul class="nav">
+    <li>
+      <a data-toggle="modal" href="#warnModal">Warn</a>
+      <div class="modal fade" id="warnModal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" align="center">신고하기</h4>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+              <!--   모달창 내용 넣기  -->
+              <body>
+              <form th:action="@{/reports/detail/{id}/warn/submit (id=${report.getId()})}" method="post">
+                <div class="form-group">
+                  <label for="warnReason">신고 이유</label>
+                    <div>
+                      <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
+                      <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
+                      <p><label><input type="radio" name="warnReason" value="3" id="3">낚시/놀람/도배</label></p>
+                      <p><label><input type="radio" name="warnReason" value="4" id="4">유출/사칭/사기</label></p>
+                      <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label></p>
+                      <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는 괴롭힘</label></p>
+                      <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남 및 대화</label></p>
+                      <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및 선거운동</label></p>
+                    </div>
+                  </div>
+                <button type="submit">등록</button>
+              </form>
+              </body>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+</html>

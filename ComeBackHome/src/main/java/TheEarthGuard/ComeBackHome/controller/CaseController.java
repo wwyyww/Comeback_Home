@@ -159,6 +159,7 @@ public class CaseController {
         return "redirect:/cases";
     }
 
+
     // 사진 출력 (URL로도 접근가능)
     @ResponseBody
     @GetMapping("/images/{filepath}/{filename}")
@@ -234,7 +235,7 @@ public class CaseController {
         } else {
             System.out.println("없음");
         }
-        // "redirect:/cases/searchCase";
+
         return "/cases/searchCaseForm";
     }
 
