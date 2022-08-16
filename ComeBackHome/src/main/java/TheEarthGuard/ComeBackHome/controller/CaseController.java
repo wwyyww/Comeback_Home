@@ -118,7 +118,15 @@ public class CaseController {
 
 
     @GetMapping(value = "/cases/searchCase")
-    public String searchCaseForm(SearchFormDto form) {
+    public String searchCaseForm(SearchFormDto form, Model model) {
+        Optional<List<Case>> caseList = Optional.empty();
+        caseList = caseService.sortCasebyTime();
+        if(caseList.isPresent()) {
+            System.out.println(caseList.get());
+            model.addAttribute("searchList", caseList.get());
+        } else {
+            System.out.println("없음");
+        }
         return "/cases/searchCaseForm";
     }
 
@@ -132,16 +140,12 @@ public class CaseController {
         System.out.println(sex);
         System.out.println(age);
         System.out.println(area);
-        if (form.getSearch_type().equals("name")){
-            System.out.println(form.getMissing_name());
-            System.out.println(form.getSearch_type());
+        if (form.getSearch_type().equals("name")){ // 이름 입력 했을 때
             caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
-        } else if (form.getSearch_type().equals("area")) {
-            System.out.println(form.getMissing_name());
-            System.out.println(form.getSearch_type());
-            caseList = caseService.findbyMissingArea(form.getMissing_name());
-        } else {
-
+        } else if (form.getSearch_type().equals("area")) { // 주소 입력 했을 때
+            caseList = caseService.findbyMissingArea(form.getMissing_name(), sex, age, area);
+        } else { // 아무 입력값이 없을 때
+            caseList = caseService.findbyFilters(form.getMissing_sex(), form.getMissing_age(), form.getMissing_area());
         }
         //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
         if(caseList.isPresent()) {

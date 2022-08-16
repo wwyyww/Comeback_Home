@@ -6,6 +6,7 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +66,16 @@ public class CaseService {
         return caseRepository.findByMissingName(keyword, sex, age, area);
     }
 
-    public Optional<List<Case>> findbyMissingArea(String keyword){
-        return caseRepository.findByMissingArea(keyword);
+    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.findByMissingArea(keyword, sex, age, area);
+    }
+
+    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.findByFilters(sex, age, area);
+    }
+
+    public Optional<List<Case>> sortCasebyTime(){
+        return caseRepository.sortCasebyTime();
     }
 
 }
