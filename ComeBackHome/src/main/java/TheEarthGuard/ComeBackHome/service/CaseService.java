@@ -10,12 +10,13 @@ import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class CaseService {
+    @Autowired
     private final CaseRepository caseRepository;
     private final FileHandler fileHandler;
     private final UserRepository userRepository;
@@ -163,19 +165,19 @@ public class CaseService {
      * 사건 검색
      */
     public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.findByMissingName(keyword, sex, age, area);
+        return caseRepository.searchByMissingName(keyword, sex, age, area);
     }
 
     public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.findByMissingArea(keyword, sex, age, area);
+        return caseRepository.searchByMissingArea(keyword, sex, age, area);
     }
 
     public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.findByFilters(sex, age, area);
+        return caseRepository.searchByFilters(sex, age, area);
     }
 
     public Optional<List<Case>> sortCasebyTime(){
-        return caseRepository.sortCasebyTime();
+        return caseRepository.casebyTime();
     }
 
 }
