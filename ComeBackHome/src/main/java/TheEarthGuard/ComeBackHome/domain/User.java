@@ -71,10 +71,17 @@ public class User implements UserDetails {
         this.fail_cnt = fail_cnt;
     }
 
-    public User update(String name) {
-        this.name = name;
+    public void updateWarnCount(Integer warning_cnt) {
+        this.warning_cnt = warning_cnt;
+    }
 
-        return this;
+
+
+    public void update(String email, String name, String birth, String phone) {
+        this.email = email;
+        this.name = name;
+        this.birth = birth;
+        this.phone = phone;
     }
 //    public User updateSocialUser(String name, String email) {
 //        this.name = name;

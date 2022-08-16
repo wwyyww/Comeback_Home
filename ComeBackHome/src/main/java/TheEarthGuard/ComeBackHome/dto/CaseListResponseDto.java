@@ -4,14 +4,13 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.User;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @NoArgsConstructor
-public class CaseResponseDto {
+public class CaseListResponseDto {
 
     private Long userId;
     private String userEmail;
@@ -36,9 +35,11 @@ public class CaseResponseDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime missingTimeEnd;
 
-    private List<FileEntity> missingPics;
+    private FileEntity missingPicThumb;
 
-    public CaseResponseDto(Case caseEntity, User user)
+    private LocalDateTime createdTime;
+
+    public CaseListResponseDto(Case caseEntity, User user)
     {
         this.userId = user.getId();
         this.userEmail = user.getEmail();
@@ -56,6 +57,7 @@ public class CaseResponseDto {
         this.missingLng = caseEntity.getMissingLng();
         this.missingTimeStart = caseEntity.getMissingTimeStart();
         this.missingTimeEnd = caseEntity.getMissingTimeEnd();
-        this.missingPics = caseEntity.getMissingPics();
+        this.missingPicThumb = caseEntity.getMissingPics().get(0);
+        this.createdTime = caseEntity.getCreatedTime();
     }
 }

@@ -21,6 +21,7 @@
         <td th:text="${report.getId()}"></td>
         <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
         <td th:text="${report.getUser().getName()}"></td>
+<!--        <td th:text="${#dates.format(report.getCreatedTime(), 'yyyy-MM-dd')}"></td>-->
       </tr>
       </tbody>
     </table>

@@ -8,53 +8,53 @@
   <form  method="post" enctype="multipart/form-data" >
     <div class="form-group">
       <div>
-        <label for="missing_name">실종자 이름</label>
-        <input type="text" id="missing_name" name="missing_name" th:value="${caseDto.missing_name}" placeholder="이름을 입력하세요">
-        <span th:text="${valid_missing_name}"></span>
+        <label for="missingName">실종자 이름</label>
+        <input type="text" id="missingName" name="missingName" th:value="${caseDto.missingName}" placeholder="이름을 입력하세요">
+        <span th:text="${valid_missingName}"></span>
       </div>
 
       <div>
-        <label for="missing_pic">실종자 사진</label>
-        <input type="file" id="missing_pic" name="missing_pic" multiple="multiple" placeholder="사진 경로를 입력하세요">
+        <label for="missingPics">실종자 사진</label>
+        <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
       </div>
 
       <div>
-        <label for="missing_age">실종자 나이</label>
-        <input type="number" id="missing_age" name="missing_age" min="1" max="150" th:value="${caseDto.missing_age}" placeholder="나이를 입력하세요">
-        <span th:text="${valid_missing_age}"></span>
+        <label for="missingAge">실종자 나이</label>
+        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" placeholder="나이를 입력하세요">
+        <span th:text="${valid_missingAge}"></span>
       </div>
 
       <div>
-        <label for="missing_sex">실종자 성별</label>
+        <label for="missingSex">실종자 성별</label>
         <label for="man">남자</label>
-        <input type="radio" name="missing_sex" value=true id="man" th:checked="${caseDto.missing_sex eq true}">
-        <label for="woman">여자</label>
-        <input type="radio" name="missing_sex" value=false id="woman" th:checked="${caseDto.missing_sex eq false}"/>
-        <span th:text="${valid_missing_age}"></span>
+        <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
+      <label for="woman">여자</label>
+      <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
+      <span th:text="${valid_missingSex}"></span>
+    </div>
+
+      <div>
+        <label for="missingDesc">실종자 정보</label>
+        <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}" placeholder="추가 실종자 정보를 입력하세요">
+        <span th:text="${valid_missingDesc}"></span>
       </div>
 
       <div>
-        <label for="missing_desc">실종자 정보</label>
-        <input type="text" id="missing_desc" name="missing_desc" th:value="${caseDto.missing_desc}" placeholder="추가 실종자 정보를 입력하세요">
-        <span th:text="${valid_missing_desc}"></span>
-      </div>
-
-      <div>
-        <label for="missing_area">실종 지역</label>
-        <input type="text" id="missing_area" name="missing_area" placeholder="지역을 입력하세요" th:value="${caseDto.missing_area}" style="width: 20%" readonly>
-        <input type="hidden" id="missing_lng" name="missing_lng" th:value="${caseDto.missing_lng} " readonly>
-        <input type="hidden" id="missing_lat" name="missing_lat" th:value="${caseDto.missing_lat} " readonly>
-        <span th:text="${valid_missing_area}"></span>
+        <label for="missingArea">실종 지역</label>
+        <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" th:value="${caseDto.missingArea}" style="width: 20%" readonly>
+        <input type="hidden" id="missingLng" name="missingLng" th:value="${caseDto.missingLng} " readonly>
+        <input type="hidden" id="missingLat" name="missingLat" th:value="${caseDto.missingLat} " readonly>
+        <span th:text="${valid_missingArea}"></span>
 <!--        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>-->
         <button type="submit" formaction="/cases/new/searchPlace">지도에서 찾기</button>
       </div>
 
       <div>
-        <label for="missing_time">실종 시간</label>
-        <input type="datetime-local" id="missing_time_start" name="missing_time_start" th:value="${caseDto.missing_time_start}"> ~
-        <input type="datetime-local" id="missing_time_end" name="missing_time_end" th:value="${caseDto.missing_time_end}">
-        <span th:text="${missing_time_start}"></span>
-        <span th:text="${missing_time_end}"></span>
+        <label for="missingTimeStart">실종 시간</label>
+        <input type="datetime-local" id="missingTimeStart" name="missingTimeStart" th:value="${caseDto.missingTimeStart}"> ~
+        <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" th:value="${caseDto.missingTimeEnd}">
+        <span th:text="${valid_missingTimeStart}"></span>
+        <span th:text="${valid_missingTimeEnd}"></span>
       </div>
 
     </div>

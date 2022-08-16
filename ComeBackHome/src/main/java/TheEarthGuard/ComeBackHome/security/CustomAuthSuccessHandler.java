@@ -1,9 +1,11 @@
 package TheEarthGuard.ComeBackHome.security;
 
+import TheEarthGuard.ComeBackHome.domain.Role;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.UserAdapter;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -23,6 +25,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -42,12 +45,22 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             findUser.setFail_cnt(0);
         }
 
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest != null) {
-            redirectStrategy.sendRedirect(request, response, savedRequest.getRedirectUrl());
+        log.info("role : "+findUser.getRole());
+
+        if (findUser.getRole().equals("ADMIN")) {
+            log.info("getrole : " + Role.ADMIN.getValue());
+            redirectStrategy.sendRedirect(request, response, "/admin");
         }else{
-            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+            SavedRequest savedRequest = requestCache.getRequest(request, response);
+            if (savedRequest != null) {
+                redirectStrategy.sendRedirect(request, response, savedRequest.getRedirectUrl());
+            }else{
+                redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+            }
+
         }
+
+
 
 
     }

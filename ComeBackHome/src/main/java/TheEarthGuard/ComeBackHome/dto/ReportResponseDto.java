@@ -1,41 +1,54 @@
 package TheEarthGuard.ComeBackHome.dto;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class ReportResponseDto {
+
     private Long id;
+    private Case cases;
+    private User user;
 
-    private String missing_name; //실종자의 이름
-
-    private String name; //작성자 이름
+    @NotBlank(message = "제보 제목은 필수 입력값입니다.")
     private String witness_title;
+
+    @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
     private Double witness_lat;
     private Double witness_lng;
+
+    @NotBlank(message = "제보 내용은 필수 입력값입니다.")
     private String witness_desc;
-    private String witness_pic;
+
+    @NotNull(message = "목격 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime witness_time;
 
-    //Entity -> DTO
-    public ReportResponseDto(Report report){
+    private List<FileEntity> witnessPics;
+
+
+    public ReportResponseDto(Report report, User user) {
+        this.cases = report.getCases();
+        this.user = user;
         this.id = report.getId();
         this.witness_title = report.getWitness_title();
         this.witness_area = report.getWitness_area();
-        this.witness_desc = report.getWitness_desc();
         this.witness_lat = report.getWitness_lat();
         this.witness_lng = report.getWitness_lng();
-        this.name = report.getUser().getName();
-        this.missing_name = report.getCases().getMissing_name();
-
+        this.witness_desc = report.getWitness_desc();
+        this.witness_time = report.getWitness_time();
+        this.witnessPics = report.getWitnessPics();
     }
-
 }
