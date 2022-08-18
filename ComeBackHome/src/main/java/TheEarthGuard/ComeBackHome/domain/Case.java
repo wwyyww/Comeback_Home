@@ -83,4 +83,7 @@ public class Case extends BaseTimeEntity{
         this.missingTimeEnd = missingTimeEnd;
     }
 
+    public void updateHitCount(Integer hitCnt) {
+        this.hitCnt = hitCnt;
+    }
 }

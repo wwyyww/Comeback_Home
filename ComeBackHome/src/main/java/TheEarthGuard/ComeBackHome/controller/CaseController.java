@@ -142,6 +142,7 @@ public class CaseController {
         Optional<Case> caseEntity = caseService.findCase(id);
 
         if(caseEntity.isPresent()) {
+            caseService.countHitCase(caseEntity.get().getCaseId()); // hit ++
             model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
         }
         model.addAttribute("user", user);

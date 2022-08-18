@@ -111,6 +111,16 @@ public class CaseService {
     }
 
     /**
+     * 사건 조회수
+     */
+    @Transactional
+    public void countHitCase(Long caseId) {
+        Optional<Case> caseEntity = caseRepository.findById(caseId);
+        caseRepository.updateHitCase(caseId);
+    }
+
+
+    /**
      * 사건 신고
      */
     @Transactional
