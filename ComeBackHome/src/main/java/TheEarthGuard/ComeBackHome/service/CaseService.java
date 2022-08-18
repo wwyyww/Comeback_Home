@@ -9,14 +9,11 @@ import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -24,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class CaseService {
-    @Autowired
     private final CaseRepository caseRepository;
     private final FileHandler fileHandler;
     private final UserRepository userRepository;
