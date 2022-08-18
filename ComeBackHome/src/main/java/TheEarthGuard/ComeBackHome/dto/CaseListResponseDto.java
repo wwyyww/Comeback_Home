@@ -57,7 +57,9 @@ public class CaseListResponseDto {
         this.missingLng = caseEntity.getMissingLng();
         this.missingTimeStart = caseEntity.getMissingTimeStart();
         this.missingTimeEnd = caseEntity.getMissingTimeEnd();
-        this.missingPicThumb = caseEntity.getMissingPics().get(0);
+        if(! caseEntity.getMissingPics().isEmpty()) {
+            this.missingPicThumb = caseEntity.getMissingPics().get(0);
+        }
         this.createdTime = caseEntity.getCreatedTime();
     }
 }

@@ -47,7 +47,9 @@
         <input type="hidden" id="missingLng" name="missingLng" th:value="${case.missingLng} " readonly>
         <input type="hidden" id="missingLat" name="missingLat" th:value="${case.missingLat} " readonly>
         <span th:text="${valid_missingArea}"></span>
-        <!--        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>-->
+        <div th:unless="${case.missingArea}">
+          <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" disabled>
+        </div>
         <button type="submit" formaction="/cases/new/searchPlace">지도에서 찾기</button>
       </div>
 

@@ -10,11 +10,14 @@ import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
-import TheEarthGuard.ComeBackHome.service.FileHandler;
+import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,14 +50,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class CaseController {
     private final CaseService caseService;
     private UserService userService;
-    private FileHandler fileHandler;
+    private FileService fileService;
     private final ReportService reportService;
 
     @Autowired
-    public CaseController(CaseService caseService, UserService userService, FileHandler fileHandler, ReportService reportService) {
+    public CaseController(CaseService caseService, UserService userService, FileService fileService, ReportService reportService) {
         this.caseService = caseService;
         this.userService = userService;
-        this.fileHandler = fileHandler;
+        this.fileService = fileService;
         this.reportService = reportService;
     }
 
@@ -90,7 +94,7 @@ public class CaseController {
         }
         User currentUser = userService.findByEmail(user.getEmail());
         caseDto.setUser(currentUser);
-        caseService.UploadCase(caseDto, caseDto.getMissingPics());
+        caseService.uploadCase(caseDto, caseDto.getMissingPics());
 
         return "redirect:/";
     }
@@ -166,7 +170,7 @@ public class CaseController {
     @ResponseBody
     @GetMapping("/images/{filepath}/{filename}")
     public ResponseEntity<byte[]> getFile(@PathVariable String filepath, @PathVariable String filename){
-        File file = new File(fileHandler.createPath(filepath, filename));
+        File file = new File(fileService.createPath(filepath, filename));
         ResponseEntity<byte[]> result = null;
 
         try{
@@ -180,27 +184,47 @@ public class CaseController {
         return result;
     }
 
+    // 사진 다운로드
+   @GetMapping("/download/{filepath}/{filename}")
+   public ResponseEntity<Resource> downloadAttach(@PathVariable String filepath, @PathVariable String filename)
+       throws MalformedURLException {
+       Resource resource = fileService.loadAsResource(filepath, filename);
+       String resourceName = resource.getFilename();
+
+       String resourceOrgName = resourceName.substring(resourceName.indexOf("_") + 1);
+
+       HttpHeaders headers = new HttpHeaders();
+       try{
+           headers.add("Content-Disposition", "attachment; filename=" +
+               new String(resourceOrgName.getBytes(StandardCharsets.UTF_8),"ISO-8859-1"));
+       } catch (UnsupportedEncodingException e) {
+           e.printStackTrace();
+       }
+       return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+   }
 
     // 사건 수정하기
     @GetMapping(value = "/cases/update/{id}")
-    public String updateCaseForm(Model model, @PathVariable("id") Long caseId) {
+    public String updateCaseForm(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
         Optional<Case> caseDto = caseService.findCase(caseId);
-        if(caseDto.isPresent()){
-            model.addAttribute("case", new CaseResponseDto(caseDto.get(), caseDto.get().getUser()));
+
+        if(caseDto.isPresent() && user.getId() == caseDto.get().getUser().getId()){
+            CaseResponseDto caseResponseDto =  new CaseResponseDto(caseDto.get(), caseDto.get().getUser());
+            model.addAttribute("case", caseResponseDto);
         }
         return "/cases/caseUpdate";
     }
 
     @PostMapping(value = "/cases/update/{id}")
     public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
-        @CurrentUser User user, Errors errors) {
+        @CurrentUser User user, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!");
             return "redirect:/cases";
         }
 
-//        caseService.updateReport(caseDto, caseId, user);
-        return "redirect:/reports/detail/{id}";
+        caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
+        return "redirect:/cases/detail/{id}";
     }
 
     @GetMapping(value = "/cases/searchCase")

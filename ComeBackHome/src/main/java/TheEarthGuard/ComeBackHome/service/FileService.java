@@ -1,11 +1,13 @@
 package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
+import TheEarthGuard.ComeBackHome.repository.FileRepository;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,22 +15,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import net.coobird.thumbnailator.Thumbnailator;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class FileHandler {
+public class FileService {
 
 //    @Value("${file.dir}/")
-    private final String fileDirPath = "D:\\ComeBackHome";
+    private final String fileDirPath = "D:\\ComeBackHome"; // parent 폴더
 
-//    public FileHandler(){};
+    private final FileRepository fileRepository;
+
+    public FileService(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     // 파일 저장
     public List<FileEntity> parseFileInfo(List<MultipartFile> files) throws Exception {
         List<FileEntity> fileList = new ArrayList<>();
-//        String uploadFolder = "D:\\ComeBackHome"; //parent 폴더
 
         if (!CollectionUtils.isEmpty(files)) {
             // 파일 저장 디렉토리 있는지 확인
@@ -97,21 +104,22 @@ public class FileHandler {
         return fileList;
     }
 
+
+    // 파일 resource로 로드하기
+    public Resource loadAsResource(String filepath,String filename) throws MalformedURLException {
+        return new UrlResource("file:" + createPath(filepath, filename));
+    }
+
+
     public String createPath(String filepath, String filename) {
         return fileDirPath + "\\" + filepath + "\\" + filename;
     }
 
-    public String createThumbPath(String filepath, String filename) {
-        return fileDirPath + "\\" + filepath + "\\s_" + filename;
-//        return URLEncoder.encode(folderPath + "/s_" +uuid + "_" +fileName,"UTF-8");
-    }
 
     private String getFolder() {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         Date date = new Date();
         String str = sdf.format(date);
-//        return str.replace("-", File.separator);
         return str;
     }
 
