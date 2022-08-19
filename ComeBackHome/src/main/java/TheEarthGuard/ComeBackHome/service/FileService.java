@@ -48,16 +48,16 @@ public class FileService {
 
             for (MultipartFile multipartFile : files) {
                 // 파일 확장자 검사 (jpeg, png만 허용)
-                String originalFileExtension;
+                String fileType;
                 String contentType = multipartFile.getContentType();
 
                 if(ObjectUtils.isEmpty(contentType)) {
                     break;
                 } else {
                     if(contentType.contains("image/jpeg"))
-                        originalFileExtension = ".jpg";
+                        fileType = "image";
                     else if(contentType.contains("image/png"))
-                        originalFileExtension = ".png";
+                        fileType = "image";
                     else
                         break;
                 }
@@ -89,7 +89,7 @@ public class FileService {
                         .orgFileName(orgFilename)
                         .savedFileName(savedFilename)
                         .fileSize(multipartFile.getSize())
-                        .fileType(originalFileExtension)
+                        .fileType(fileType)
                         .uploadPath(uploadFolderPath)
                         .build();
 

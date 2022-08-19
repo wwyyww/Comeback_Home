@@ -13,12 +13,6 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,20 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -164,44 +152,6 @@ public class CaseController {
         caseService.deleteCase(id, user);
         return "redirect:/cases";
     }
-
-
-    // 사진 출력 (URL로도 접근가능)
-    @ResponseBody
-    @GetMapping("/images/{filepath}/{filename}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String filepath, @PathVariable String filename){
-        File file = new File(fileService.createPath(filepath, filename));
-        ResponseEntity<byte[]> result = null;
-
-        try{
-            HttpHeaders header = new HttpHeaders();
-
-            header.add("Content-type", Files.probeContentType(file.toPath()));
-            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header, HttpStatus.OK);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    // 사진 다운로드
-   @GetMapping("/download/{filepath}/{filename}")
-   public ResponseEntity<Resource> downloadAttach(@PathVariable String filepath, @PathVariable String filename)
-       throws MalformedURLException {
-       Resource resource = fileService.loadAsResource(filepath, filename);
-       String resourceName = resource.getFilename();
-
-       String resourceOrgName = resourceName.substring(resourceName.indexOf("_") + 1);
-
-       HttpHeaders headers = new HttpHeaders();
-       try{
-           headers.add("Content-Disposition", "attachment; filename=" +
-               new String(resourceOrgName.getBytes(StandardCharsets.UTF_8),"ISO-8859-1"));
-       } catch (UnsupportedEncodingException e) {
-           e.printStackTrace();
-       }
-       return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
-   }
 
     // 사건 수정하기
     @GetMapping(value = "/cases/update/{id}")
