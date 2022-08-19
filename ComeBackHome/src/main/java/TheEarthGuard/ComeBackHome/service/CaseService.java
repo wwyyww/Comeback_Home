@@ -78,10 +78,12 @@ public class CaseService {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
-        caseDto.setUser(user.get());
-        Case updateCase = caseDto.toEntity();
-        updateCase.setCreatedTime(caseEntity.get().getCreatedTime());
-        caseRepository.save(updateCase);
+
+        caseEntity.get().updateCase(caseDto);
+//        caseDto.setUser(user.get());
+//        Case updateCase = caseDto.toEntity();
+//        updateCase.setCreatedTime(caseEntity.get().getCreatedTime());
+//        caseRepository.save(updateCase);
 
         return case_id;
     }
@@ -109,6 +111,22 @@ public class CaseService {
         caseRepository.updateHitCase(caseId);
     }
 
+
+    /**
+     * 실종자 발견
+     */
+    @Transactional
+    public void foundCase(Long caseId, Boolean isFind){
+        Optional<Case> caseEntity = Optional
+            .ofNullable(caseRepository.findById(caseId).orElseThrow(() ->
+                new IllegalArgumentException("사건 수정 실패 : 존재하지 않는 사건입니다")));
+
+        if(isFind == true){
+            caseEntity.get().updateIsFind(true);
+        }else{
+            caseEntity.get().updateIsFind(false);
+        }
+    }
 
     /**
      * 사건 신고

@@ -8,6 +8,7 @@
       <thead>
       <tr>
         <th class="col-md-1">번호</th>
+        <th class="col-md-2">실종 여부</th>
         <th class="col-md-2">사진</th>
         <th class="col-md-4">실종자 이름</th>
         <th class="col-md-3">실종자 정보 (나이/성별)</th>
@@ -22,6 +23,10 @@
       <!-- CONTENTS !-->
       <tr th:each="case : ${cases}">
         <td th:text="${case.getCaseId()}"></td>
+        <td>
+          <span th:if="${case.getIsFind() == false}">실종</span>
+          <span th:if="${case.getIsFind() == true}">찾음</span>
+        </td>
         <td>
           <img th:each="imageFile  : ${case.getMissingPicThumb()}"
                th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>

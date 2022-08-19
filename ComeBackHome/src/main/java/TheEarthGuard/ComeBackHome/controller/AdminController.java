@@ -38,14 +38,14 @@ public class AdminController  {
         this.caseService = caseService;
         this.reportService = reportService;
         this.warnRepository = warnRepository;
-        warnReasonList.put("1", "허위신고");
-        warnReasonList.put("2", "욕설/비하");
-        warnReasonList.put("3", "낚시/놀람/도배");
-        warnReasonList.put("4", "유출/사칭/사기");
-        warnReasonList.put("5", "상업적 광고 및 판매");
-        warnReasonList.put("6", "희롱 또는 괴롭힘");
-        warnReasonList.put("7", "음란물/불건전한 만남 및 대화");
-        warnReasonList.put("8", "정당/정치인 비하 및 선거운동");
+//        warnReasonList.put("1", "허위신고");
+//        warnReasonList.put("2", "욕설/비하");
+//        warnReasonList.put("3", "낚시/놀람/도배");
+//        warnReasonList.put("4", "유출/사칭/사기");
+//        warnReasonList.put("5", "상업적 광고 및 판매");
+//        warnReasonList.put("6", "희롱 또는 괴롭힘");
+//        warnReasonList.put("7", "음란물/불건전한 만남 및 대화");
+//        warnReasonList.put("8", "정당/정치인 비하 및 선거운동");
     }
 
 

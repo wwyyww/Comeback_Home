@@ -169,6 +169,7 @@ public class CaseController {
         return "/cases/caseUpdate";
     }
 
+    // 사건 수정하기
     @PostMapping(value = "/cases/update/{id}")
     public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
@@ -178,6 +179,18 @@ public class CaseController {
         }
 
         caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
+        return "redirect:/cases/detail/{id}";
+    }
+
+    // 실종자 찾았을 경우
+    @GetMapping(value = "/cases/find/{id}")
+    public String findCase(@PathVariable("id") Long caseId, @CurrentUser User user) {
+        Optional<Case> caseEntity = caseService.findCase(caseId);
+
+        if(caseEntity.isPresent() && user.getId() == caseEntity.get().getUser().getId()){
+            caseService.foundCase(caseId,true);
+        }
+
         return "redirect:/cases/detail/{id}";
     }
 
