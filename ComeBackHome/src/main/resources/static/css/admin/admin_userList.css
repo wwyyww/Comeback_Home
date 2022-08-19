@@ -41,7 +41,7 @@ section .search-form .search-submit:hover {
 
 section .user-box{
     margin-top: 25px;
-    width: 80%;
+    width: 90%;
 }
 section .user-box .num-searched-box {
     padding: 5px 5px;
@@ -55,8 +55,12 @@ table{
     font-size: 14px;
 }
 td, th {
+    max-width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 5px;
 }
 
 th {

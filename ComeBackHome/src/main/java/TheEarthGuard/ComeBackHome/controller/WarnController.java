@@ -9,6 +9,8 @@ import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+
+import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,6 @@ public class WarnController {
     private final CaseService caseService;
     private UserService userService;
     private final ReportService reportService;
-
 
     public WarnController(CaseService caseService, UserService userService, ReportService reportService) {
         this.caseService = caseService;
@@ -81,7 +82,7 @@ public class WarnController {
         log.info("신고하기 버튼 눌림");
 //        model.addAttribute("report", reportService.getReportDetail(id));
 //        model.addAttribute("user", user);
-        return "redirect:/reports/detail/{id}";
+        return "redirect:/cases/detail/{id}";
     }
 
 }

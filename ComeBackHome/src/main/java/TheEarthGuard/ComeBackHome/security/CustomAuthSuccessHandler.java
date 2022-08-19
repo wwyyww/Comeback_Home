@@ -45,10 +45,8 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             findUser.setFail_cnt(0);
         }
 
-        log.info("role : "+findUser.getRole());
 
         if (findUser.getRole().equals("ADMIN")) {
-            log.info("getrole : " + Role.ADMIN.getValue());
             redirectStrategy.sendRedirect(request, response, "/admin");
         }else{
             SavedRequest savedRequest = requestCache.getRequest(request, response);

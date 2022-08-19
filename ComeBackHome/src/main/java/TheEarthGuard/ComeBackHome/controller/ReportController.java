@@ -100,6 +100,7 @@ public class ReportController {
     @GetMapping(value = "/reports/detail/{id}")
     public String reportDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report reportDto = reportService.getReportDetail(id);
+
         ReportResponseDto responseDto = new ReportResponseDto(reportDto, user);
         model.addAttribute("report", responseDto);
         model.addAttribute("user", user);
@@ -126,6 +127,7 @@ public class ReportController {
             model.addAttribute("reportForm", responseDto);
             return "/reports/reportUpdate";
         }
+
         return "redirect:/cases";
     }
 
@@ -151,6 +153,8 @@ public class ReportController {
         model.addAttribute("user", user);
         return "redirect:/reports/detail/{id}";
     }
+
+
 
 
     //지도로 목격위치 찍는 부분

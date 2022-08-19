@@ -58,7 +58,11 @@ public class CaseController {
 
     // 처음 사건 등록할 때
     @GetMapping(value = "/cases/new")
-    public String createCaseForm(Model model) {
+    public String createCaseForm(Model model, @CurrentUser User user) {
+        if (user == null) {
+            return "/users/login";
+        }
+
         model.addAttribute("caseDto",  new CaseSaveRequestDto());
         return "cases/createCaseForm";
     }

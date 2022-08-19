@@ -1,11 +1,14 @@
 package TheEarthGuard.ComeBackHome.service;
 
 
+import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.UserAdapter;
 import TheEarthGuard.ComeBackHome.dto.UserDto;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,18 +22,25 @@ import org.springframework.validation.FieldError;
 import java.util.*;
 
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
+    private final CaseService caseService;
+    private final ReportService reportService;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
 //    private final KakaoOAuth2 kakaoOAuth2;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, CaseService caseService, ReportService reportService) {
         this.userRepository = userRepository;
+        this.caseService = caseService;
+        this.reportService = reportService;
     }
 
     @Transactional
@@ -81,6 +91,30 @@ public class UserService implements UserDetailsService {
         userRepository.save(updateUser);
 
         return user.getId();
+    }
+
+    @Transactional
+    public void deleteUser(Long id, User user) {
+        Optional<User> deleteUser = userRepository.findById(id);
+        if (user.getRole().equals("ADMIN")) {
+            Optional<List<Case>> cases = caseService.findCaseByUser(deleteUser.get());
+            List<Report> reports = reportService.getReportsListByUser(deleteUser.get());
+
+            for (Report report : reports) {
+                reportService.deleteReport(report.getId(), report.getUser());
+            }
+
+            for (Case caseEntity : cases.get()) {
+                caseService.deleteCase(caseEntity.getCaseId(), caseEntity.getUser());
+            }
+
+            userRepository.delete(deleteUser.get());
+
+        } else {
+            new IllegalArgumentException("회원 삭제 실패 : 관리자가 아님");
+        }
+
+
     }
 
     public List<User> getUserList() {

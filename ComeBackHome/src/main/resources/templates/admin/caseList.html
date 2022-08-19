@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin userlist</title>
+    <title>admin caseList</title>
     <link rel="stylesheet" href="/static/css/admin/admin_userlist.css">
     <link rel="stylesheet" href="/static/css/admin/admin_nav.css">
 </head>
 <body>
 <nav th:replace="admin/admin_nav :: navFragment"></nav>
 <section>
-    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/userList}">
+    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/caseList}">
         <select name="searchCondition" class="search-mode search-item" form="search-form">
             <option value="userid">아이디</option>
             <option value="username">이름</option>
@@ -25,28 +25,30 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="checkbox-selectall"></th>
-                <th>기본정보</th>
-                <th>이메일</th>
-                <th>등급</th>
-                <th>휴대전화</th>
-                <th>로그인 실패 횟수</th>
-                <th>신고 횟수</th>
+                <th>기본정보(작성자)</th>
+                <th>실종자 이름</th>
+                <th>실종자 나이</th>
+                <th>실종지역</th>
+                <th>조회수</th>
+                <th>작성일</th>
+                <th>수정일</th>
                 <th>상세보기</th>
                 <th>삭제</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${userList}">
+            <tr th:each="caseEntity : ${caseList}">
                 <td><input type="checkbox" class="checkbox-select"></td>
-                <td th:text = "${user.name} + '(' + ${user.id}+ ')'">채창완(sejchae)</td>
-                <td th:text = "${user.email}">abc@gmail.com</td>
-                <td th:text = "${user.role}">일반회원</td>
-                <td th:text = "${user.phone}">010-1234-5678</td>
-                <td th:text = "${user.fail_cnt}">11</td>
-                <td th:text = "${user.warning_cnt}">2</td>
-                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|location.href='@{/admin/userDetail/{id}(id=${user.id})}'|"></td>
-                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|location.href='@{/admin/deleteUser/{id}(id=${user.id})}'|"></td>
-                <input type="hidden" th:value="${user.id}">
+                <td th:text = "${caseEntity.getUser().getEmail()} + '(' + ${caseEntity.caseId}+ ')'">채창완(sejchae)</td>
+                <td th:text = "${caseEntity.missingName}">이름</td>
+                <td th:text = "${caseEntity.missingAge}">20</td>
+                <td th:text = "${caseEntity.missingArea}">지역</td>
+                <td th:text = "${caseEntity.hitCnt}">2</td>
+                <td th:text="${#temporals.format(caseEntity.createdTime, 'yyyy-MM-dd')}">2021-05-12</td>
+                <td th:text="${#temporals.format(caseEntity.modifiedTime, 'yyyy-MM-dd')}">2021-05-12</td>
+                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${caseEntity.caseId}')|"></td>
+                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${caseEntity.caseId}')|"></td>
+                <input type="hidden" th:value="${caseEntity.caseId}">
             </tr>
             </tbody>
 
@@ -57,6 +59,7 @@
         <div class="bottombtn-box">
             <input type="button" value="전체선택" class="selectallbtn bottombtn" th:onclick="|checkall()|">
             <input type="button" value="선택삭제" class="bottom-deletebtn bottombtn" th:onclick="|deleteCheckedUsers()|">
+
         </div>
 
     </div>
@@ -65,5 +68,3 @@
 
 </body>
 </html>
-
-

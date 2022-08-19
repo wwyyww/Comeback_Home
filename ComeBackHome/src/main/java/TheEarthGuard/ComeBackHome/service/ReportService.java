@@ -128,7 +128,7 @@ public class ReportService {
     }
 
     //전체 증언 조회
-    public List<Report> findReports() {
+    public List<Report> getReports() {
         return reportRepository.findAll();
     }
 

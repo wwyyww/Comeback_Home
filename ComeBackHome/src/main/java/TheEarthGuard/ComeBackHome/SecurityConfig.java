@@ -53,7 +53,9 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/reports/**").authenticated()
+                .antMatchers("/").permitAll()
                 .and()
                 .formLogin()
                 .usernameParameter("email")

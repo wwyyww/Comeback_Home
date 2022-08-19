@@ -19,12 +19,14 @@
             </div>
 
 
-            <label for="witness_pic">제보 사진</label>
-            <div th:if="${reportForm.witness_pic}">
-                <input type="text" id="witness_pic" name="witness_pic" th:value="${reportForm.witness_pic}" placeholder="사진 경로를 입력하세요">
+            <label for="witnessPics">제보 사진</label>
+            <div th:if="${reportForm.witnessPics}">
+                <img th:each="imageFile  : ${reportForm.getWitnessPics()}"
+                     th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
             </div>
-            <div th:unless="${reportForm.witness_pic}">
-                <input type="text" id="witness_pic" name="witness_pic" placeholder="사진 경로를 입력하세요">
+            <div th:unless="${reportForm.witnessPics}">
+                <label for="witnessPics">제보 사진</label>
+                <input type="file" id="witnessPics" name="witnessPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
             </div>
 
 
