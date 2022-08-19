@@ -50,7 +50,7 @@ public class WarnController {
         log.info("신고하기 버튼 눌림");
         User currentUser = userService.findByEmail(user.getEmail());
         if (currentUser != null) {
-            reportService.warnReport(id, user);
+            reportService.warnReport(id, user, form);
         }else{
             return "/users/login";
         }

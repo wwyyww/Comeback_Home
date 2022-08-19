@@ -11,14 +11,6 @@
 <body>
 <nav th:replace="admin/admin_nav :: navFragment"></nav>
 <section>
-    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/warnList}">
-        <select name="searchCondition" class="search-mode search-item" form="search-form">
-            <option value="userid">아이디</option>
-            <option value="username">이름</option>
-        </select>
-        <input type="text" name="searchKeyword" class="search-input search-item">
-        <input type="submit" class="search-submit search-item" value="검색">
-    </form>
     <div class="user-box">
 
         <table class="user-table">
@@ -27,7 +19,6 @@
                 <th><input type="checkbox" class="checkbox-selectall"></th>
                 <th>신고자</th>
                 <th>신고이유</th>
-                <th>신고여부</th>
                 <th>신고일</th>
                 <th>상세보기</th>
                 <th>삭제</th>
@@ -38,11 +29,10 @@
                 <td><input type="checkbox" class="checkbox-select"></td>
                 <td th:text = "${warn.getWarnSender().name} + '(' + ${warn.getWarnSender().id}+ ')'">채창완(sejchae)</td>
                 <td th:text = "${warn.warnReason}">0</td>
-                <td th:text = "${report.is_alert}">2</td>
                 <td th:text="${#temporals.format(warn.createdTime, 'yyyy-MM-dd')}">2021-05-12</td>
-                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${report.id}')|"></td>
-                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${report.id}')|"></td>
-                <input type="hidden" th:value="${report.id}">
+                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${warn.id}')|"></td>
+                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${warn.id}')|"></td>
+                <input type="hidden" th:value="${warn.id}">
             </tr>
             </tbody>
 

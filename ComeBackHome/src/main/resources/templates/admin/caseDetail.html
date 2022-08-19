@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin report</title>
+    <script src="https://kit.fontawesome.com/e6f78261b2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/admin/admin_nav.css">
+    <link rel="stylesheet" href="/static/css/admin/admin_user.css">
+</head>
+<body>
+<nav th:replace="admin/admin_nav :: navFragment"></nav>
+<section>
+    <div class="item">
+        <div class="item-caption">
+            <div class="item-title">사건 정보</div>
+        </div>
+        <div class="item-content">
+            <table>
+                <colgroup>
+                    <col width="15%"/>
+                    <col width="85%"/>
+                </colgroup>
+                <tr>
+                    <th>작성자</th>
+                    <td th:text="${caseEntity.getUser().name} + '(' + ${caseEntity.caseId}+ ')'">sejchae</td>
+                </tr>
+                <tr>
+                    <th>이메일</th>
+                    <td th:text="${caseEntity.getUser().email}">@naver.com</td>
+                </tr>
+                <tr>
+                    <th>실종자 이름</th>
+                    <td th:text="${caseEntity.missingName}">실종자</td>
+                </tr>
+                <tr>
+                    <th>실종자 나이</th>
+                    <td th:text = "${caseEntity.missingAge}">0</td>
+                </tr>
+                <tr>
+                    <th>실종 지역</th>
+                    <td th:text = "${caseEntity.missingArea}">0</td>
+                </tr>
+                <tr>
+                    <th>조회수</th>
+                    <td th:text = "${caseEntity.hitCnt}">0</td>
+                </tr>
+                <tr>
+                    <th>제보수</th>
+                    <td th:text = "${caseEntity.getReports().size()}">0</td>
+                </tr>
+                <tr>
+                    <th>신고횟수</th>
+                    <td th:text = "${caseEntity.getWarns().size()}">0</td>
+                </tr>
+                <tr>
+                    <th>작성일</th>
+                    <td th:text="${#temporals.format(caseEntity.createdTime, 'yyyy-MM-dd')}">2021-05-12</td>
+                </tr>
+                <tr>
+                    <th>수정일</th>
+                    <td th:text="${#temporals.format(caseEntity.modifiedTime, 'yyyy-MM-dd')}">2021-05-12</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="bottombtn">
+            <input type="button" value="뒤로가기" onclick="history.back()">
+        </div>
+    </div>
+</section>
+<script src="/static/js/admin/admin_nav.js"></script>
+</body>
+</html>

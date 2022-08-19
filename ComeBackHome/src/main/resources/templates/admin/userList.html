@@ -11,14 +11,6 @@
 <body>
 <nav th:replace="admin/admin_nav :: navFragment"></nav>
 <section>
-    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/userList}">
-        <select name="searchCondition" class="search-mode search-item" form="search-form">
-            <option value="userid">아이디</option>
-            <option value="username">이름</option>
-        </select>
-        <input type="text" name="searchKeyword" class="search-input search-item">
-        <input type="submit" class="search-submit search-item" value="검색">
-    </form>
     <div class="user-box">
 
         <table class="user-table">

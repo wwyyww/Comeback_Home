@@ -144,15 +144,15 @@ public class ReportController {
     }
 
 
-    //제보 신고하기
-    @PostMapping(value = "/reports/warn/{id}")
-    public String reportWarn(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        reportService.warnReport(id, user);
-        log.info("신고하기 버튼 눌림");
-        model.addAttribute("report", reportService.getReportDetail(id));
-        model.addAttribute("user", user);
-        return "redirect:/reports/detail/{id}";
-    }
+//    //제보 신고하기
+//    @PostMapping(value = "/reports/warn/{id}")
+//    public String reportWarn(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+//        reportService.warnReport(id, user);
+//        log.info("신고하기 버튼 눌림");
+//        model.addAttribute("report", reportService.getReportDetail(id));
+//        model.addAttribute("user", user);
+//        return "redirect:/reports/detail/{id}";
+//    }
 
 
 

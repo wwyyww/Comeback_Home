@@ -27,12 +27,13 @@
                 <th><input type="checkbox" class="checkbox-selectall"></th>
                 <th>기본정보(작성자)</th>
                 <th>실종자 이름</th>
-                <th>실종자 나이</th>
-                <th>실종지역</th>
                 <th>조회수</th>
+                <th>제보수</th>
+                <th>신고횟수</th>
                 <th>작성일</th>
                 <th>수정일</th>
                 <th>상세보기</th>
+                <th>신고목록</th>
                 <th>삭제</th>
             </tr>
             </thead>
@@ -41,13 +42,14 @@
                 <td><input type="checkbox" class="checkbox-select"></td>
                 <td th:text = "${caseEntity.getUser().getEmail()} + '(' + ${caseEntity.caseId}+ ')'">채창완(sejchae)</td>
                 <td th:text = "${caseEntity.missingName}">이름</td>
-                <td th:text = "${caseEntity.missingAge}">20</td>
-                <td th:text = "${caseEntity.missingArea}">지역</td>
                 <td th:text = "${caseEntity.hitCnt}">2</td>
+                <td th:text = "${caseEntity.getReports().size()}">0</td>
+                <td th:text = "${caseEntity.getWarns().size()}">0</td>
                 <td th:text="${#temporals.format(caseEntity.createdTime, 'yyyy-MM-dd')}">2021-05-12</td>
                 <td th:text="${#temporals.format(caseEntity.modifiedTime, 'yyyy-MM-dd')}">2021-05-12</td>
-                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${caseEntity.caseId}')|"></td>
-                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${caseEntity.caseId}')|"></td>
+                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|location.href='@{/admin/caseDetail/{id}(id=${caseEntity.caseId})}'|"></td>
+                <td><input type="button" value="신고보기" class="userdetailbtn table-btn" th:onclick="|location.href='@{/admin/caseWarnList/{id}(id=${caseEntity.caseId})}'|"></td>
+                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|location.href='@{/admin/deleteCase/{id}(id=${caseEntity.caseId})}'|"></td>
                 <input type="hidden" th:value="${caseEntity.caseId}">
             </tr>
             </tbody>
