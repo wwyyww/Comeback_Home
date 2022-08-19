@@ -4,6 +4,7 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.Warn;
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
@@ -15,9 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -29,30 +28,27 @@ public class AdminController  {
     private final ReportService reportService;
 
     private final WarnRepository warnRepository;
+    private final CaseRepository caseRepository;
 
-    private Map<String, String> warnReasonList;
+
+    private Map<String, String> warnReasonList=new HashMap<>();
 
 
-    public AdminController(UserService userService, CaseService caseService, ReportService reportService, WarnRepository warnRepository) {
+    public AdminController(UserService userService, CaseService caseService, ReportService reportService, WarnRepository warnRepository, CaseRepository caseRepository) {
         this.userService = userService;
         this.caseService = caseService;
         this.reportService = reportService;
         this.warnRepository = warnRepository;
-//        warnReasonList.put("1", "허위신고");
-//        warnReasonList.put("2", "욕설/비하");
-//        warnReasonList.put("3", "낚시/놀람/도배");
-//        warnReasonList.put("4", "유출/사칭/사기");
-//        warnReasonList.put("5", "상업적 광고 및 판매");
-//        warnReasonList.put("6", "희롱 또는 괴롭힘");
-//        warnReasonList.put("7", "음란물/불건전한 만남 및 대화");
-//        warnReasonList.put("8", "정당/정치인 비하 및 선거운동");
+        this.caseRepository = caseRepository;
     }
 
 
     @GetMapping("/admin")
-    public String adminPage() {
+    public String adminPage(Model model) {
+        List<User> userList = userService.getUserList();
+        model.addAttribute("userList", userList);
 
-        return "/admin/admin_main";
+        return "/admin/userList";
     }
 
     @GetMapping("/admin/userList")
@@ -88,6 +84,24 @@ public class AdminController  {
 
     }
 
+    @GetMapping("/admin/reportDetail/{id}")
+    public String adminReportDetail(Model model, @PathVariable("id") Long id) {
+        Report report = reportService.getReportDetail(id);
+        model.addAttribute("report", report);
+
+        return "/admin/reportDetail";
+
+    }
+
+    @GetMapping("/admin/caseDetail/{id}")
+    public String adminCaseDetail(Model model, @PathVariable("id") Long id) {
+        Optional<Case> caseEntity = caseService.findCase(id);
+        model.addAttribute("caseEntity", caseEntity.get());
+
+        return "/admin/caseDetail";
+
+    }
+
     @GetMapping("/admin/deleteUser/{id}")
     public String adminDeleteUser(@PathVariable("id") Long id, @CurrentUser User user) {
         userService.deleteUser(id, user);
@@ -96,17 +110,44 @@ public class AdminController  {
 
     }
 
-    @GetMapping("/admin/warnList")
-    public String adminWarnList(Model model) {
+    @GetMapping("/admin/deleteReport/{id}")
+    public String adminDeleteReport(@PathVariable("id") Long id, @CurrentUser User user) {
+        Report report = reportService.getReportDetail(id);
+        reportService.deleteReport(id, report.getUser());
+
+        return "redirect:/admin/reportList";
+
+    }
+
+    @GetMapping("/admin/deleteCase/{id}")
+    public String adminDeleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
+        Optional<Case> caseEntity = caseService.findCase(id);
+        caseService.deleteCase(id, caseEntity.get().getUser());
+
+        return "redirect:/admin/caseList";
+
+    }
 
 
 
-        List<Warn> warnList = warnRepository.findAll();
+    @GetMapping("/admin/reportWarnList/{id}")
+    public String reportWarnList(Model model, @PathVariable("id") Long id) {
 
-
+        Report report = reportService.getReportDetail(id);
+        List<Warn> warnList = report.getWarns();
+        log.info("warn list : "+warnList);
         model.addAttribute("warnList", warnList);
 
+        return "/admin/warnList";
+    }
 
+    @GetMapping("/admin/caseWarnList/{id}")
+    public String caseWarnList(Model model, @PathVariable("id") Long id) {
+
+        Optional<Case> caseEntity = caseService.findCase(id);
+        List<Warn> warnList = caseEntity.get().getWarns();
+        log.info("warn list : "+warnList);
+        model.addAttribute("warnList", warnList);
 
         return "/admin/warnList";
     }

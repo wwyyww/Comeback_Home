@@ -6,11 +6,15 @@ import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.Warn;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,7 @@ public class ReportService {
     private final CaseRepository caseRepository;
     private final WarnRepository warnRepository;
     private final FileService fileService;
+    private Map<String, String> warnReasonList=new HashMap<>();
 
 
     public ReportService(ReportRepository reportRepository, UserRepository userRepository, CaseRepository caseRepository, WarnRepository warnRepository, FileService fileService) {
@@ -34,6 +39,14 @@ public class ReportService {
         this.caseRepository = caseRepository;
         this.warnRepository = warnRepository;
         this.fileService = fileService;
+        warnReasonList.put("1", "허위신고");
+        warnReasonList.put("2", "욕설/비하");
+        warnReasonList.put("3", "낚시/놀람/도배");
+        warnReasonList.put("4", "유출/사칭/사기");
+        warnReasonList.put("5", "상업적 광고 및 판매");
+        warnReasonList.put("6", "희롱 또는 괴롭힘");
+        warnReasonList.put("7", "음란물/불건전한 만남 및 대화");
+        warnReasonList.put("8", "정당/정치인 비하 및 선거운동");
     }
 
 
@@ -91,7 +104,7 @@ public class ReportService {
     }
 
     @Transactional
-    public void warnReport(Long id, User user) {
+    public void warnReport(Long id, User user, WarnDto form) {
         Optional<Report> report = reportRepository.findById(id);
         //1. 제보를 작성한 사용자 신고카운트 증가
         User reportUser=report.get().getUser();
@@ -99,11 +112,13 @@ public class ReportService {
         userRepository.saveAndFlush(reportUser);
 
         //2. warn 테이블에 저장
-        Warn warn = new Warn();
-//        warn.setReports(report.get());
-        warn.setWarnSender(user);
-        warn.setWarnReason("신고 이유");
+        Warn warn = Warn.builder()
+                .warnSender(user)
+                .warnReason(warnReasonList.get(form.getWarnReason()))
+                .build();
         warnRepository.save(warn);
+        report.get().getWarns().add(warn);
+        report.get().setIs_alert(Boolean.TRUE);
 
     }
 

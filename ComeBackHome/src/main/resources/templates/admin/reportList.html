@@ -4,21 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin userlist</title>
+    <title>admin reportList</title>
     <link rel="stylesheet" href="/static/css/admin/admin_userlist.css">
     <link rel="stylesheet" href="/static/css/admin/admin_nav.css">
 </head>
 <body>
 <nav th:replace="admin/admin_nav :: navFragment"></nav>
 <section>
-    <form class= "search-form" id="search-form" method="GET" th:action="@{/admin/userList}">
-        <select name="searchCondition" class="search-mode search-item" form="search-form">
-            <option value="userid">아이디</option>
-            <option value="username">이름</option>
-        </select>
-        <input type="text" name="searchKeyword" class="search-input search-item">
-        <input type="submit" class="search-submit search-item" value="검색">
-    </form>
     <div class="user-box">
 
         <table class="user-table">
@@ -27,10 +19,11 @@
                 <th><input type="checkbox" class="checkbox-selectall"></th>
                 <th>기본정보(작성자)</th>
                 <th>사건정보</th>
-                <th>신고여부</th>
+                <th>신고횟수</th>
                 <th>작성일</th>
                 <th>수정일</th>
                 <th>상세보기</th>
+                <th>신고보기</th>
                 <th>삭제</th>
             </tr>
             </thead>
@@ -39,11 +32,12 @@
                 <td><input type="checkbox" class="checkbox-select"></td>
                 <td th:text = "${report.getUser().getEmail()} + '(' + ${report.id}+ ')'">채창완(sejchae)</td>
                 <td th:text = "${report.getCases().getCaseId()}">0</td>
-                <td th:text = "${report.is_alert}">2</td>
+                <td th:text = "${report.getWarns().size()}">0</td>
                 <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}">2021-05-12</td>
                 <td th:text="${#temporals.format(report.modifiedTime, 'yyyy-MM-dd')}">2021-05-12</td>
-                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|openUserDetail('${report.id}')|"></td>
-                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|deleteUser('${report.id}')|"></td>
+                <td><input type="button" value="보기" class="userdetailbtn table-btn" th:onclick="|location.href='@{/admin/reportDetail/{id}(id=${report.id})}'|"></td>
+                <td><input type="button" value="신고보기" class="userdetailbtn table-btn" th:onclick="|location.href='@{/admin/reportWarnList/{id}(id=${report.id})}'|"></td>
+                <td><input type="button" value="삭제" class="deletebtn table-btn" th:onclick="|location.href='@{/admin/deleteReport/{id}(id=${report.id})}'|"></td>
                 <input type="hidden" th:value="${report.id}">
             </tr>
             </tbody>

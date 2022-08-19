@@ -16,9 +16,40 @@
     </style>
 
 </head>
-<body>
+<body onload="javascript:getJSON()">
+<table>
+    <thead>
+    <tr>
+        <td>순번</td>
+    </tr>
+    </thead>
+    <tbody class="table_body">
+
+    </tbody>
+    <button type="button" onclick="getJSON()"> json 불러오는 버튼</button>
+</table>
 <div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
 <script>
+
+    function getJSON() {
+        $.ajax({
+            type:"get",
+            url:"data.json",
+            dataType:"json",
+            success: function(data){
+                console.log("통신성공");
+                console.log(data);
+                str = '<TR>';
+                $.each(data , function(i){
+                    str += '<TD>' + data[i].missingLat+ '</TD></TR>';
+                });
+                $('.table_body').append(str);
+            },
+            error:function(){
+                console.log("통신에러");
+            }
+        })
+    }
 
 
     var map = new naver.maps.Map("map", {
