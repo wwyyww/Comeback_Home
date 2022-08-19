@@ -14,6 +14,7 @@
         <th class="col-md-3">지역</th>
         <th class="col-md-2">작성자</th>
         <th class="col-md-2">작성일</th>
+        <th class="col-md-2">조회수</th>
       </tr>
       </thead>
 
@@ -36,6 +37,7 @@
         <td th:text="${case.getMissingRegion()}"></td>
         <td th:text="${case.getUserName()}"></td>
         <td th:text="${case.getCreatedTime()}"></td>
+        <td th:text="${case.getHitCnt()}"></td>
         </tr>
       </tbody>
     </table>

@@ -50,7 +50,6 @@ public class WarnController {
         log.info("신고하기 버튼 눌림");
         User currentUser = userService.findByEmail(user.getEmail());
         if (currentUser != null) {
-//            caseService.warnCase(id, user);
             reportService.warnReport(id, user);
         }else{
             return "/users/login";
@@ -80,8 +79,6 @@ public class WarnController {
             caseService.warnCase(id, currentUser, form);
         }
         log.info("신고하기 버튼 눌림");
-//        model.addAttribute("report", reportService.getReportDetail(id));
-//        model.addAttribute("user", user);
         return "redirect:/cases/detail/{id}";
     }
 

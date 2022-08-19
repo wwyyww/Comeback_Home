@@ -1,15 +1,18 @@
 package TheEarthGuard.ComeBackHome.service;
 
-import TheEarthGuard.ComeBackHome.domain.*;
+import TheEarthGuard.ComeBackHome.domain.Case;
+import TheEarthGuard.ComeBackHome.domain.FileEntity;
+import TheEarthGuard.ComeBackHome.domain.Report;
+import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.domain.Warn;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.ReportRepository;
+import TheEarthGuard.ComeBackHome.repository.UserRepository;
+import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
-
-import TheEarthGuard.ComeBackHome.repository.UserRepository;
-import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,16 +24,16 @@ public class ReportService {
     private final UserRepository userRepository;
     private final CaseRepository caseRepository;
     private final WarnRepository warnRepository;
-    private final FileHandler fileHandler;
+    private final FileService fileService;
 
 
-    public ReportService(ReportRepository reportRepository, UserRepository userRepository, CaseRepository caseRepository, WarnRepository warnRepository, FileHandler fileHandler) {
+    public ReportService(ReportRepository reportRepository, UserRepository userRepository, CaseRepository caseRepository, WarnRepository warnRepository, FileService fileService) {
 
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
         this.caseRepository = caseRepository;
         this.warnRepository = warnRepository;
-        this.fileHandler = fileHandler;
+        this.fileService = fileService;
     }
 
 
@@ -42,7 +45,7 @@ public class ReportService {
         Optional<User> user = userRepository.findById(user_id);
         Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
                 new IllegalArgumentException("제보 작성 실패 : 존재하지 않는 게시글"));
-        List<FileEntity> witPics = fileHandler.parseFileInfo(files);
+        List<FileEntity> witPics = fileService.parseFileInfo(files);
 
         reportObj.setUser(user.get());
         reportObj.setCases(findCase);

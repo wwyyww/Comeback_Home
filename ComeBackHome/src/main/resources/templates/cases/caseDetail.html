@@ -36,8 +36,12 @@
 <!--  <tr th:each="pic : ${missing_pics}">-->
   <tr>
     <th>실종자 사진</th>
-    <img th:each="imageFile  : ${case.getMissingPics()}"
-         th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+    <td th:each="imageFile  : ${case.getMissingPics()}">
+      <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+      <a th:href="@{/download/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}">
+        <div th:text="${imageFile.getOrgFileName()}"></div>
+      </a>
+    </td>
   </tr>
   <tr>
     <th>실종자 나이</th>

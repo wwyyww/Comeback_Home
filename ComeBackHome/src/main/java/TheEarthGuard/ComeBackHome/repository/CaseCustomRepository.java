@@ -1,14 +1,13 @@
 package TheEarthGuard.ComeBackHome.repository;
 
-import org.springframework.stereotype.Repository;
+import TheEarthGuard.ComeBackHome.domain.Case;
+import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface CaseCustomRepository <T> {
-//    Case save(Case caseObj); // case만 하면 오류떠서 Obj 붙임
-//    Optional<Case> findByCaseId(Long case_id);
-//    Optional<Case> findByUserId(Long finder_id);
-//    Optional<List<Case>> findMissingNameFilter(String missing_name, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area);
-//    Optional<List<Case>> findMissingAreaFilter(String missing_area);
-//    Optional<List<Case>> findfilter(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area);
-//    List<Case> findAll();
+public interface CaseCustomRepository {
+
+    Optional<List<Case>> searchByMissingName(String missing_name, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area);
+    Optional<List<Case>> searchByMissingArea(String missing_area, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area);
+    Optional<List<Case>> searchByFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area);
+    Optional<List<Case>> casebyTime();
 }

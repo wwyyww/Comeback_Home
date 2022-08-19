@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container">
-  <form th:action="@{/cases/update/{id}(id = ${case.getCaseId()})}" method="post">
+  <form  method="post" enctype="multipart/form-data">
     <div class="form-group">
       <div>
         <label for="missingName">실종자 이름</label>
@@ -17,7 +17,10 @@
       <div>
         <label for="missingPics">실종자 사진</label>
         <img th:each="imageFile  : ${case.getMissingPics()}"
-             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+        <input type="hidden" id="missingLng" name="missingLng" th:value="${caseDto.missingLng} " readonly>
+    // 여기 하고 있었음!
+        <button type="submit" th:action="@{/deleteFile/{filepath}/{filename} ()}">x</button>
       </div>
 
       <div>
@@ -47,7 +50,9 @@
         <input type="hidden" id="missingLng" name="missingLng" th:value="${case.missingLng} " readonly>
         <input type="hidden" id="missingLat" name="missingLat" th:value="${case.missingLat} " readonly>
         <span th:text="${valid_missingArea}"></span>
-        <!--        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>-->
+        <div th:unless="${case.missingArea}">
+          <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" disabled>
+        </div>
         <button type="submit" formaction="/cases/new/searchPlace">지도에서 찾기</button>
       </div>
 
@@ -60,7 +65,7 @@
       </div>
 
     </div>
-    <button type="submit">수정</button>
+    <button type="submit" th:action="@{/cases/update/{id}(id = ${case.getCaseId()})}">수정</button>
   </form>
 </div> <!-- /container -->
 </body>

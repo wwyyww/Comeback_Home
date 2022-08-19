@@ -22,26 +22,26 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class CaseService {
     private final CaseRepository caseRepository;
-    private final FileHandler fileHandler;
+    private final FileService fileService;
     private final UserRepository userRepository;
     private final WarnRepository warnRepository;
 
     public CaseService(CaseRepository caseRepository, UserRepository userRepository, WarnRepository warnRepository,
-        FileHandler fileHandler) {
+        FileService fileService) {
         this.caseRepository = caseRepository;
         this.userRepository = userRepository;
         this.warnRepository = warnRepository;
-        this.fileHandler = fileHandler;
+        this.fileService = fileService;
     }
 
     /**
      * 사건 등록하기
      */
     @Transactional
-    public Long UploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
+    public Long uploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
         Case newCase = caseDto.toEntity();
 
-        List<FileEntity> missing_pictures = fileHandler.parseFileInfo(files);
+        List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
         System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
         if(!missing_pictures.isEmpty()) {
             System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
@@ -67,35 +67,25 @@ public class CaseService {
     /**
      * 사건  수정하기
      */
-//    @Transactional
-//    public Long UpdateCase(CaseSaveRequestDto caseDto, Long case_id, List<MultipartFile> files) throws Exception{
-//        Optional<User> user = userRepository.findById(user_id);
-//        Case findCase = caseRepository.findByCaseId(case_id).orElseThrow(() ->
-//            new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
-//
-//        Optional<Report> report = reportRepository.findById(reportObj.getId());
-//        reportObj.setUser(user.get());
-//        reportObj.setCases(findCase);
-//        Report updateReport = reportObj.toEntity();
-//        updateReport.setCreatedTime(report.get().getCreatedTime());
-//        reportRepository.save(updateReport);
-//        return reportObj.getId();
-//
-//
-//
-//
-//        Case newCase = caseDto.toEntity();
-//
-//        List<FileEntity> missing_pictures = fileHandler.parseFileInfo(files);
-//        System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
-//        if(!missing_pictures.isEmpty()) {
-//            System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
-//            newCase.setMissingPics(missing_pictures);
-//        }
-//
-//        caseRepository.save(newCase);
-//        return newCase.getCaseId();
-//    }
+    @Transactional
+    public Long updateCase(Long user_id,  Long case_id, CaseSaveRequestDto caseDto, List<MultipartFile> files) throws Exception{
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<Case> caseEntity = Optional
+            .ofNullable(caseRepository.findById(case_id).orElseThrow(() ->
+                new IllegalArgumentException("사건 수정 실패 : 존재하지 않는 사건입니다")));
+
+        if (caseEntity.get().getUser().getId() != user.get().getId()) {
+            throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
+        }
+
+        caseDto.setUser(user.get());
+        Case updateCase = caseDto.toEntity();
+        updateCase.setCreatedTime(caseEntity.get().getCreatedTime());
+        caseRepository.save(updateCase);
+
+        return case_id;
+    }
+
 
     /**
      * 사건 삭제
@@ -109,6 +99,16 @@ public class CaseService {
             new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
         }
     }
+
+    /**
+     * 사건 조회수
+     */
+    @Transactional
+    public void countHitCase(Long caseId) {
+        Optional<Case> caseEntity = caseRepository.findById(caseId);
+        caseRepository.updateHitCase(caseId);
+    }
+
 
     /**
      * 사건 신고
@@ -160,12 +160,20 @@ public class CaseService {
     /**
      * 사건 검색
      */
-//    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-//        return caseRepository.findByMissingNameFilter(keyword, sex, age, area);
-//    }
-//
-//    public Optional<List<Case>> findbyMissingArea(String keyword){
-//        return caseRepository.findByMissingAreaFilter(keyword);
-//    }
+    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.searchByMissingName(keyword, sex, age, area);
+    }
+
+    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.searchByMissingArea(keyword, sex, age, area);
+    }
+
+    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
+        return caseRepository.searchByFilters(sex, age, area);
+    }
+
+    public Optional<List<Case>> sortCasebyTime(){
+        return caseRepository.casebyTime();
+    }
 
 }
