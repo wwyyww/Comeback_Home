@@ -80,7 +80,12 @@
   <div th:if="${case.getUserId() == user.getId()}">
     <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
     <a th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
-  </div>
+    <div th:unless="${case.getIsFind()}">
+      <button th:onclick="|location.href='@{/cases/find/{id} (id=${case.getCaseId()})}'|">실종자 찾음</button>
+    </div>
+    <div th:if="${case.getIsFind()}">
+      <button disabled>실종자 찾음</button>
+    </div>
 
   <form th:action="@{/cases/detail/{id}/submit(id=${case.getCaseId()})}" method="post">
     <div>

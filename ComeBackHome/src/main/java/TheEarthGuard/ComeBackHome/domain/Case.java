@@ -1,5 +1,7 @@
 package TheEarthGuard.ComeBackHome.domain;
 
+import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,8 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -89,7 +89,20 @@ public class Case extends BaseTimeEntity{
         this.missingTimeEnd = missingTimeEnd;
     }
 
-    public void updateHitCount(Integer hitCnt) {
-        this.hitCnt = hitCnt;
+    public void updateIsFind(Boolean isFind) {
+        this.isFind = isFind;
+    }
+
+
+    public void updateCase(CaseSaveRequestDto dto){
+        this.missingName = dto.getMissingName();
+        this.missingAge = dto.getMissingAge();
+        this.missingSex = dto.getMissingSex();
+        this.missingDesc = dto.getMissingDesc();
+        this.missingArea = dto.getMissingArea();
+        this.missingLng = Double.parseDouble(String.valueOf(this.missingLng));
+        this.missingLat = Double.parseDouble(String.valueOf(this.missingLat));
+        this.missingTimeStart = dto.getMissingTimeStart();
+        this.missingTimeEnd = dto.getMissingTimeEnd();
     }
 }

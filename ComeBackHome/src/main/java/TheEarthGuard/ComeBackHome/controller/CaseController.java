@@ -15,6 +15,8 @@ import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 
 import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +53,24 @@ public class CaseController {
         this.userService = userService;
         this.fileService = fileService;
         this.reportService = reportService;
+    }
+
+    @GetMapping(value = "/casesMap")
+    public String caseMap(Model model) {
+        List<Case> caseEntityList = caseService.getCaseList();
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+                caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        Map<String, Object> returnMap=new HashMap<String, Object>();
+
+        returnMap.put("cases", caseDtoList);
+
+        model.addAttribute("cases", returnMap);
+
+        System.out.println(returnMap);
+//        model.addObject("casesList", caseDtoList);
+        return "/allmaps/casesMap/marker-clustering";
     }
 
     // 처음 사건 등록할 때
@@ -178,6 +198,7 @@ public class CaseController {
         return "/cases/caseUpdate";
     }
 
+    // 사건 수정하기
     @PostMapping(value = "/cases/update/{id}")
     public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
@@ -187,6 +208,18 @@ public class CaseController {
         }
 
         caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
+        return "redirect:/cases/detail/{id}";
+    }
+
+    // 실종자 찾았을 경우
+    @GetMapping(value = "/cases/find/{id}")
+    public String findCase(@PathVariable("id") Long caseId, @CurrentUser User user) {
+        Optional<Case> caseEntity = caseService.findCase(caseId);
+
+        if(caseEntity.isPresent() && user.getId() == caseEntity.get().getUser().getId()){
+            caseService.foundCase(caseId,true);
+        }
+
         return "redirect:/cases/detail/{id}";
     }
 

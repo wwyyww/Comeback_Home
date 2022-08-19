@@ -16,11 +16,14 @@
 
       <div>
         <label for="missingPics">실종자 사진</label>
-        <img th:each="imageFile  : ${case.getMissingPics()}"
-             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
-        <input type="hidden" id="missingLng" name="missingLng" th:value="${caseDto.missingLng} " readonly>
-    // 여기 하고 있었음!
-        <button type="submit" th:action="@{/deleteFile/{filepath}/{filename} ()}">x</button>
+          <div th:each="imageFile  : ${case.getMissingPics()}">
+            <form th:name="${imageFile.getSavedFileName()}" method="post" enctype="multipart/form-data" target="blankifr">
+            <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
+            <input type="hidden" id="fileName" name="fileName" th:value="${imageFile.getUploadPath()} + '/s_' +  ${imageFile.getSavedFileName()}" readonly>
+            <input type="hidden" id="fileType" name="fileType" th:value="${imageFile.getFileType()}" readonly>
+            <button type="submit" formaction="/deleteFile">x</button>
+          </div>
+        </form>
       </div>
 
       <div>
@@ -69,4 +72,5 @@
   </form>
 </div> <!-- /container -->
 </body>
+<iframe name="blankifr" style="display:none;"></iframe>
 </html>

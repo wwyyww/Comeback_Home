@@ -114,6 +114,9 @@ public class FileService {
     public String createPath(String filepath, String filename) {
         return fileDirPath + "\\" + filepath + "\\" + filename;
     }
+    public String createPath1(String filepath) {
+        return fileDirPath + "\\" + filepath;
+    }
 
 
     private String getFolder() {

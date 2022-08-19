@@ -71,17 +71,22 @@ public class FileController {
     // 사진 삭제
     @PostMapping("/deleteFile")
     @ResponseBody
-    public ResponseEntity<String> deleteFile(String fileName, String type)
+    public ResponseEntity<String> deleteFile(String fileName, String fileType)
         throws UnsupportedEncodingException {
         File file;
 
+        URLDecoder.decode(fileName,"UTF-8");
+        System.out.println("DeleteFile "+ fileName + fileType );
         log.info("DeleteFile : ", URLDecoder.decode(fileName,"UTF-8"));
 
-        file = new File(fileService.createPath(fileName, "test"));
-        file.delete();
+        file = new File(fileService.createPath1(fileName));
+        System.out.println("file : "+ file.getAbsolutePath());
+        boolean result = file.delete();
+        System.out.println("result :  "+ result);
 
-        // 썸네일 삭제
-        if(type.equals("image")){
+        // 원본 삭제
+        if(fileType.equals("image")){
+            System.out.println("원본도 삭제됨");
             String largeFileName = file.getAbsolutePath().replace("s_", "");
             file = new File(largeFileName);
             file.delete();
