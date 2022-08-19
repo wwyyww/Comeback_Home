@@ -131,6 +131,10 @@ public class ReportService {
 //            });
 //    }
 
+//    public List<Report> getReportsListByFilter(){
+//
+//    }
+
     public Report getReportDetail(Long id) {
         return reportRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 제보입니다."));
     }

@@ -13,6 +13,8 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Slf4j
 @Controller
@@ -150,6 +154,11 @@ public class CaseController {
         return "/cases/caseDetail";
     }
 
+    @PostMapping(value = "/cases/detail/{id}/submit")
+    public String showCaseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+        System.out.println(id);
+        return "redirect:/cases/detail/{id}";
+    }
     // 사건 삭제하기
     @GetMapping(value = "/cases/delete/{id}")
     public String deleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
@@ -182,9 +191,17 @@ public class CaseController {
     }
 
     @GetMapping(value = "/cases/searchCase")
-    public String searchCaseForm(SearchFormDto form, Model model) {
+    public String searchCaseForm(SearchFormDto form, Model model, HttpServletRequest request) {
+        System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Case>> caseList = Optional.empty();
-        caseList = caseService.sortCasebyTime();
+        if (RequestContextUtils.getInputFlashMap(request) != null){
+            System.out.println("redirect2:  " + RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0).getClass().getName());
+            caseList = (Optional<List<Case>>) RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0);
+        } else {
+            System.out.println("nono");
+            caseList = caseService.sortCasebyTime();
+        }
+
         if(caseList.isPresent()) {
             System.out.println(caseList.get());
             model.addAttribute("searchList", caseList.get());
@@ -196,7 +213,7 @@ public class CaseController {
 
 
     @PostMapping(value = "/cases/search/submit")
-    public String showCaseForm(SearchFormDto form, Model model) {
+    public String showCaseForm(SearchFormDto form, Model model, RedirectAttributes redirectAttributes) {
         Optional<List<Case>> caseList = Optional.empty();
         Optional<List<String>> sex = form.getMissing_sex();
         Optional<List<String>> age = form.getMissing_age();
@@ -216,11 +233,13 @@ public class CaseController {
             System.out.println(caseList.get());
             //System.out.println(caseList.get().getMissing_name());
             model.addAttribute("searchList", caseList.get());
+            //System.out.println("redirect1: " + caseList.get());
         } else {
             System.out.println("없음");
         }
-        // "redirect:/cases/searchCase";
-        return "/cases/searchCaseForm";
+        redirectAttributes.addFlashAttribute("searchParam", caseList);
+        return "redirect:/cases/searchCase";
+       // return "/cases/searchCaseForm";
     }
 
 }
