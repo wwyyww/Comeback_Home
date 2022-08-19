@@ -13,6 +13,8 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,6 +49,24 @@ public class CaseController {
         this.userService = userService;
         this.fileService = fileService;
         this.reportService = reportService;
+    }
+
+    @GetMapping(value = "/casesMap")
+    public String caseMap(Model model) {
+        List<Case> caseEntityList = caseService.getCaseList();
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+                caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        Map<String, Object> returnMap=new HashMap<String, Object>();
+
+        returnMap.put("cases", caseDtoList);
+
+        model.addAttribute("cases", returnMap);
+
+        System.out.println(returnMap);
+//        model.addObject("casesList", caseDtoList);
+        return "/allmaps/casesMap/marker-clustering";
     }
 
     // 처음 사건 등록할 때

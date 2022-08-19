@@ -3,8 +3,7 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,7 +21,7 @@ public class MapController {
 
 
 
-    @GetMapping("/caseMap")
+    @RequestMapping(value = "/data.json", method = RequestMethod.GET)
     public List<Case> map(HttpServletRequest req) throws Exception {
         return caseService.getCaseList();
     }
