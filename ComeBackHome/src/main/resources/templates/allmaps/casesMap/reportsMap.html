@@ -46,8 +46,8 @@
 
                 console.log("통신성공" + url);
                 $.each(data , function(i){
-                    var x = data[i].missingLat;
-                    var y = data[i].missingLng;
+                    var x = data[i].witness_lat;
+                    var y = data[i].witness_lng;
                     console.log(x, y)
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(x, y),

@@ -36,6 +36,8 @@ public class Report extends BaseTimeEntity{
     private Double witness_lat;
     private Double witness_lng;
 
+    private String witness_region;
+
     private LocalDateTime witness_time;
 
     private String witness_desc;
@@ -52,9 +54,7 @@ public class Report extends BaseTimeEntity{
     private List<FileEntity> witnessPics;
 
     @Builder
-    public Report(Long id, Case cases, User user,
-                  String witness_title, String witness_area, Double witness_lat, Double witness_lng,
-                  LocalDateTime witness_time, String witness_desc, Boolean is_alert) {
+    public Report(Long id, Case cases, User user, String witness_title, String witness_area, Double witness_lat, Double witness_lng, String witness_region, LocalDateTime witness_time, String witness_desc, Boolean is_alert, List<Warn> warns, List<FileEntity> witnessPics) {
         this.id = id;
         this.cases = cases;
         this.user = user;
@@ -62,8 +62,12 @@ public class Report extends BaseTimeEntity{
         this.witness_area = witness_area;
         this.witness_lat = witness_lat;
         this.witness_lng = witness_lng;
+        this.witness_region = witness_region;
         this.witness_time = witness_time;
         this.witness_desc = witness_desc;
         this.is_alert = is_alert;
+        this.warns = warns;
+        this.witnessPics = witnessPics;
     }
+
 }
