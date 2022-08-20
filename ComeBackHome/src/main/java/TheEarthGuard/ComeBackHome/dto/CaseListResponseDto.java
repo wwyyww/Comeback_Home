@@ -6,9 +6,11 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class CaseListResponseDto {
 
