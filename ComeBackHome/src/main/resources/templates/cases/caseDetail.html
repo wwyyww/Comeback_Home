@@ -80,6 +80,8 @@
   <div th:if="${case.getUserId() == user.getId()}">
     <a th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
     <a th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
+    <a th:href="@{/cases/detailReport/{id}(id=${case.getCaseId()})}">제보 시각화하기</a>
+
     <div th:unless="${case.getIsFind()}">
       <button th:onclick="|location.href='@{/cases/find/{id} (id=${case.getCaseId()})}'|">실종자 찾음</button>
     </div>
@@ -167,6 +169,34 @@
     </table>
   </div>
 </div>
+
+  <div th:if="${#lists.size(reports)>0} and ${case.getUserId() != user.getId()}">
+    <table class="table table-bordered">
+      제보 목록
+      <!-- CONTENTS !-->
+      <thead>
+      <tr>
+        <th class="col-md-1">번호</th>
+        <th class="col-md-4">글제목</th>
+        <th class="col-md-3">작성자</th>
+        <th class="col-md-2">작성일</th>
+        <th class="col-md-2">수정일</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <!-- CONTENTS !-->
+      <tr th:each="report : ${reports}">
+        <td th:text="${report.getId()}"></td>
+        <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
+        <td th:text="${report.getUser().getName()}"></td>
+        <!--        <td th:text="${#dates.format(report.getCreatedTime(), 'yyyy-MM-dd')}"></td>-->
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
 
 </body>
 </html>
