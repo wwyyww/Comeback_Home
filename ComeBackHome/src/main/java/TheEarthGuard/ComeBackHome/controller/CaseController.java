@@ -13,9 +13,6 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
-
-import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -237,7 +234,11 @@ public class CaseController {
 
         if(caseList.isPresent()) {
             System.out.println(caseList.get());
-            model.addAttribute("searchList", caseList.get());
+             List<CaseListResponseDto> caseDtoList = caseList.get().stream().map(
+                caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+            ).collect(Collectors.toList());
+
+            model.addAttribute("cases", caseDtoList);
         } else {
             System.out.println("없음");
         }
