@@ -8,6 +8,7 @@ import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
+import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
@@ -19,10 +20,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +71,24 @@ public class CaseController {
         System.out.println(returnMap);
 //        model.addObject("casesList", caseDtoList);
         return "/allmaps/casesMap/marker-clustering";
+    }
+
+    @GetMapping(value = "/detailMap")
+    public String detailMap(Model model) {
+        List<Case> caseEntityList = caseService.getCaseList();
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+                caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        Map<String, Object> returnMap=new HashMap<String, Object>();
+
+        returnMap.put("cases", caseDtoList);
+
+        model.addAttribute("cases", returnMap);
+
+        System.out.println(returnMap);
+//        model.addObject("casesList", caseDtoList);
+        return "/allmaps/casesMap/reportsMap";
     }
 
     // 처음 사건 등록할 때
@@ -168,7 +189,25 @@ public class CaseController {
             List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
             model.addAttribute("reports", reports);
         }
+
+        if (user != null) {
+
+            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
+            List<Report> reports = new ArrayList<>();
+            for (Report report : reportList) {
+                if (report.getUser().getId() == user.getId()) {
+                    reports.add(report);
+                }
+            }
+            log.info("reports : " + reports);
+            model.addAttribute("reports", reports);
+        }
         return "/cases/caseDetail";
+    }
+
+    @GetMapping(value = "/cases/detailReport/{id}")
+    public String caseDetailMap(@PathVariable("id") Long id) {
+        return "/allmaps/casesMap/reportsMap";
     }
 
     @PostMapping(value = "/cases/detail/{id}/submit")
@@ -220,13 +259,26 @@ public class CaseController {
         return "redirect:/cases/detail/{id}";
     }
 
+    @Transactional(readOnly = true)
     @GetMapping(value = "/cases/searchCase")
     public String searchCaseForm(SearchFormDto form, Model model, HttpServletRequest request) {
         System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Case>> caseList = Optional.empty();
         if (RequestContextUtils.getInputFlashMap(request) != null){
-            System.out.println("redirect2:  " + RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0).getClass().getName());
+            //System.out.println("redirect2:  " + RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0));
             caseList = (Optional<List<Case>>) RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0);
+
+            if (caseList.get().isEmpty()){
+                System.out.println("없음");
+            } else {
+                System.out.println(caseList.get().get(0).getCaseId());
+                System.out.println("fileEntity: " + caseService.test(caseList.get().get(0).getCaseId()));
+                for(int i = 0; i < caseList.get().size(); i++){
+                    caseList.get().get(i).setMissingPics(caseService.test(caseList.get().get(i).getCaseId()));
+                }
+                //caseList.get().get(0).setMissingPics(caseService.test(caseList.get().get(0).getCaseId()));
+            }
+            //System.out.println(caseList.get().get(0).getMissingPics());
         } else {
             System.out.println("nono");
             caseList = caseService.sortCasebyTime();
@@ -245,7 +297,7 @@ public class CaseController {
         return "/cases/searchCaseForm";
     }
 
-
+    @Transactional(readOnly = true)
     @PostMapping(value = "/cases/search/submit")
     public String showCaseForm(SearchFormDto form, Model model, RedirectAttributes redirectAttributes) {
         Optional<List<Case>> caseList = Optional.empty();

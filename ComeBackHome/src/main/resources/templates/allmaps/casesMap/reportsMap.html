@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>실종자 지도보기</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8"></script>
+    <!--    <script type="text/javascript" src="../src/caseInfo.js"></script>-->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <style>
+        html, body { width:100%;height:100%;padding:0;margin:0; }
+    </style>
+
+</head>
+<body onload="javascript:initMap()">
+
+<div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
+<script>
+    var map = new naver.maps.Map("map", {
+        zoom: 10,
+        center: new naver.maps.LatLng(36.2253017, 127.6460516),
+        zoomControl: true,
+        zoomControlOptions: {
+            position: naver.maps.Position.TOP_LEFT,
+            style: naver.maps.ZoomControlStyle.SMALL
+        }
+    });
+
+    var markers = [];
+    var url = window.location.href;
+    url=url.split("/");
+    url = url[url.length - 1];
+
+
+    function initMap() {
+
+        $.ajax({
+            type:"get",
+            url:"report.json/"+url,
+            dataType:"json",
+            success: function(data){
+
+                console.log("통신성공" + url);
+                $.each(data , function(i){
+                    var x = data[i].missingLat;
+                    var y = data[i].missingLng;
+                    console.log(x, y)
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(x, y),
+                        map: map
+                    });
+                });
+            },
+            error:function(){
+                console.log("통신에러");
+            }
+        })
+
+
+    }
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

@@ -59,7 +59,7 @@ public class Case extends BaseTimeEntity{
     private List<Warn> warns;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cases", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "cases", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("createdTime desc")
     private List<Report> reports;
 
