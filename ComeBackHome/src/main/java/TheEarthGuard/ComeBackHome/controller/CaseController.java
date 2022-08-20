@@ -73,6 +73,24 @@ public class CaseController {
         return "/allmaps/casesMap/marker-clustering";
     }
 
+    @GetMapping(value = "/detailMap")
+    public String detailMap(Model model) {
+        List<Case> caseEntityList = caseService.getCaseList();
+        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+                caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+        ).collect(Collectors.toList());
+
+        Map<String, Object> returnMap=new HashMap<String, Object>();
+
+        returnMap.put("cases", caseDtoList);
+
+        model.addAttribute("cases", returnMap);
+
+        System.out.println(returnMap);
+//        model.addObject("casesList", caseDtoList);
+        return "/allmaps/casesMap/reportsMap";
+    }
+
     // 처음 사건 등록할 때
     @GetMapping(value = "/cases/new")
     public String createCaseForm(Model model, @CurrentUser User user) {
@@ -171,7 +189,25 @@ public class CaseController {
             List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
             model.addAttribute("reports", reports);
         }
+
+        if (user != null) {
+
+            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
+            List<Report> reports = new ArrayList<>();
+            for (Report report : reportList) {
+                if (report.getUser().getId() == user.getId()) {
+                    reports.add(report);
+                }
+            }
+            log.info("reports : " + reports);
+            model.addAttribute("reports", reports);
+        }
         return "/cases/caseDetail";
+    }
+
+    @GetMapping(value = "/cases/detailReport/{id}")
+    public String caseDetailMap(@PathVariable("id") Long id) {
+        return "/allmaps/casesMap/reportsMap";
     }
 
     @PostMapping(value = "/cases/detail/{id}/submit")
