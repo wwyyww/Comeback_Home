@@ -38,15 +38,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Slf4j
 @Controller
-@SessionAttributes({"caseDto"})
+@SessionAttributes({"caseDto", "RedirectURL"})
 public class CaseController {
     private final CaseService caseService;
     private UserService userService;
@@ -139,17 +137,20 @@ public class CaseController {
         return "redirect:/";
     }
 
-    // 장소 검색
-    @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missingPics") MultipartFile file, Model model, Errors errors) {
+    // (1) 장소 검색 (new Case)
+    @PostMapping(value = "/searchPlace")
+    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, HttpServletRequest request, Model model, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
             // 에러 페이지 수정 필요
             return "cases/createCaseForm";
         }
+        // RedirectURL 세션 삭제해주기
+
         model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
         return "/cases/searchPlace";
     }
+
 
     // 모든 사건 조회
     @GetMapping(value = "/cases")
@@ -212,7 +213,9 @@ public class CaseController {
     }
 
     @GetMapping(value = "/cases/detailReport/{id}")
-    public String caseDetailMap(@PathVariable("id") Long id) {
+    public String caseDetailMap(@PathVariable("id") Long id, Model model) {
+        Optional<Case> caseEntity = caseService.findCase(id);
+        model.addAttribute("caseEntity", caseEntity.get());
         return "/allmaps/casesMap/reportsMap";
     }
 
@@ -234,6 +237,7 @@ public class CaseController {
         //return "/cases/caseDetail";
         return "redirect:/cases/detail/{id}";
     }
+
     // 사건 삭제하기
     @GetMapping(value = "/cases/delete/{id}")
     public String deleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
@@ -241,27 +245,43 @@ public class CaseController {
         return "redirect:/cases";
     }
 
-    // 사건 수정하기
+    // 사건 수정하기 (첫 화면)
     @GetMapping(value = "/cases/update/{id}")
-    public String updateCaseForm(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
+    public String createEditCase(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
         Optional<Case> caseDto = caseService.findCase(caseId);
 
         if(caseDto.isPresent() && user.getId() == caseDto.get().getUser().getId()){
             CaseResponseDto caseResponseDto =  new CaseResponseDto(caseDto.get(), caseDto.get().getUser());
-            model.addAttribute("case", caseResponseDto);
+            model.addAttribute("caseDto", caseResponseDto);
+
+            String redirectURL = "/cases/update/" + caseId.toString();
+            model.addAttribute("RedirectURL",  redirectURL);
         }
         return "/cases/caseUpdate";
     }
 
-    // 사건 수정하기
+    // 사건 수정하기 (지도 찍고 와서 )
     @PostMapping(value = "/cases/update/{id}")
-    public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
+    public String updateEditCase(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,  @PathVariable("id") Long caseId, HttpServletRequest request, Model model) {
+        caseDto.setMissingArea(placeInfoDto.getMissingArea());
+        caseDto.setMissingLat(placeInfoDto.getMissingLat());
+        caseDto.setMissingLng(placeInfoDto.getMissingLng());
+
+        model.addAttribute("caseDto", caseDto);
+        model.addAttribute("id", caseId);
+        return "cases/caseUpdate";
+    }
+
+    // 사건 수정하기 (제출)
+    @PostMapping(value = "/cases/update/submit/{id}")
+    public String uploadEditCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!");
             return "redirect:/cases";
         }
 
+        System.out.println("submit : ");
         caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
         return "redirect:/cases/detail/{id}";
     }

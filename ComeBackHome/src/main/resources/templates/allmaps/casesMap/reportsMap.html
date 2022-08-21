@@ -18,6 +18,8 @@
 </head>
 <body onload="javascript:initMap()">
 
+<input type="button" 3333333333333333333
+       value="제보 모두보기" th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
 <div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
 <script>
     var map = new naver.maps.Map("map", {
