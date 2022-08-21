@@ -204,7 +204,9 @@ public class CaseController {
     }
 
     @GetMapping(value = "/cases/detailReport/{id}")
-    public String caseDetailMap(@PathVariable("id") Long id) {
+    public String caseDetailMap(@PathVariable("id") Long id, Model model) {
+        Optional<Case> caseEntity = caseService.findCase(id);
+        model.addAttribute("caseEntity", caseEntity.get());
         return "/allmaps/casesMap/reportsMap";
     }
 
