@@ -322,4 +322,12 @@ public class CaseController {
        // return "/cases/searchCaseForm";
     }
 
+
+    // (1) 장소 검색 (new Case)
+    @GetMapping(value = "/searchPlace")
+    public String searchPlace() {
+        return "/cases/searchPlace";
+    }
+
+
 }
