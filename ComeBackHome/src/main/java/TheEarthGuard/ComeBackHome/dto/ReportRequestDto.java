@@ -26,6 +26,9 @@ public class ReportRequestDto extends BaseTimeEntity {
 
     @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
+
+    private String witness_region;
+
     private String witness_lat;
     private String witness_lng;
 
@@ -42,6 +45,7 @@ public class ReportRequestDto extends BaseTimeEntity {
         Report report=Report.builder()
                 .witness_title(this.witness_title)
                 .witness_area(this.witness_area)
+                .witness_region(this.witness_area.substring(0,2))
                 .witness_desc(this.witness_desc)
                 .witness_lat(Double.valueOf(this.witness_lat))
                 .witness_lng(Double .valueOf(this.witness_lng))

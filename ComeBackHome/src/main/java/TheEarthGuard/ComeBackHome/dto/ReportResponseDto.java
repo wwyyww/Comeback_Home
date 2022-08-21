@@ -26,6 +26,9 @@ public class ReportResponseDto {
 
     @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
+
+    private String witness_region;
+
     private Double witness_lat;
     private Double witness_lng;
 
@@ -45,6 +48,7 @@ public class ReportResponseDto {
         this.id = report.getId();
         this.witness_title = report.getWitness_title();
         this.witness_area = report.getWitness_area();
+        this.witness_region = report.getWitness_region();
         this.witness_lat = report.getWitness_lat();
         this.witness_lng = report.getWitness_lng();
         this.witness_desc = report.getWitness_desc();

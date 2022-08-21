@@ -3,6 +3,7 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.ReportPlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
@@ -89,8 +90,29 @@ public class ReportController {
 
     }
 
+    @GetMapping(value = "/reports/reportList/{id}")
+    public String caseReportList(Model model, @PathVariable("id") Long id, @CurrentUser User user){
+
+        Optional<Case> caseEntity = caseService.findCase(id);
+
+        if(caseEntity.isPresent()) {
+            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
+        }
+
+        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+            List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
+            model.addAttribute("reports", reports);
+        }else{
+            return "redirect:/";
+        }
+
+        return "/reports/allReports";
+
+    }
+
+
     @GetMapping(value = "/mypage/reports")
-    public String reportList(Model model, @CurrentUser User user) {
+    public String myReportList(Model model, @CurrentUser User user) {
         List<Report> reports = reportService.getReportsListByUser(user);
         model.addAttribute("reports", reports);
         return "reports/reportList";

@@ -12,6 +12,8 @@ import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,5 +155,22 @@ public class ReportService {
     public List<Report> getReports() {
         return reportRepository.findAll();
     }
+
+//    public List<Report> getByArea(){
+//        //return reportRepository.
+//    }
+//
+//    public List<Report> getByDate(){
+//
+//    }
+
+//    public List<Report> getByFilters(String area, LocalDate start, LocalDate end){
+//        if(area != null && start != null && end != null){
+//
+//        } else if () {
+//
+//        }
+//    }
+
 
 }

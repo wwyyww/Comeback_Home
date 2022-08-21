@@ -9,6 +9,8 @@ import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
+
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,5 +205,21 @@ public class CaseService {
     public Optional<List<Case>> sortCasebyTime(){
         return caseRepository.casebyTime();
     }
+
+//    @Override
+//    public Optional<List<Case>> casebyTime() {
+//        Optional<List<Case>> caseList = Optional.empty();
+//        List<Case> result = em.createQuery("select c from Case c ORDER BY c.missingTimeStart DESC ", Case.class).getResultList();
+//        caseList = Optional.of(result);
+//        return caseList;
+//    }
+
+    @Transactional
+    public List<FileEntity> test(Long caseId){
+        List<FileEntity> missing_pictures = caseRepository.findByCaseId(caseId).get().getMissingPics();
+        //List<FileEntity> missing_pictures = caseRepository.findByMissingTimeStartOrderByMissingTimeStartDesc(missingTimeStart).get().get(0).getMissingPics();
+        return missing_pictures;
+    }
+
 
 }
