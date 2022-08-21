@@ -15,12 +15,20 @@ import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -174,7 +182,7 @@ public class CaseController {
 
     // 사건 상세보기
     @GetMapping(value = "/cases/detail/{id}")
-    public String caseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+    public String caseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Optional<Case> caseEntity = caseService.findCase(id);
 
         if(caseEntity.isPresent()) {
@@ -211,8 +219,14 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/detail/{id}/submit")
-    public String showCaseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        System.out.println(id);
+    public String showCaseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+
+        String area = form.getMissing_area2();
+        LocalDate start = form.getMissing_time_start();
+        LocalDate end = form.getMissing_time_end();
+        System.out.println(id + area + start + end);
+
+        //return "/cases/caseDetail";
         return "redirect:/cases/detail/{id}";
     }
     // 사건 삭제하기

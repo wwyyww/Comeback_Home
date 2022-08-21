@@ -16,4 +16,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     Optional<List<Report>> findAllByCases(Case cases);
 
+    //Optional<List<Report>> findBy
+
 }
