@@ -11,7 +11,7 @@
 </head>
 <body>
 <div layout:fragment="content" class="container">
-  <form  method="post" enctype="multipart/form-data" >
+  <form  method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
     <div class="form-group">
       <div>
         <label for="missingName">실종자 이름</label>
@@ -21,7 +21,7 @@
 
       <div>
         <label for="missingAge">실종자 나이</label>
-        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" placeholder="나이를 입력하세요">
+        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" > 세
         <span th:text="${valid_missingAge}"></span>
       </div>
 
@@ -71,10 +71,10 @@
         <p><em>지도를 클릭해주세요!</em></p>
 <!--        <form action="/cases/new" method="post">-->
           <div className="form-group">
-            <div id="clickLatlng"></div>
+<!--            <div id="clickLatlng"></div>-->
             <input type="hidden" id="missingLat" name="missingLat">
             <input type="hidden" id="missingLng" name="missingLng">
-            <input type="text" id="missingArea" name="missingArea">
+            <input type="text" id="missingArea" name="missingArea"  placeholder="장소를 선택해주세요">
 <!--            <button type="submit">등록</button>-->
           </div>
 <!--        </form>-->
@@ -151,8 +151,8 @@
           naver.maps.Event.addListener(map, 'click', function(e) {
             marker.setPosition(e.coord);
             var message = marker.position.toString();
-            var resultDiv = document.getElementById('clickLatlng');
-            resultDiv.innerHTML =  message;
+            // var resultDiv = document.getElementById('clickLatlng');
+            // resultDiv.innerHTML =  message;
 
             var missingLat = document.getElementById('missingLat');
             var missingLng = document.getElementById('missingLng');
@@ -206,11 +206,20 @@
         <label for="missingPics">실종자 사진</label>
         <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
       </div>
-
     </div>
-    <button type="submit" formaction="/cases/new/submit">등록</button>
-<!--    <button type="submit" th:action="@{/cases/new/submit}">등록</button>-->
+    <button type="submit">등록</button>
   </form>
+    <script>
+      // 파일 null인지 확인
+      let missingPics = document.getElementById("missingPics");
+      let newCaseForm = document.getElementById("newCaseForm");
+      function checkFileNull() {
+        if(! missingPics.value) {
+          alert("실종자 사진 등록은 필수입니다.");
+          return false;
+        }
+      }
+    </script>
 </div>
 
 </body>
