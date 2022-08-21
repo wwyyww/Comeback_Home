@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.util.*;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -135,13 +136,13 @@ public class ReportService {
     }
 
     public List<Report> getReportsListByCase(Case selectCase) {
-        return reportRepository.findAllByCases(selectCase).orElseThrow(() -> new RuntimeException("존재하지 않는 사건입니다."));
+        return reportRepository.findAllByCasesOrderByWitnessTimeDesc(selectCase).orElseThrow(() -> new RuntimeException("존재하지 않는 사건입니다."));
 
     }
 
     //사용자가 작성한 제보 조회
     public List<Report> getReportsListByUser(User user) {
-        return reportRepository.findAllByUser(user).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+        return reportRepository.findAllByUserOrderByWitnessTimeDesc(user).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
     }
 
     //전체 증언 조회
@@ -158,17 +159,16 @@ public class ReportService {
 
         if(!Objects.equals(area, "전체") && start != null ){
             System.out.println("필터링 전부 선택");
-
-        } else if (!Objects.equals(area, "전체") && start == null) {
+            reportList = reportRepository.findByWitnessRegionAndWitnessTimeBetween(area, start.atStartOfDay(), end.atTime(LocalTime.MAX));
+        } else if (!Objects.equals(area, "전체") && start == null && end == null) {
             System.out.println("필터링 지역만 선택");
             reportList = reportRepository.findByWitnessRegion(area);
         } else if (Objects.equals(area, "전체") && start != null && end != null){
             System.out.println("필터링 시간만 선택");
-            //System.out.println(start.atStartOfDay().toString() + end.atTime(LocalTime.MAX));
             reportList = reportRepository.findByWitnessTimeBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX));
-        } else if (Objects.equals(area, "전체") && start == null){
+        } else if (Objects.equals(area, "전체") && start == null && end == null){
             System.out.println("필터링 전부 선택 안함");
-
+            reportList = reportRepository.findAllByOrderByWitnessTimeDesc();
         }
         return reportList;
     }

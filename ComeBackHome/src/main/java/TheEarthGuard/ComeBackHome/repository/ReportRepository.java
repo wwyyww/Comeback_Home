@@ -15,9 +15,12 @@ import java.util.Optional;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    Optional<List<Report>> findAllByUser(User user);
+    Optional<List<Report>> findAllByUserOrderByWitnessTimeDesc(User user);
 
-    Optional<List<Report>> findAllByCases(Case cases);
+    Optional<List<Report>> findAllByCasesOrderByWitnessTimeDesc(Case cases);
+
+    Optional<List<Report>> findAllByOrderByWitnessTimeDesc();
+    //ByMissingTimeStartOrderByWitnessTimeDesc();
 
    Optional<List<Report>> findByWitnessRegion(String region);
 

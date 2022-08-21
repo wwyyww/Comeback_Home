@@ -3,8 +3,7 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
-import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
+
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
@@ -12,16 +11,25 @@ import TheEarthGuard.ComeBackHome.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+
+import TheEarthGuard.ComeBackHome.dto.*;
+import java.time.LocalDate;
+
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 
 @Slf4j
 @Controller
@@ -73,19 +81,58 @@ public class ReportController {
     }
 
     @GetMapping(value = "/reports/reportList/{id}")
-    public String caseReportList(Model model, @PathVariable("id") Long id, @CurrentUser User user){
+    public String caseReportList(Model model, @PathVariable("id") Long id, @CurrentUser User user, HttpServletRequest request){
+        System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
+        Optional<List<Report>> reportList = Optional.empty();
 
         Optional<Case> caseEntity = caseService.findCase(id);
-
         if(caseEntity.isPresent()) {
-            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
+            caseService.countHitCase(caseEntity.get().getCaseId()); // hit ++
+            model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
         }
 
-        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
-            List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
-            model.addAttribute("reports", reports);
-        }else{
-            return "redirect:/";
+//        if(caseEntity.isPresent()) {
+//            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
+//        }
+
+//        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+//            //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
+//            reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
+//            //model.addAttribute("reports", reports);
+//        }else{
+//            return "redirect:/";
+//        }
+
+
+
+        if (RequestContextUtils.getInputFlashMap(request) != null){
+            reportList = (Optional<List<Report>>) RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0);
+            if (reportList.isPresent()){
+                System.out.println("값이 있음");
+                //System.out.println(reportList.get().get(0).getId());
+            } else {
+                System.out.println("값이 없음");
+            }
+
+        } else {
+            System.out.println("nono");
+            if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+                //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
+                reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
+                //model.addAttribute("reports", reports);
+            }else{
+                return "redirect:/";
+            }
+        }
+        if(reportList.isPresent()) {
+            System.out.println(reportList.get());
+            List<ReportResponseDto> reportDtoList = reportList.get().stream().map(
+                    ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
+            ).collect(Collectors.toList());
+
+            model.addAttribute("reports", reportDtoList);
+        } else {
+            System.out.println("없음");
         }
 
         return "/reports/reportList";
@@ -93,6 +140,23 @@ public class ReportController {
     }
 
 
+    @PostMapping(value = "/reports/reportList/{id}/submit")
+    public String showCaseReportList(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+        Optional<List<Report>> reportList = Optional.empty();
+        String area = form.getMissing_area2();
+        LocalDate start = form.getMissing_time_start();
+        LocalDate end = form.getMissing_time_end();
+        System.out.println(id + area + start + end);
+        reportList = reportService.getByFilters(area, start, end);
+        if(reportList.isPresent()) {
+            System.out.println(reportList.get());
+        } else {
+            System.out.println("없음");
+        }
+        redirectAttributes.addFlashAttribute("searchReport", reportList);
+        //return "/cases/caseDetail";
+        return "redirect:/reports/reportList/{id}";
+    }
     @GetMapping(value = "/mypage/reports")
     public String myReportList(Model model, @CurrentUser User user) {
         List<Report> reports = reportService.getReportsListByUser(user);
