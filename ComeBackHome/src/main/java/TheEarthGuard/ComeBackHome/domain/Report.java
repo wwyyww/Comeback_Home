@@ -54,7 +54,7 @@ public class Report extends BaseTimeEntity{
     private List<FileEntity> witnessPics;
 
     @Builder
-    public Report(Long id, Case cases, User user, String witness_title, String witness_area, Double witness_lat, Double witness_lng, String witnessRegion, LocalDateTime witness_time, String witness_desc, Boolean is_alert, List<Warn> warns, List<FileEntity> witnessPics) {
+    public Report(Long id, Case cases, User user, String witness_title, String witness_area, Double witness_lat, Double witness_lng, String witnessRegion, LocalDateTime witnessTime, String witness_desc, Boolean is_alert, List<Warn> warns, List<FileEntity> witnessPics) {
         this.id = id;
         this.cases = cases;
         this.user = user;
