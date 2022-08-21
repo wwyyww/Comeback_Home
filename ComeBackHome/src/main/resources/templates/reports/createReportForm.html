@@ -49,12 +49,12 @@
       </p>
 
 
-      <label for="witness_time">발견 시간</label>
-      <div th:if="${reportForm.witness_time}">
-        <input type="datetime-local" id="witness_time" name="witness_time" th:value="${reportForm.witness_time}">
+      <label for="witnessTime">발견 시간</label>
+      <div th:if="${reportForm.witnessTime}">
+        <input type="datetime-local" id="witnessTime" name="witnessTime" th:value="${reportForm.witnessTime}">
       </div>
-      <div th:unless="${reportForm.witness_time}">
-        <input type="datetime-local" id="witness_time" name="witness_time" >
+      <div th:unless="${reportForm.witnessTime}">
+        <input type="datetime-local" id="witnessTime" name="witnessTime" >
       </div>
 
     </div>

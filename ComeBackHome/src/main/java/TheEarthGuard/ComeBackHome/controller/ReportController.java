@@ -106,7 +106,7 @@ public class ReportController {
             return "redirect:/";
         }
 
-        return "/reports/allReports";
+        return "/reports/reportList";
 
     }
 
