@@ -41,7 +41,7 @@
         </td>
         <td th:text="${case.getMissingRegion()}"></td>
         <td th:text="${case.getUserName()}"></td>
-        <td th:text="${case.getCreatedTime()}"></td>
+        <td th:text="${#temporals.format(case.createdTime, 'yyyy-MM-dd')}"></td>
         <td th:text="${case.getHitCnt()}"></td>
         </tr>
       </tbody>

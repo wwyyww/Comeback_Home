@@ -63,10 +63,8 @@
   <tr>
     <th>실종 시간</th>
     <td>
-      <p>
-      <span th:text="${case.getMissingTimeStart()}"></span> ~
-      <span th:text="${case.getMissingTimeEnd()}"></span>
-      </p>
+      <span th:text="${#temporals.format(case.getMissingTimeStart(), 'yyyy-MM-dd HH:MM')}"></span> ~
+        <span th:text="${#temporals.format(case.getMissingTimeEnd(), 'yyyy-MM-dd HH:MM')}"></span>
     </td>
   </tr>
   </tbody>
