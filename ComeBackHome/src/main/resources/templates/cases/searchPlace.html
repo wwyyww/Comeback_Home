@@ -58,7 +58,9 @@
 
     <!-- 선택한 장소 표기 -->
     <p><em>지도를 클릭/선택해주세요!</em></p>
-    <form action="/cases/new" method="post">
+    <span th:text="${RedirectURL}"></span>
+    <form th:action="${RedirectURL}" method="post">
+<!--      /cases/update/{id}-->
       <div className="form-group">
         <input type="hidden" id="missingLat" name="missingLat">
         <input type="hidden" id="missingLng" name="missingLng">
