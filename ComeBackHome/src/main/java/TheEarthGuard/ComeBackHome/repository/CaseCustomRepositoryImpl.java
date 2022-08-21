@@ -21,11 +21,18 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
 
     @Override
     public Optional<List<Case>> searchByMissingName(String missing_name, Optional<List<String>> sex,
-        Optional<List<String>> age, Optional<List<String>> area) {
+        Optional<List<String>> age, Optional<List<String>> area, String feature) {
         Optional<List<Case>> caseList = Optional.empty();
         List<Boolean> sexList = Collections.emptyList();
         List<String> areaList = Collections.emptyList();
         List<String> ageList = Collections.emptyList();
+        List<Integer> featureList = Collections.emptyList();
+
+        if (feature != null){
+            featureList = new ArrayList<>(Arrays.asList(Integer.parseInt(feature)));
+        } else {
+            featureList = new ArrayList<>(Arrays.asList(1,2,3,4));
+        }
         if (sex != null){
             List<Integer> sexList_Int = sex.get().stream().map(s -> Integer.parseInt(s)).collect(
                 Collectors.toList());
@@ -53,13 +60,13 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         System.out.println("sexList: " + sexList);
         System.out.println("areaList: " + areaList);
         System.out.println("areaList: " + ageList);
-        System.out.println("name: " + missing_name);
+        System.out.println("featureList: " + featureList);
 //        List<Case> result2 = em.createQuery("select c from Case c where c.missing_name like :missing_name", Case.class)
 //            .setParameter("missing_name", "%" + missing_name +"%")
 //            .getResultList();
 
-        List<Case> result = em.createQuery("select c from Case c where c.missingName like :missing_name and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2", Case.class)
-            .setParameter("missing_name", "%" + missing_name +"%").setParameter("area", areaList).setParameter("sex", sexList).
+        List<Case> result = em.createQuery("select c from Case c where c.missingName like :missing_name and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2 and c.missingFeature in (:feature)", Case.class)
+            .setParameter("missing_name", "%" + missing_name +"%").setParameter("area", areaList).setParameter("sex", sexList).setParameter("feature", featureList).
                 setParameter("age1", Integer.parseInt(ageList.get(0))).setParameter("age2", Integer.parseInt(ageList.get(1))).getResultList();
         caseList = Optional.of(result);
         return caseList;
@@ -67,11 +74,18 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
 
     @Override
     public Optional<List<Case>> searchByMissingArea(String missing_area, Optional<List<String>> sex,
-        Optional<List<String>> age, Optional<List<String>> area) {
+        Optional<List<String>> age, Optional<List<String>> area, String feature) {
         Optional<List<Case>> caseList = Optional.empty();
         List<Boolean> sexList = Collections.emptyList();
         List<String> areaList = Collections.emptyList();
         List<String> ageList = Collections.emptyList();
+        List<Integer> featureList = Collections.emptyList();
+
+        if (feature != null){
+            featureList = new ArrayList<>(Arrays.asList(Integer.parseInt(feature)));
+        } else {
+            featureList = new ArrayList<>(Arrays.asList(1,2,3,4));
+        }
         if (sex != null){
             List<Integer> sexList_Int = sex.get().stream().map(s -> Integer.parseInt(s)).collect(Collectors.toList());
             sexList = sexList_Int.stream().map(s -> s != 0).collect(Collectors.toList());
@@ -97,12 +111,13 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         System.out.println("sexList: " + sexList);
         System.out.println("areaList: " + areaList);
         System.out.println("areaList: " + ageList);
+        System.out.println("featureList: " + featureList);
 //        List<Case> result = em.createQuery("select c from Case c where c.missing_area like :missing_area", Case.class)
 //                .setParameter("missing_area", "%"+missing_area+"%")
 //                .getResultList();
 
-        List<Case> result = em.createQuery("select c from Case c where c.missingArea like :missing_area and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2", Case.class)
-            .setParameter("missing_area", "%"+missing_area+"%").setParameter("area", areaList).setParameter("sex", sexList).
+        List<Case> result = em.createQuery("select c from Case c where c.missingArea like :missing_area and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2 and c.missingFeature in (:feature)", Case.class)
+            .setParameter("missing_area", "%"+missing_area+"%").setParameter("area", areaList).setParameter("sex", sexList).setParameter("feature", featureList).
                 setParameter("age1", Integer.parseInt(ageList.get(0))).setParameter("age2", Integer.parseInt(ageList.get(1))).getResultList();
 
         caseList = Optional.of(result);
@@ -111,11 +126,18 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
 
     @Override
     public Optional<List<Case>> searchByFilters(Optional<List<String>> sex,
-        Optional<List<String>> age, Optional<List<String>> area) {
+        Optional<List<String>> age, Optional<List<String>> area, String feature) {
         Optional<List<Case>> caseList = Optional.empty();
         List<Boolean> sexList = Collections.emptyList();
         List<String> areaList = Collections.emptyList();
         List<String> ageList = Collections.emptyList();
+        List<Integer> featureList = Collections.emptyList();
+
+        if (feature != null){
+            featureList = new ArrayList<>(Arrays.asList(Integer.parseInt(feature)));
+        } else {
+            featureList = new ArrayList<>(Arrays.asList(1,2,3,4));
+        }
         if (sex != null){
             List<Integer> sexList_Int = sex.get().stream().map(s -> Integer.parseInt(s)).collect(Collectors.toList());
             sexList = sexList_Int.stream().map(s -> s != 0).collect(Collectors.toList());
@@ -142,8 +164,10 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         System.out.println("sexList: " + sexList);
         System.out.println("areaList: " + areaList);
         System.out.println("areaList: " + ageList);
-        List<Case> result = em.createQuery("select c from Case c where c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2", Case.class)
-            .setParameter("area", areaList).setParameter("sex", sexList).setParameter("age1", Integer.parseInt(ageList.get(0))).setParameter("age2", Integer.parseInt(ageList.get(1))).getResultList();
+        System.out.println("featureList: " + featureList);
+        List<Case> result = em.createQuery("select c from Case c where c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2 and c.missingFeature in (:feature)", Case.class)
+            .setParameter("area", areaList).setParameter("sex", sexList).setParameter("age1", Integer.parseInt(ageList.get(0))).setParameter("age2", Integer.parseInt(ageList.get(1)))
+                .setParameter("feature", featureList).getResultList();
 
         caseList = Optional.of(result);
 

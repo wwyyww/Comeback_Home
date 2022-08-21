@@ -26,5 +26,5 @@ public class SearchFormDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate missing_time_end;
-
+    private String missing_feature;
 }

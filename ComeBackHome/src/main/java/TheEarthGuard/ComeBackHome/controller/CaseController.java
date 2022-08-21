@@ -298,15 +298,14 @@ public class CaseController {
         Optional<List<String>> sex = form.getMissing_sex();
         Optional<List<String>> age = form.getMissing_age();
         Optional<List<String>> area = form.getMissing_area();
-        System.out.println(sex);
-        System.out.println(age);
-        System.out.println(area);
+        String feature = form.getMissing_feature();
+        //System.out.println(sex.toString() + age + area + feature);
         if (form.getSearch_type().equals("name")){ // 이름 입력 했을 때
-            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
+            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area, feature);
         } else if (form.getSearch_type().equals("area")) { // 주소 입력 했을 때
-            caseList = caseService.findbyMissingArea(form.getMissing_name(), sex, age, area);
+            caseList = caseService.findbyMissingArea(form.getMissing_name(), sex, age, area, feature);
         } else { // 아무 입력값이 없을 때
-            caseList = caseService.findbyFilters(form.getMissing_sex(), form.getMissing_age(), form.getMissing_area());
+            caseList = caseService.findbyFilters(form.getMissing_sex(), form.getMissing_age(), form.getMissing_area(), feature);
         }
         //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
         if(caseList.isPresent()) {
