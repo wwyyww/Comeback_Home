@@ -1,10 +1,19 @@
 package TheEarthGuard.ComeBackHome.domain;
 
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,4 +79,14 @@ public class Report extends BaseTimeEntity{
         this.witnessPics = witnessPics;
     }
 
+    public void updateReport(ReportRequestDto dto){
+        this.witness_title = dto.getWitness_title();
+        this.witness_area = dto.getWitness_area();
+        this.witnessRegion = dto.getWitnessRegion();
+        this.witness_desc = dto.getWitness_desc();
+        this.witness_lat =  Double.parseDouble(dto.getWitness_lat());
+        this.witness_lng = Double.parseDouble(dto.getWitness_lng());
+        this.witnessTime = dto.getWitnessTime();
+        this.witnessRegion = this.witness_area.substring(0,2);
+    }
 }

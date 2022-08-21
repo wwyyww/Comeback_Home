@@ -67,5 +67,6 @@ public class CaseSaveRequestDto {
             .missingTimeEnd(this.missingTimeEnd)
             .build();
     }
+
 }
 

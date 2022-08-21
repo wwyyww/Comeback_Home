@@ -237,7 +237,6 @@ public class CaseController {
             return "redirect:/cases";
         }
 
-        System.out.println("submit : ");
         caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
         return "redirect:/cases/detail/{id}";
     }
