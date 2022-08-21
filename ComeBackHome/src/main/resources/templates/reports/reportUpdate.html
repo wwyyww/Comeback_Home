@@ -2,7 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>타이틀</title>
+    <title>제보 수정하기</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
 </head>
 <body>
 <div class="container">
@@ -41,25 +45,132 @@
 
 
             <p>
-                <label for="missing_area">발견 지역</label>
-            <div th:if="${reportForm.witness_area}">
-                <input type="text" id="witness_area" name="witness_area" placeholder="지역을 입력하세요" th:value="${reportForm.witness_area}" readonly>
-                <input type="hidden" id="witness_lng" name="witness_lng" th:value="${reportForm.witness_lng} " readonly>
-                <input type="hidden" id="witness_lat" name="witness_lat" th:value="${reportForm.witness_lat} " readonly>
+<!--                <label for="missing_area">발견 지역</label>기존코드&ndash;&gt;-->
+<!--                <div th:if="${reportForm.witness_area}">-->
+<!--                    <input type="text" id="witness_area" name="witness_area" placeholder="지역을 입력하세요" th:value="${reportForm.witness_area}" readonly>-->
+<!--                    <input type="hidden" id="witness_lng" name="witness_lng" th:value="${reportForm.witness_lng} " readonly>-->
+<!--                    <input type="hidden" id="witness_lat" name="witness_lat" th:value="${reportForm.witness_lat} " readonly>-->
+<!--                </div>-->
+<!--                <div th:unless="${reportForm.witness_area}">-->
+<!--                    <input type="text" id="witness_area" name="witness_area" placeholder="지역을 입력하세요" disabled>-->
+<!--                </div>-->
+<!--                <button type="submit" formaction="/reports/new/searchPlace">지도에서 찾기</button>(끝) 기존코드&ndash;&gt;-->
+            <div class="search" style="">
+                <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />
+                <input id="submit" type="button" value="주소 검색" />
             </div>
-            <div th:unless="${reportForm.witness_area}">
-                <input type="text" id="witness_area" name="witness_area" placeholder="지역을 입력하세요" disabled>
+            <!-- 지도 표기 -->
+            <div id="map" style="width:100%;height:350px;"></div>
+            <p><em>지도를 클릭해주세요!</em></p>
+            <div className="form-group">
+                <input type="hidden" id="witness_lat" name="witness_lat" th:value="${reportForm.witness_lat}">
+                <input type="hidden" id="witness_lng" name="witness_lng" th:value="${reportForm.witness_lng}">
+                <input type="text" id="witness_area" name="witness_area"  placeholder="장소를 선택해주세요" th:value="${reportForm.witness_area}" readonly>
             </div>
-            <button type="submit" formaction="/reports/new/searchPlace">지도에서 찾기</button>
+            <script>
+                var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
+                var map = new naver.maps.Map('map', {
+                    center: position,
+                    zoom: 15
+                });
+
+                var marker = new naver.maps.Marker({
+                    position: position,
+                    map: map
+                });
+
+                function searchCoordinateToAddress(latlng) {
+                    naver.maps.Service.reverseGeocode({
+                        coords: latlng,
+                        orders: [
+                            naver.maps.Service.OrderType.ADDR,
+                            naver.maps.Service.OrderType.ROAD_ADDR
+                        ].join(',')
+                    }, function(status, response) {
+                        if (status === naver.maps.Service.Status.ERROR) {
+                            if (!latlng) {
+                                return alert('ReverseGeocode Error, Please check latlng');
+                            }
+                            if (latlng.toString) {
+                                return alert('ReverseGeocode Error, latlng:' + latlng.toString());
+                            }
+                            if (latlng.x && latlng.y) {
+                                return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
+                            }
+                            return alert('ReverseGeocode Error, Please check latlng');
+                        }
+
+                        var address = response.v2.address,
+                            htmlAddresses = [];
+
+                        if (address.jibunAddress !== '') {
+                            htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
+                        }
+
+                        if (address.roadAddress !== '') {
+                            htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+                        }
+
+                        witness_area.value = address.jibunAddress;
+                    });
+                }
+
+                function searchAddressToCoordinate(address) {
+                    naver.maps.Service.geocode({
+                        query: address
+                    }, function(status, response) {
+                        if (status === naver.maps.Service.Status.ERROR) {
+                            if (!address) {
+                                return alert('Geocode Error, Please check address');
+                            }
+                            return alert('Geocode Error, address:' + address);
+                        }
+
+                        if (response.v2.meta.totalCount === 0) {
+                            return alert('No result.');
+                        }
+
+                        var point = new naver.maps.Point(item.x, item.y);
+
+                        map.setCenter(point);
+                    });
+                }
+
+                naver.maps.Event.addListener(map, 'click', function(e) {
+                    marker.setPosition(e.coord);
+                    var message = marker.position.toString();
+                    // var resultDiv = document.getElementById('clickLatlng');
+                    // resultDiv.innerHTML =  message;
+
+                    var witness_lat = document.getElementById('witness_lat');
+                    var witness_lng = document.getElementById('witness_lng');
+                    var witness_area = document.getElementById('witness_area');
+                    witness_lat.value = marker.position.lat().toString();
+                    witness_lng.value = marker.position.lng().toString();
+
+                    searchCoordinateToAddress(marker.position);
+                });
+
+                $('#address').on('keydown', function(e) {
+                    var keyCode = e.which;
+
+                    if (keyCode === 13) { // Enter Key
+                        searchAddressToCoordinate($('#address').val());
+                    }
+                });
+
+
+            </script>
             </p>
 
 
             <label for="witness_time">발견 시간</label>
-            <div th:if="${reportForm.witness_time}">
-                <input type="datetime-local" id="witness_time" name="witness_time" th:value="${reportForm.witness_time}">
+            <div th:if="${reportForm.witnessTime}">
+                <input type="datetime-local" id="witnessTime" name="witnessTime" th:value="${reportForm.witnessTime}">
             </div>
-            <div th:unless="${reportForm.witness_time}">
-                <input type="datetime-local" id="witness_time" name="witness_time" >
+            <div th:unless="${reportForm.witnessTime}">
+                <input type="datetime-local" id="witnessTime" name="witnessTime" >
             </div>
 
         </div>

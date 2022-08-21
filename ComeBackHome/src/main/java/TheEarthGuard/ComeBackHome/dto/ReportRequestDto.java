@@ -49,7 +49,7 @@ public class ReportRequestDto extends BaseTimeEntity {
                 .witness_desc(this.witness_desc)
                 .witness_lat(Double.valueOf(this.witness_lat))
                 .witness_lng(Double .valueOf(this.witness_lng))
-                .witness_time(this.witnessTime)
+                .witnessTime(this.witnessTime)
                 .is_alert(Boolean.FALSE)
                 .user(this.user)
                 .cases(this.cases)

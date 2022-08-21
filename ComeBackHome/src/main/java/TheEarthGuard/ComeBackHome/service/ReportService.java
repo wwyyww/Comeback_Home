@@ -83,12 +83,8 @@ public class ReportService {
         if (report.get().getUser().getId() != user.get().getId()) {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
-        reportObj.setUser(user.get());
-        reportObj.setCases(findCase);
-        Report updateReport = reportObj.toEntity();
-        updateReport.setCreatedTime(report.get().getCreatedTime());
-        reportRepository.save(updateReport);
 
+        report.get().updateReport(reportObj);
         return report_id;
     }
 

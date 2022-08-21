@@ -3,27 +3,25 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
-import TheEarthGuard.ComeBackHome.dto.ReportPlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
-
+import TheEarthGuard.ComeBackHome.service.UserService;
 import java.util.List;
 import java.util.Optional;
-
-import TheEarthGuard.ComeBackHome.service.UserService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Slf4j
 @Controller
@@ -56,23 +54,8 @@ public class ReportController {
         return "reports/createReportForm";
     }
 
-    //실종위치 찍고나서 제보글 이어서 작성할 때
-    @PostMapping(value="/reports/new/{id}")
-    public String createFormPlace(@ModelAttribute ReportPlaceInfoDto reportPlaceInfoDto, @ModelAttribute("reportForm") ReportRequestDto reportForm,
-                                  @PathVariable("id") Long id, Model model){
-        reportForm.setWitness_area(reportPlaceInfoDto.getWitness_area());
-        reportForm.setWitness_lat(reportPlaceInfoDto.getWitness_lat());
-        reportForm.setWitness_lng(reportPlaceInfoDto.getWitness_lng());
-        Optional<Case> caseDto = caseService.findCase(id);
-        reportForm.setCases(caseDto.get());
-
-        model.addAttribute("reportForm", reportForm);
-        return "reports/createReportForm";
-    }
-
-
     //제보 제출
-    @PostMapping(value = "/reports/new/{id}/submit")
+    @PostMapping(value = "/reports/new/{id}")
     public String createReport(@Valid @ModelAttribute ReportRequestDto form, @PathVariable("id") Long id, @CurrentUser User user,Errors errors) throws Exception {
         if (errors.hasErrors()) {
             System.out.println("ERROR!!!!!!!!");
@@ -87,7 +70,6 @@ public class ReportController {
         }
 
         return "redirect:/cases";
-
     }
 
     @GetMapping(value = "/reports/reportList/{id}")
@@ -140,7 +122,7 @@ public class ReportController {
         return "redirect:/cases";
     }
 
-    //제보 수정하기
+    //제보 수정하기 (첫 화면)
     @GetMapping(value = "/reports/update/{id}")
     public String updateReportForm(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
@@ -153,6 +135,7 @@ public class ReportController {
         return "redirect:/cases";
     }
 
+    //제보 수정하기 (제출)
     @PostMapping(value = "/reports/update/{id}")
     public String updateReport(@Valid @ModelAttribute ReportRequestDto form, @PathVariable("id") Long id,
                                @CurrentUser User user, Errors errors) throws IllegalAccessException {
@@ -160,7 +143,7 @@ public class ReportController {
             log.info("error!!");
             return "redirect:/cases";
         }
-        Report report = reportService.getReportDetail(id);
+
         reportService.updateReport(user.getId(), id, form);
         return "redirect:/reports/detail/{id}";
     }
@@ -175,23 +158,6 @@ public class ReportController {
 //        model.addAttribute("user", user);
 //        return "redirect:/reports/detail/{id}";
 //    }
-
-
-
-
-    //지도로 목격위치 찍는 부분
-    @PostMapping(value="/reports/new/{id}/searchPlace")
-    public String searchPlace(@ModelAttribute ReportRequestDto form, @RequestParam("witnessPics") MultipartFile file, Model model, @PathVariable("id") Long id, Errors errors) {
-        if (errors.hasErrors()) {
-            System.out.println("ERROR!!!!!!!!");
-            return "/reports/createReportForm";
-        }
-        Optional<Case> caseDto = caseService.findCase(id);
-        form.setCases(caseDto.get());
-        log.info("searchplace : "+ caseDto.get().getCaseId());
-        model.addAttribute("reportForm", form);
-        return "/reports/searchPlace";
-    }
 
 
 }

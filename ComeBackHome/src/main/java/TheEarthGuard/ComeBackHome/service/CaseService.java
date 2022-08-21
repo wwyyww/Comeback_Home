@@ -9,8 +9,6 @@ import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
-
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,13 +88,7 @@ public class CaseService {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
-
         caseEntity.get().updateCase(caseDto);
-//        caseDto.setUser(user.get());
-//        Case updateCase = caseDto.toEntity();
-//        updateCase.setCreatedTime(caseEntity.get().getCreatedTime());
-//        caseRepository.save(updateCase);
-
         return case_id;
     }
 

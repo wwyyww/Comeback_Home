@@ -103,8 +103,9 @@ public class Case extends BaseTimeEntity{
         this.missingDesc = dto.getMissingDesc();
         this.missingFeature = dto.getMissingFeature();
         this.missingArea = dto.getMissingArea();
-        this.missingLng = Double.parseDouble(String.valueOf(this.missingLng));
-        this.missingLat = Double.parseDouble(String.valueOf(this.missingLat));
+        this.missingRegion = this.missingArea.substring(0,2);
+        this.missingLng = Double.parseDouble(dto.getMissingLng());
+        this.missingLat = Double.parseDouble(dto.getMissingLng());
         this.missingTimeStart = dto.getMissingTimeStart();
         this.missingTimeEnd = dto.getMissingTimeEnd();
     }
