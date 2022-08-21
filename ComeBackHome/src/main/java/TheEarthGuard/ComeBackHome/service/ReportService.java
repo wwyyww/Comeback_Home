@@ -13,11 +13,8 @@ import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -156,21 +153,29 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-//    public List<Report> getByArea(){
-//        //return reportRepository.
-//    }
-//
-//    public List<Report> getByDate(){
-//
-//    }
 
-//    public List<Report> getByFilters(String area, LocalDate start, LocalDate end){
-//        if(area != null && start != null && end != null){
-//
-//        } else if () {
-//
-//        }
-//    }
+
+
+    public Optional<List<Report>> getByFilters(String area, LocalDate start, LocalDate end){
+        Optional<List<Report>> reportList = Optional.empty();
+        System.out.println(area + start + end);
+
+        if(!Objects.equals(area, "전체") && start != null ){
+            System.out.println("필터링 전부 선택");
+
+        } else if (!Objects.equals(area, "전체") && start == null) {
+            System.out.println("필터링 지역만 선택");
+            reportList = reportRepository.findByWitnessRegion(area);
+        } else if (Objects.equals(area, "전체") && start != null && end != null){
+            System.out.println("필터링 시간만 선택");
+            //System.out.println(start.atStartOfDay().toString() + end.atTime(LocalTime.MAX));
+            reportList = reportRepository.findByWitnessTimeBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+        } else if (Objects.equals(area, "전체") && start == null){
+            System.out.println("필터링 전부 선택 안함");
+
+        }
+        return reportList;
+    }
 
 
 }

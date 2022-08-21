@@ -27,7 +27,7 @@ public class ReportResponseDto {
     @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
 
-    private String witness_region;
+    private String witnessRegion;
 
     private Double witness_lat;
     private Double witness_lng;
@@ -37,7 +37,7 @@ public class ReportResponseDto {
 
     @NotNull(message = "목격 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime witness_time;
+    private LocalDateTime witnessTime;
 
     private List<FileEntity> witnessPics;
 
@@ -48,11 +48,11 @@ public class ReportResponseDto {
         this.id = report.getId();
         this.witness_title = report.getWitness_title();
         this.witness_area = report.getWitness_area();
-        this.witness_region = report.getWitness_region();
+        this.witnessRegion = report.getWitnessRegion();
         this.witness_lat = report.getWitness_lat();
         this.witness_lng = report.getWitness_lng();
         this.witness_desc = report.getWitness_desc();
-        this.witness_time = report.getWitness_time();
+        this.witnessTime = report.getWitnessTime();
         this.witnessPics = report.getWitnessPics();
     }
 }

@@ -217,13 +217,20 @@ public class CaseController {
     }
 
     @PostMapping(value = "/cases/detail/{id}/submit")
-    public String showCaseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-
+    public String showCaseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user, RedirectAttributes redirectAttributes) {
+        Optional<List<Report>> reportList = Optional.empty();
         String area = form.getMissing_area2();
         LocalDate start = form.getMissing_time_start();
         LocalDate end = form.getMissing_time_end();
         System.out.println(id + area + start + end);
+        reportList = reportService.getByFilters(area, start, end);
+        if(reportList.isPresent()) {
+            System.out.println(reportList.get());
+        } else {
+            System.out.println("없음");
+        }
 
+        redirectAttributes.addFlashAttribute("searchReport", reportList);
         //return "/cases/caseDetail";
         return "redirect:/cases/detail/{id}";
     }

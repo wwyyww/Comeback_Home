@@ -121,15 +121,25 @@
                     <input type="date" id="missing_time_end" name="missing_time_end" onchange="setMinValue()">
                   </span>
                   <script>
-                    let missingTimeStart = document.getElementById("missingTimeStart");
-                    let missingTimeEnd = document.getElementById("missingTimeEnd");
+                    let missingTimeStart = document.getElementById("missing_time_start");
+                    let missingTimeEnd = document.getElementById("missing_time_end");
 
                     function setMinValue() {
+                      console.log(missingTimeStart.value, missingTimeEnd.value);
                       if( missingTimeStart.value >= missingTimeEnd.value) {
                         alert('실종 시간보다 이전의 날짜는 설정할 수 없습니다.');
                         missingTimeEnd.value = null;
                       }
+                      if( missingTimeStart.value === "" && missingTimeEnd.value != null) {
+                        alert('실종 기간 기반 검색을 위해서는 앞에 기간부터 모두 선택해야 합니다.');
+                        missingTimeEnd.value = null;
+                      }
                     }
+                    // function setValue(){
+                    //   if (missingTimeStart.value == null) {
+                    //     alert('실종 기간 기반 검색을 위해서는 모두 선택해야 합니다.')
+                    //   }
+                    // }
                   </script>
               </td>
           </tr>
