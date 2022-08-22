@@ -6,7 +6,13 @@
   <title>ComeBackHome</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script type="text/javascript" src="/assets/markerClustering.js"></script>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8"></script>
+
   <link rel="stylesheet" th:href="@{/static/plugins/bootstrap/bootstrap.min.css}">
   <!--	icon-->
   <link rel="stylesheet" th:href="@{/static/plugins/themify-icons/themify-icons.css}">
@@ -16,13 +22,18 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
   <!-- Main Stylesheet -->
   <link th:href="@{/static/assets/style.css}" rel="stylesheet" media="screen" />
+
+  <style>
+    html, body { width:100%;height:100%;padding:0;margin:0; }
+  </style>
+
 </head>
 
-<body>
+<body onload="javascript:initMap()">
 <!-- header -->
 <header class="banner overlay bg-cover" >
   <nav class="navbar navbar-expand-md navbar-dark">
-    <div class="container">
+    <div class="container-fluid">
       <a class="navbar-brand px-2" href="/">ComeBackHome</a>
       <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation"
               aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +42,6 @@
 
       <div class="collapse navbar-collapse text-center" id="navigation">
         <ul class="navbar-nav ml-auto">
-
 
           <li class="nav-item">
             <a class="nav-link text-dark" href="/casesMap">지도보기</a>
@@ -46,103 +56,181 @@
           <li class="nav-item">
             <a sec:authorize="!isAuthenticated()" class="nav-link text-dark" href="/users/login">로그인</a>
             <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/logout">로그아웃</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/mypage">마이페이지</a>
           </li>
 <!--          <li sec:authorize="!isAuthenticated()" class="nav-item">-->
 <!--            <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님, 환영합니다.-->
 <!--          </li>-->
-
         </ul>
       </div>
     </div>
   </nav>
   <!-- banner -->
-  <div class="container section">
-    <div class="row">
-      <div class="col-lg-8 text-center mx-auto">
-        <h1 class="text-white mb-3">실종자를 찾아주세요!</h1>
-        <p class="text-white mb-4">지도를 기반으로 실종자 정보를 보려면, 지도보기를 눌러주세요.</p>
-        <div class="position-relative">
-          <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
-                class="ti-search search-icon"></i>
-        </div>
-      </div>
-    </div>
-  </div>
+<!--  <div class="container section">-->
+<!--    <div class="row">-->
+<!--      <div class="col-lg-8 text-center mx-auto">-->
+<!--        <h1 class="text-white mb-3">실종자를 찾아주세요!</h1>-->
+<!--        <p class="text-white mb-4">지도를 기반으로 실종자 정보를 보려면, 지도보기를 눌러주세요.</p>-->
+<!--        <div class="position-relative">-->
+<!--          <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i-->
+<!--                class="ti-search search-icon"></i>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
-  <div>
-    <h4>사건 관련</h4>
-    <p>
-      <a href="/cases">사건 목록</a>
-    </p>
+<!--  <div>-->
+<!--    <h4>사건 관련</h4>-->
+<!--    <p>-->
+<!--      <a href="/cases">사건 목록</a>-->
+<!--    </p>-->
 
-    <h4>증언 관련</h4>
-    <p>
-      <a href="/reports/new">증언 하기</a>
-      <a href="/reports">증언 목록</a>
-    </p>
+<!--    <h4>증언 관련</h4>-->
+<!--    <p>-->
+<!--      <a href="/reports/new">증언 하기</a>-->
+<!--      <a href="/reports">증언 목록</a>-->
+<!--    </p>-->
 
-    <h4>회원 관련</h4>
-    <p sec:authorize="!isAuthenticated()">
-      <a href="/users/signup">회원가입</a>
-      <a href="/users/login">로그인</a>
-    </p>
+<!--    <h4>회원 관련</h4>-->
+<!--    <p sec:authorize="!isAuthenticated()">-->
+<!--      <a href="/users/signup">회원가입</a>-->
+<!--      <a href="/users/login">로그인</a>-->
+<!--    </p>-->
 
-    <div sec:authorize="isAuthenticated()">
-      <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님 환영합니다.
-      <p>
-        <a href="/users/mypage">마이페이지</a>
-      </p>
-    </div>
-  </div>
+<!--    <div sec:authorize="isAuthenticated()">-->
+<!--      <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>님 환영합니다.-->
+<!--      <p>-->
+<!--        <a href="/users/mypage">마이페이지</a>-->
+<!--      </p>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <!-- /banner -->
 </header>
 <!-- /header -->
 
-<!-- topics -->
-<section class="section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <!-- topic-item -->
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
-          <i class="ti-panel icon text-primary d-block mb-4"></i>
-          <h3 class="mb-3 mt-0">현재 실종자 수 표현</h3>
-          <p class="mb-0">현재 실종자 수</p>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
-          <i class="ti-credit-card icon text-primary d-block mb-4"></i>
-          <h3 class="mb-3 mt-0">현재 제보 수 표현</h3>
-          <p class="mb-0">현재 제보 수</p>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <a href="single.html" class="px-4 py-5 bg-white shadow text-center d-block match-height">
-          <i class="ti-package icon text-primary d-block mb-4"></i>
-          <h3 class="mb-3 mt-0">사용자 수 표현</h3>
-          <p class="mb-0">사용자 수 말고 더 좋은건 없나?</p>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- /topics -->
-
 <!-- call to action -->
-<section>
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="section px-3 bg-white shadow text-center">
-          <h2 class="mb-4">실종신고 112</h2>
-          <p class="mb-4">간절히 가족과 지인을 찾는 이들을 위해 허위 신고/제보는 자제 부탁드립니다.</p>
-          <a href="contact.html" class="btn btn-primary">contact us</a>
+<section class="container-fluid" style="height: 100%;">
+<!--  <div class="container-fluid">-->
+    <div class="row" style="height: 100%">
+      <div class="col-4">
+        <div class="section bg-white shadow text-center">
+          <div class="position-relative">
+            <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
+                  class="ti-search search-icon"></i>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+      <div id="map"class ="col-8" style="width:100%;height:100%;padding:0;margin:0;"></div>
+      <script>
+        var map = new naver.maps.Map("map", {
+          zoom: 7,
+          center: new naver.maps.LatLng(36.2253017, 127.6460516),
+          zoomControl: true,
+          zoomControlOptions: {
+            position: naver.maps.Position.TOP_LEFT,
+            style: naver.maps.ZoomControlStyle.SMALL
+          }
+        });
+
+        var htmlMarker1 = {
+                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-1.png);background-size:contain;"></div>',
+                  size: N.Size(40, 40),
+                  anchor: N.Point(20, 20)
+                },
+                htmlMarker2 = {
+                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-2.png);background-size:contain;"></div>',
+                  size: N.Size(40, 40),
+                  anchor: N.Point(20, 20)
+                },
+                htmlMarker3 = {
+                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-3.png);background-size:contain;"></div>',
+                  size: N.Size(40, 40),
+                  anchor: N.Point(20, 20)
+                },
+                htmlMarker4 = {
+                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-4.png);background-size:contain;"></div>',
+                  size: N.Size(40, 40),
+                  anchor: N.Point(20, 20)
+                },
+                htmlMarker5 = {
+                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-5.png);background-size:contain;"></div>',
+                  size: N.Size(40, 40),
+                  anchor: N.Point(20, 20)
+                };
+
+
+        var markers = [],
+                infoWindows =[];
+
+        function initMap() {
+
+          $.ajax({
+            type:"get",
+            url:"data.json",
+            dataType:"json",
+            success: function(data){
+              console.log("통신성공");
+              $.each(data , function(i){
+                var x = data[i].missingLat;
+                var y = data[i].missingLng;
+                console.log(x, y)
+                var marker = new naver.maps.Marker({
+                  position: new naver.maps.LatLng(x, y),
+                  map: map,
+                  draggable: false
+                });
+                //클릭하면 해당 사건 출력
+                var infoWindow = new naver.maps.InfoWindow({
+                  content: '<div style="width:150px;text-align:center;padding:10px;">실종자 이름: <b>"'+ data[i].missingName +'"</b>.</div>'
+                });
+                markers.push(marker);
+                infoWindows.push(infoWindow);
+              });
+              console.log(markers);
+
+              //클러스터링
+              var markerClustering = new MarkerClustering({
+                minClusterSize: 2,
+                maxZoom: 8,
+                map: map,
+                markers: markers,
+                disableClickZoom: false,
+                gridSize: 120,
+                icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+                indexGenerator: [10, 100, 200, 500, 1000],
+                stylingFunction: function(clusterMarker, count) {
+                  $(clusterMarker.getElement()).find('div:first-child').text(count);
+                }
+              });
+
+              function getClickHandler(seq){
+                return function(e) {
+                  var marker = markers[seq],
+                          infoWindow = infoWindows[seq];
+
+                  if (infoWindow.getMap()) {
+                    infoWindow.close();
+                  } else {
+                    infoWindow.open(map, marker);
+                  }
+                }
+              }
+
+              for (var i=0, ii=markers.length; i<ii; i++) {
+                console.log(markers[i] , getClickHandler(i));
+                naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+              }
+            },
+            error:function(){
+              console.log("통신에러");
+            }
+          })
+        }
+
+      </script>
+      </div>
+<!--    </div>-->
 </section>
 <!-- /call to action -->
 

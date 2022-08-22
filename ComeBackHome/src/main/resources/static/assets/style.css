@@ -812,7 +812,8 @@ code {
   position: absolute;
   right: 20px;
   top: 18px;
-  font-size: 14px
+  font-size: 14px;
+  border-color: #4e555b;
 }
 
 i {
