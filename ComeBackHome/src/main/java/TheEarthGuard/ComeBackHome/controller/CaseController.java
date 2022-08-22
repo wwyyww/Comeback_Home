@@ -6,6 +6,7 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseListResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
+import TheEarthGuard.ComeBackHome.dto.Message;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -90,33 +92,62 @@ public class CaseController {
 
     // 처음 사건 등록할 때
     @GetMapping(value = "/cases/new")
-    public String createCaseForm(Model model, @CurrentUser User user) {
+    public ModelAndView createCaseForm(ModelAndView mav, @CurrentUser User user) {
         if (user == null) {
-            return "/users/login";
+//            return "/users/login";
+            mav.setViewName("/users/login");
+            return mav;
         }
 
-        model.addAttribute("caseDto",  new CaseSaveRequestDto());
-        return "cases/createCaseForm";
+//        model.addAttribute("caseDto",  new CaseSaveRequestDto());
+//        return "cases/createCaseForm";
+        mav.addObject("caseDto",  new CaseSaveRequestDto());
+        mav.setViewName("cases/createCaseForm");
+        return mav;
     }
 
     // 사건 등록
     @PostMapping(value = "/cases/new")
-    public String uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @CurrentUser User user, Errors errors, Model model) throws Exception {
+    ModelAndView uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @CurrentUser User user, Errors errors, ModelAndView mav) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!" + errors);
-            model.addAttribute("caseDto", caseDto);
+            mav.addObject("caseDto", caseDto);
 
             Map<String, String> validatorResult = caseService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
+//                model.addAttribute(key, validatorResult.get(key));
+                System.out.println("error 존재함");
+                mav.addObject(key,validatorResult.get(key));
             }
-            return "cases/createCaseForm";
+
+//            return "cases/createCaseForm";
+//            mav.addObject("data", new Message("모든 필드를 입력해주세요.", "cases/createCaseForm"));
+            mav.setViewName("cases/createCaseForm");
+            return mav;
         }
         User currentUser = userService.findByEmail(user.getEmail());
         caseDto.setUser(currentUser);
-        caseService.uploadCase(caseDto, caseDto.getMissingPics());
+        Long caseId = caseService.uploadCase(caseDto, caseDto.getMissingPics());
 
-        return "redirect:/";
+//        if(caseId == null)
+//        {
+//            model.addAttribute("message", "유해 이미지가 포함되어 업로드가 취소되었습니다.");
+//            model.addAttribute("searchUrl", "/cases");
+//            return "message";
+//        }
+//        model.addAttribute("message", "사건 업로드 성공");
+//        model.addAttribute("searchUrl", "/cases");
+//        return "message";
+
+        if(caseId == null){
+            mav.addObject("data", new Message("유해 이미지가 포함되어 업로드가 취소되었습니다.", "/"));
+            mav.setViewName("Message");
+            return mav;
+        }
+
+        mav.addObject("data", new Message("실종자 등록이 완료되었습니다.", "/"));
+        mav.setViewName("Message");
+        return mav;
     }
 
     // 모든 사건 조회

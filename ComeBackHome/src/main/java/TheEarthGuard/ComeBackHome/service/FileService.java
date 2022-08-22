@@ -2,8 +2,22 @@ package TheEarthGuard.ComeBackHome.service;
 
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.repository.FileRepository;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.vision.v1.AnnotateImageRequest;
+import com.google.cloud.vision.v1.AnnotateImageResponse;
+import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.Feature;
+import com.google.cloud.vision.v1.Image;
+import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.cloud.vision.v1.Likelihood;
+import com.google.cloud.vision.v1.SafeSearchAnnotation;
+import com.google.common.collect.Lists;
+import com.google.protobuf.ByteString;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +89,16 @@ public class FileService {
                     File saveFile = new File(uploadPath.getAbsolutePath(), savedFilename);
                     multipartFile.transferTo(saveFile);
 
+                    // 유해 이미지 검사
+                    FileInputStream inputStream = new FileInputStream(saveFile);
+                    Boolean result = detectSafeSearch(inputStream);
+
+                    if (!result){ // 유해 이미지시 삭제
+                        Boolean deleteResult = saveFile.delete();
+                        System.out.println("deleteResult" + deleteResult);
+                        return null;
+                    }
+
 
                     // 썸네일 생성
                     if (checkImageType(saveFile)) {
@@ -134,6 +158,70 @@ public class FileService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //InputStream initialStream
+    // 유해 이미지 여부 검사
+    public Boolean detectSafeSearch(FileInputStream fileStream) throws IOException {
+        List<AnnotateImageRequest> requests = new ArrayList<>();
+
+        // 검사할 이미지 바이트 단위로
+        ByteString imgBytes = ByteString.readFrom(fileStream);
+
+        Image img = Image.newBuilder().setContent(imgBytes).build();
+        Feature feat = Feature.newBuilder().setType(Feature.Type.SAFE_SEARCH_DETECTION).build();
+        AnnotateImageRequest request =
+            AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+        requests.add(request);
+
+        try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
+            BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+            List<AnnotateImageResponse> responses = response.getResponsesList();
+
+            for (AnnotateImageResponse res : responses) {
+                if (res.hasError()) {
+                    System.out.format("Error: %s%n", res.getError().getMessage());
+
+                }
+
+                SafeSearchAnnotation annotation = res.getSafeSearchAnnotation();
+                Likelihood resultAdult = annotation.getAdult();
+                Likelihood resultMedical = annotation.getMedical();
+                Likelihood resultSpoof= annotation.getSpoof();
+                Likelihood resultViolence = annotation.getViolence();
+                Likelihood resultRacy = annotation.getRacy();
+
+
+                System.out.format(
+                    "adult: %s%nmedical: %s%nspoofed: %s%nviolence: %s%nracy: %s%n",
+                    resultAdult,
+                    resultMedical,
+                    resultSpoof,
+                    resultViolence,
+                    resultRacy);
+
+                if (resultAdult.equals(Likelihood.LIKELY) || resultAdult.equals(Likelihood.VERY_LIKELY) ||
+                    resultMedical.equals(Likelihood.LIKELY) || resultMedical.equals(Likelihood.VERY_LIKELY) ||
+                    resultSpoof.equals(Likelihood.LIKELY) || resultSpoof.equals(Likelihood.VERY_LIKELY) ||
+                    resultViolence.equals(Likelihood.LIKELY) || resultViolence.equals(Likelihood.VERY_LIKELY) ||
+                    resultRacy.equals(Likelihood.LIKELY) || resultRacy.equals(Likelihood.VERY_LIKELY)
+                ){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    // api key 연결
+    public void authExplicit() throws IOException {
+        String jsonPath = "D:\\ComeBackHome-90c138d3d128.json";
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(jsonPath))
+            .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+        System.out.println("Google Account Init Completed");
     }
 }
 

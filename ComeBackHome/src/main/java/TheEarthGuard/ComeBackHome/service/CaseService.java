@@ -52,6 +52,10 @@ public class CaseService {
         Case newCase = caseDto.toEntity();
 
         List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
+        if (missing_pictures == null) {
+            System.out.println("[CaseService - UploadCase] 유해이미지로 판단됨!");
+            return null;
+        }
         System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
         if(!missing_pictures.isEmpty()) {
             System.out.println("[CaseService-UploadCase] 파일 있음!" + missing_pictures);
@@ -71,6 +75,7 @@ public class CaseService {
             validatorResult.put(validKeyName, error.getDefaultMessage());
         }
 
+        System.out.println("validatorResult : " + validatorResult);
         return validatorResult;
     }
 
