@@ -25,6 +25,7 @@ public class CaseResponseDto {
     private Integer missingAge;
     private Boolean missingSex;
     private String missingDesc;
+    private Integer missingFeature;
     private String missingArea;
     private String missingRegion;
     private Double missingLng;
@@ -46,6 +47,7 @@ public class CaseResponseDto {
         this.caseId = caseEntity.getCaseId();
         this.isFind = caseEntity.getIsFind();
         this.hitCnt = caseEntity.getHitCnt();
+        this.missingFeature = caseEntity.getMissingFeature();
         this.missingName = caseEntity.getMissingName();
         this.missingAge = caseEntity.getMissingAge();
         this.missingSex = caseEntity.getMissingSex();

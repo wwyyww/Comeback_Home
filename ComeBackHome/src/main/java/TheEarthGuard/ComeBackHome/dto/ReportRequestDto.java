@@ -26,6 +26,9 @@ public class ReportRequestDto extends BaseTimeEntity {
 
     @NotBlank(message = "목격 지역은 필수 입력값입니다.")
     private String witness_area;
+
+    private String witnessRegion;
+
     private String witness_lat;
     private String witness_lng;
 
@@ -34,7 +37,9 @@ public class ReportRequestDto extends BaseTimeEntity {
 
     @NotNull(message = "목격 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime witness_time;
+    private LocalDateTime witnessTime;
+
+    private LocalDateTime createdTime;
 
     private List<MultipartFile> witnessPics;
 
@@ -42,10 +47,11 @@ public class ReportRequestDto extends BaseTimeEntity {
         Report report=Report.builder()
                 .witness_title(this.witness_title)
                 .witness_area(this.witness_area)
+                .witnessRegion(this.witness_area.substring(0,2))
                 .witness_desc(this.witness_desc)
                 .witness_lat(Double.valueOf(this.witness_lat))
                 .witness_lng(Double .valueOf(this.witness_lng))
-                .witness_time(this.witness_time)
+                .witnessTime(this.witnessTime)
                 .is_alert(Boolean.FALSE)
                 .user(this.user)
                 .cases(this.cases)

@@ -1,10 +1,19 @@
 package TheEarthGuard.ComeBackHome.domain;
 
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +45,9 @@ public class Report extends BaseTimeEntity{
     private Double witness_lat;
     private Double witness_lng;
 
-    private LocalDateTime witness_time;
+    private String witnessRegion;
+
+    private LocalDateTime witnessTime;
 
     private String witness_desc;
 
@@ -52,9 +63,7 @@ public class Report extends BaseTimeEntity{
     private List<FileEntity> witnessPics;
 
     @Builder
-    public Report(Long id, Case cases, User user,
-                  String witness_title, String witness_area, Double witness_lat, Double witness_lng,
-                  LocalDateTime witness_time, String witness_desc, Boolean is_alert) {
+    public Report(Long id, Case cases, User user, String witness_title, String witness_area, Double witness_lat, Double witness_lng, String witnessRegion, LocalDateTime witnessTime, String witness_desc, Boolean is_alert, List<Warn> warns, List<FileEntity> witnessPics) {
         this.id = id;
         this.cases = cases;
         this.user = user;
@@ -62,8 +71,22 @@ public class Report extends BaseTimeEntity{
         this.witness_area = witness_area;
         this.witness_lat = witness_lat;
         this.witness_lng = witness_lng;
-        this.witness_time = witness_time;
+        this.witnessRegion = witnessRegion;
+        this.witnessTime = witnessTime;
         this.witness_desc = witness_desc;
         this.is_alert = is_alert;
+        this.warns = warns;
+        this.witnessPics = witnessPics;
+    }
+
+    public void updateReport(ReportRequestDto dto){
+        this.witness_title = dto.getWitness_title();
+        this.witness_area = dto.getWitness_area();
+        this.witnessRegion = dto.getWitnessRegion();
+        this.witness_desc = dto.getWitness_desc();
+        this.witness_lat =  Double.parseDouble(dto.getWitness_lat());
+        this.witness_lng = Double.parseDouble(dto.getWitness_lng());
+        this.witnessTime = dto.getWitnessTime();
+        this.witnessRegion = this.witness_area.substring(0,2);
     }
 }

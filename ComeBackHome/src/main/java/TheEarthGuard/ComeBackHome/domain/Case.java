@@ -44,6 +44,7 @@ public class Case extends BaseTimeEntity{
     private String missingName;
     private Integer missingAge;
     private Boolean missingSex;
+    private Integer missingFeature;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String missingDesc;
@@ -68,7 +69,7 @@ public class Case extends BaseTimeEntity{
     private List<FileEntity> missingPics;
 
     @Builder
-    public Case(Long caseId, User user, Boolean isFind, Integer hitCnt,
+    public Case(Long caseId, User user, Boolean isFind, Integer hitCnt, Integer missingFeature,
         String missingName, Integer missingAge, Boolean missingSex, String missingDesc,
         String missingArea, String missingRegion, Double missingLat, Double missingLng,
         LocalDateTime missingTimeStart, LocalDateTime missingTimeEnd)
@@ -77,6 +78,7 @@ public class Case extends BaseTimeEntity{
         this.user = user;
         this.isFind = false;
         this.hitCnt = 0;
+        this.missingFeature = missingFeature;
         this.missingName = missingName;
         this.missingAge = missingAge;
         this.missingSex = missingSex;
@@ -99,9 +101,11 @@ public class Case extends BaseTimeEntity{
         this.missingAge = dto.getMissingAge();
         this.missingSex = dto.getMissingSex();
         this.missingDesc = dto.getMissingDesc();
+        this.missingFeature = dto.getMissingFeature();
         this.missingArea = dto.getMissingArea();
-        this.missingLng = Double.parseDouble(String.valueOf(this.missingLng));
-        this.missingLat = Double.parseDouble(String.valueOf(this.missingLat));
+        this.missingRegion = this.missingArea.substring(0,2);
+        this.missingLng = Double.parseDouble(dto.getMissingLng());
+        this.missingLat = Double.parseDouble(dto.getMissingLng());
         this.missingTimeStart = dto.getMissingTimeStart();
         this.missingTimeEnd = dto.getMissingTimeEnd();
     }

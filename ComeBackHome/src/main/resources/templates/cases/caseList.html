@@ -3,6 +3,7 @@
 <body>
 <div class="container">
   <div>
+    <a th:href="@{/searchPlace}">장소 선택하기</a>
     <table class="table table-bordered">
       <!-- CONTENTS !-->
       <thead>
@@ -41,7 +42,7 @@
         </td>
         <td th:text="${case.getMissingRegion()}"></td>
         <td th:text="${case.getUserName()}"></td>
-        <td th:text="${case.getCreatedTime()}"></td>
+        <td th:text="${#temporals.format(case.createdTime, 'yyyy-MM-dd')}"></td>
         <td th:text="${case.getHitCnt()}"></td>
         </tr>
       </tbody>

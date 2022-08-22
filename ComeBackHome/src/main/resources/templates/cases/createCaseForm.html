@@ -3,9 +3,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
-
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+</head>
+<body>
 <div layout:fragment="content" class="container">
-  <form  method="post" enctype="multipart/form-data" >
+  <form  method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
     <div class="form-group">
       <div>
         <label for="missingName">실종자 이름</label>
@@ -14,13 +20,8 @@
       </div>
 
       <div>
-        <label for="missingPics">실종자 사진</label>
-        <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
-      </div>
-
-      <div>
         <label for="missingAge">실종자 나이</label>
-        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" placeholder="나이를 입력하세요">
+        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" > 세
         <span th:text="${valid_missingAge}"></span>
       </div>
 
@@ -28,38 +29,198 @@
         <label for="missingSex">실종자 성별</label>
         <label for="man">남자</label>
         <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
-      <label for="woman">여자</label>
-      <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
-      <span th:text="${valid_missingSex}"></span>
+        <label for="woman">여자</label>
+        <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
+        <span th:text="${valid_missingSex}"></span>
     </div>
 
       <div>
-        <label for="missingDesc">실종자 정보</label>
-        <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}" placeholder="추가 실종자 정보를 입력하세요">
+        <label for="missingFeature">실종자 특징  </label>
+        <input type="radio" name="missingFeature" value=1 id="1" th:checked="${caseDto.missingFeature eq 1}">
+        <label for="missingFeature1">비장애아동(18세 미만)</label>
+
+        <input type="radio" name="missingFeature" value=2 id="2" th:checked="${caseDto.missingFeature eq 2}"/>
+        <label for="missingFeature2">장애인</label>
+
+        <input type="radio" name="missingFeature" value=3 id="3" th:checked="${caseDto.missingFeature eq 3}"/>
+        <label for="missingFeature3">치매환자</label>
+
+        <input type="radio" name="missingFeature" value=4 id="4" th:checked="${caseDto.missingFeature eq 4}"/>
+        <label for="missingFeature4">기타(18세 이상)</label>
+
+        <span th:text="${valid_missingFeature}"></span>
+      </div>
+
+
+      <div>
+        <label for="missingDesc">실종자 추가 정보</label>
+        <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}" placeholder="실종자 인상착의 등 실종자 추가 정보를 적어주세요"  style="width:500px; height:30px">
         <span th:text="${valid_missingDesc}"></span>
       </div>
 
       <div>
-        <label for="missingArea">실종 지역</label>
-        <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" th:value="${caseDto.missingArea}" style="width: 20%" readonly>
-        <input type="hidden" id="missingLng" name="missingLng" th:value="${caseDto.missingLng} " readonly>
-        <input type="hidden" id="missingLat" name="missingLat" th:value="${caseDto.missingLat} " readonly>
-        <span th:text="${valid_missingArea}"></span>
-<!--        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>-->
-        <button type="submit" formaction="/cases/new/searchPlace">지도에서 찾기</button>
+        <!--장소 검색-->
+        <div class="search" style="">
+          <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />
+          <input id="submit" type="button" value="주소 검색" />
+        </div>
+
+        <!-- 지도 표기 -->
+        <div id="map" style="width:100%;height:350px;"></div>
+
+        <p><em>지도를 클릭해주세요!</em></p>
+<!--        <form action="/cases/new" method="post">-->
+          <div className="form-group">
+<!--            <div id="clickLatlng"></div>-->
+            <input type="hidden" id="missingLat" name="missingLat">
+            <input type="hidden" id="missingLng" name="missingLng">
+            <input type="text" id="missingArea" name="missingArea"  placeholder="장소를 선택해주세요">
+<!--            <button type="submit">등록</button>-->
+          </div>
+<!--        </form>-->
+        <script>
+          var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
+          var map = new naver.maps.Map('map', {
+            center: position,
+            zoom: 15
+          });
+
+          var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+          });
+
+          function searchCoordinateToAddress(latlng) {
+            naver.maps.Service.reverseGeocode({
+              coords: latlng,
+              orders: [
+                naver.maps.Service.OrderType.ADDR,
+                naver.maps.Service.OrderType.ROAD_ADDR
+              ].join(',')
+            }, function(status, response) {
+              if (status === naver.maps.Service.Status.ERROR) {
+                if (!latlng) {
+                  return alert('ReverseGeocode Error, Please check latlng');
+                }
+                if (latlng.toString) {
+                  return alert('ReverseGeocode Error, latlng:' + latlng.toString());
+                }
+                if (latlng.x && latlng.y) {
+                  return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
+                }
+                return alert('ReverseGeocode Error, Please check latlng');
+              }
+
+              var address = response.v2.address,
+                  htmlAddresses = [];
+
+              if (address.jibunAddress !== '') {
+                htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
+              }
+
+              if (address.roadAddress !== '') {
+                htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+              }
+
+              missingArea.value = address.jibunAddress;
+            });
+          }
+
+          function searchAddressToCoordinate(address) {
+            naver.maps.Service.geocode({
+              query: address
+            }, function(status, response) {
+              if (status === naver.maps.Service.Status.ERROR) {
+                if (!address) {
+                  return alert('Geocode Error, Please check address');
+                }
+                return alert('Geocode Error, address:' + address);
+              }
+
+              if (response.v2.meta.totalCount === 0) {
+                return alert('No result.');
+              }
+
+              var point = new naver.maps.Point(item.x, item.y);
+
+              map.setCenter(point);
+            });
+          }
+
+          naver.maps.Event.addListener(map, 'click', function(e) {
+            marker.setPosition(e.coord);
+            var message = marker.position.toString();
+            // var resultDiv = document.getElementById('clickLatlng');
+            // resultDiv.innerHTML =  message;
+
+            var missingLat = document.getElementById('missingLat');
+            var missingLng = document.getElementById('missingLng');
+            var missingArea = document.getElementById('missingArea');
+            missingLat.value = marker.position.lat().toString();
+            missingLng.value = marker.position.lng().toString();
+
+            searchCoordinateToAddress(marker.position);
+          });
+
+          $('#address').on('keydown', function(e) {
+            var keyCode = e.which;
+
+            if (keyCode === 13) { // Enter Key
+              searchAddressToCoordinate($('#address').val());
+            }
+          });
+
+
+        </script>
+<!--        <label for="missingArea">실종 지역</label>-->
+<!--        <input type="text" id="missingArea" name="missingArea" placeholder="지역을 입력하세요" th:value="${caseDto.missingArea}" style="width: 20%" readonly>-->
+<!--        <input type="hidden" id="missingLng" name="missingLng" th:value="${caseDto.missingLng} " readonly>-->
+<!--        <input type="hidden" id="missingLat" name="missingLat" th:value="${caseDto.missingLat} " readonly>-->
+<!--        <span th:text="${valid_missingArea}"></span>-->
+<!--&lt;!&ndash;        <button type="submit" th:action="@{/cases/new/searchPlace}">지도에서 찾기</button>&ndash;&gt;-->
+<!--        <button type="submit" formaction="/searchPlace">지도에서 찾기</button>-->
       </div>
 
       <div>
         <label for="missingTimeStart">실종 시간</label>
         <input type="datetime-local" id="missingTimeStart" name="missingTimeStart" th:value="${caseDto.missingTimeStart}"> ~
-        <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" th:value="${caseDto.missingTimeEnd}">
+        <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" onchange="setMinValue()" th:value="${caseDto.missingTimeEnd}">
         <span th:text="${valid_missingTimeStart}"></span>
         <span th:text="${valid_missingTimeEnd}"></span>
       </div>
 
+      <script>
+        let missingTimeStart = document.getElementById("missingTimeStart");
+        let missingTimeEnd = document.getElementById("missingTimeEnd");
+
+        function setMinValue() {
+          if( missingTimeStart.value >= missingTimeEnd.value) {
+            alert('실종 시간보다 이전의 날짜는 설정할 수 없습니다.');
+            missingTimeEnd.value = null;
+          }
+        }
+      </script>
+
+      <div>
+        <label for="missingPics">실종자 사진</label>
+        <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
+      </div>
     </div>
-    <button type="submit" formaction="/cases/new/submit">등록</button>
-<!--    <button type="submit" th:action="@{/cases/new/submit}">등록</button>-->
+    <button type="submit">등록</button>
   </form>
+    <script>
+      // 파일 null인지 확인
+      let missingPics = document.getElementById("missingPics");
+      let newCaseForm = document.getElementById("newCaseForm");
+      function checkFileNull() {
+        if(! missingPics.value) {
+          alert("실종자 사진 등록은 필수입니다.");
+          return false;
+        }
+      }
+    </script>
 </div>
+
+</body>
 </html>

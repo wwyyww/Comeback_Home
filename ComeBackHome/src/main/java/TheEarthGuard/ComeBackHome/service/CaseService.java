@@ -9,8 +9,6 @@ import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
-
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,13 +88,7 @@ public class CaseService {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
-
         caseEntity.get().updateCase(caseDto);
-//        caseDto.setUser(user.get());
-//        Case updateCase = caseDto.toEntity();
-//        updateCase.setCreatedTime(caseEntity.get().getCreatedTime());
-//        caseRepository.save(updateCase);
-
         return case_id;
     }
 
@@ -190,16 +182,16 @@ public class CaseService {
     /**
      * 사건 검색
      */
-    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByMissingName(keyword, sex, age, area);
+    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByMissingName(keyword, sex, age, area, feature);
     }
 
-    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByMissingArea(keyword, sex, age, area);
+    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByMissingArea(keyword, sex, age, area, feature);
     }
 
-    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByFilters(sex, age, area);
+    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByFilters(sex, age, area, feature);
     }
 
     public Optional<List<Case>> sortCasebyTime(){
@@ -220,6 +212,5 @@ public class CaseService {
         //List<FileEntity> missing_pictures = caseRepository.findByMissingTimeStartOrderByMissingTimeStartDesc(missingTimeStart).get().get(0).getMissingPics();
         return missing_pictures;
     }
-
 
 }

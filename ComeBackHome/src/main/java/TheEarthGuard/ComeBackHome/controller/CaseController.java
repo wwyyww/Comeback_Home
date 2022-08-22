@@ -6,19 +6,22 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.CaseListResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
-import TheEarthGuard.ComeBackHome.dto.PlaceInfoDto;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
-import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
-
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +33,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Slf4j
 @Controller
-@SessionAttributes({"caseDto"})
+@SessionAttributes({"caseDto", "RedirectURL"})
 public class CaseController {
     private final CaseService caseService;
     private UserService userService;
@@ -100,19 +101,8 @@ public class CaseController {
         return "cases/createCaseForm";
     }
 
-    //실종위치 찍고나서 사건글 이어서 작성할 때
-    @PostMapping(value = "/cases/new")
-    public String updateCaseForm(@ModelAttribute PlaceInfoDto placeInfoDto, @ModelAttribute("caseDto") CaseSaveRequestDto caseDto,HttpServletRequest request, Model model) {
-        caseDto.setMissingArea(placeInfoDto.getMissingArea());
-        caseDto.setMissingLat(placeInfoDto.getMissingLat());
-        caseDto.setMissingLng(placeInfoDto.getMissingLng());
-
-        model.addAttribute("caseDto", caseDto);
-        return "cases/createCaseForm";
-    }
-
     // 사건 등록
-    @PostMapping(value = "/cases/new/submit")
+    @PostMapping(value = "/cases/new")
     public String uploadCaseForm(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @CurrentUser User user, Errors errors, Model model) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!" + errors);
@@ -129,18 +119,6 @@ public class CaseController {
         caseService.uploadCase(caseDto, caseDto.getMissingPics());
 
         return "redirect:/";
-    }
-
-    // 장소 검색
-    @PostMapping(value = "/cases/new/searchPlace")
-    public String searchPlace(@ModelAttribute CaseSaveRequestDto caseDto, @RequestParam("missingPics") MultipartFile file, Model model, Errors errors) {
-        if (errors.hasErrors()) {
-            System.out.println("ERROR!!!!!!!!");
-            // 에러 페이지 수정 필요
-            return "cases/createCaseForm";
-        }
-        model.addAttribute("caseDto", caseDto);// 세션으로 같이 등록됨
-        return "/cases/searchPlace";
     }
 
     // 모든 사건 조회
@@ -174,7 +152,7 @@ public class CaseController {
 
     // 사건 상세보기
     @GetMapping(value = "/cases/detail/{id}")
-    public String caseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
+    public String caseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Optional<Case> caseEntity = caseService.findCase(id);
 
         if(caseEntity.isPresent()) {
@@ -204,15 +182,32 @@ public class CaseController {
     }
 
     @GetMapping(value = "/cases/detailReport/{id}")
-    public String caseDetailMap(@PathVariable("id") Long id) {
+    public String caseDetailMap(@PathVariable("id") Long id, Model model) {
+        Optional<Case> caseEntity = caseService.findCase(id);
+        model.addAttribute("caseEntity", caseEntity.get());
         return "/allmaps/casesMap/reportsMap";
     }
 
+
     @PostMapping(value = "/cases/detail/{id}/submit")
-    public String showCaseDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
-        System.out.println(id);
+    public String showCaseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user, RedirectAttributes redirectAttributes) {
+        Optional<List<Report>> reportList = Optional.empty();
+        String area = form.getMissing_area2();
+        LocalDate start = form.getMissing_time_start();
+        LocalDate end = form.getMissing_time_end();
+        System.out.println(id + area + start + end);
+        reportList = reportService.getByFilters(area, start, end);
+        if(reportList.isPresent()) {
+            System.out.println(reportList.get());
+        } else {
+            System.out.println("없음");
+        }
+
+        redirectAttributes.addFlashAttribute("searchReport", reportList);
+        //return "/cases/caseDetail";
         return "redirect:/cases/detail/{id}";
     }
+
     // 사건 삭제하기
     @GetMapping(value = "/cases/delete/{id}")
     public String deleteCase(@PathVariable("id") Long id, @CurrentUser User user) {
@@ -220,21 +215,24 @@ public class CaseController {
         return "redirect:/cases";
     }
 
-    // 사건 수정하기
+    // 사건 수정하기 (첫 화면)
     @GetMapping(value = "/cases/update/{id}")
-    public String updateCaseForm(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
+    public String createEditCase(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
         Optional<Case> caseDto = caseService.findCase(caseId);
 
         if(caseDto.isPresent() && user.getId() == caseDto.get().getUser().getId()){
             CaseResponseDto caseResponseDto =  new CaseResponseDto(caseDto.get(), caseDto.get().getUser());
-            model.addAttribute("case", caseResponseDto);
+            model.addAttribute("caseDto", caseResponseDto);
+
+            String redirectURL = "/cases/update/" + caseId.toString();
+            model.addAttribute("RedirectURL",  redirectURL);
         }
         return "/cases/caseUpdate";
     }
 
-    // 사건 수정하기
+    // 사건 수정하기 (제출)
     @PostMapping(value = "/cases/update/{id}")
-    public String updateCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
+    public String uploadEditCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!");
@@ -302,15 +300,14 @@ public class CaseController {
         Optional<List<String>> sex = form.getMissing_sex();
         Optional<List<String>> age = form.getMissing_age();
         Optional<List<String>> area = form.getMissing_area();
-        System.out.println(sex);
-        System.out.println(age);
-        System.out.println(area);
+        String feature = form.getMissing_feature();
+        //System.out.println(sex.toString() + age + area + feature);
         if (form.getSearch_type().equals("name")){ // 이름 입력 했을 때
-            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area);
+            caseList = caseService.findbyMissingName(form.getMissing_name(), sex, age, area, feature);
         } else if (form.getSearch_type().equals("area")) { // 주소 입력 했을 때
-            caseList = caseService.findbyMissingArea(form.getMissing_name(), sex, age, area);
+            caseList = caseService.findbyMissingArea(form.getMissing_name(), sex, age, area, feature);
         } else { // 아무 입력값이 없을 때
-            caseList = caseService.findbyFilters(form.getMissing_sex(), form.getMissing_age(), form.getMissing_area());
+            caseList = caseService.findbyFilters(form.getMissing_sex(), form.getMissing_age(), form.getMissing_area(), feature);
         }
         //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
         if(caseList.isPresent()) {
@@ -325,5 +322,13 @@ public class CaseController {
         return "redirect:/cases/searchCase";
        // return "/cases/searchCaseForm";
     }
+
+
+    // (1) 장소 검색 (new Case)
+    @GetMapping(value = "/searchPlace")
+    public String searchPlace() {
+        return "/cases/searchPlace";
+    }
+
 
 }

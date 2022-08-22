@@ -37,6 +37,8 @@ public class CaseSaveRequestDto {
     private String missingLng;
     @NotBlank(message = "실종 지역은 필수 입력값입니다.")
     private String missingLat;
+    @NotNull(message = "실종자 특성은 필수 입력값입니다.")
+    private Integer missingFeature;
 
     @NotNull(message = "실종 추정 날짜는 필수 입력값입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -46,6 +48,7 @@ public class CaseSaveRequestDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime missingTimeEnd;
 
+    @NotNull(message = "실종자 사진 등록은 필수입니다.")
     private List<MultipartFile> missingPics;
 
     public Case toEntity(){
@@ -55,6 +58,7 @@ public class CaseSaveRequestDto {
             .missingAge(this.missingAge)
             .missingSex(this.missingSex)
             .missingDesc(this.missingDesc)
+            .missingFeature(this.missingFeature)
             .missingArea(this.missingArea)
             .missingRegion(this.missingArea.substring(0,2)) // 지역명 앞 2글자만
             .missingLat(Double.parseDouble(this.missingLat))
@@ -63,5 +67,6 @@ public class CaseSaveRequestDto {
             .missingTimeEnd(this.missingTimeEnd)
             .build();
     }
+
 }
 
