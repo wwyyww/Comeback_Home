@@ -39,6 +39,8 @@ public class ReportResponseDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime witnessTime;
 
+    private LocalDateTime createdTime;
+
     private List<FileEntity> witnessPics;
 
 
@@ -54,5 +56,7 @@ public class ReportResponseDto {
         this.witness_desc = report.getWitness_desc();
         this.witnessTime = report.getWitnessTime();
         this.witnessPics = report.getWitnessPics();
+        this.createdTime = report.getCreatedTime();
+
     }
 }

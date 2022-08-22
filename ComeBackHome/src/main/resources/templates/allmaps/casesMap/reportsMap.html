@@ -17,10 +17,36 @@
 
 </head>
 <body onload="javascript:initMap()">
-
-<input type="button" 3333333333333333333
+<input type="button"
+       value="시간별 보기" th:onclick="selectTime('right-list')">
+<input type="button"
+       value="장소소별 보기" th:onclick="selectPlace('right-list')">
+<input type="button" style="position: absolute; right: 5%;"
        value="제보 모두보기" th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
-<div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
+<section class="container-fluid" style="height: 100%;">
+    <div id="map" style="width:80%;height:100%;padding:0;margin:0; float: left"></div>
+    <div id="right-list" style="background-color: #9fcdff; height: 100%; width: 20%; float: right">
+        <div>
+            <span style="float: left">발견시간</span>
+            <span style="float:right; padding-right: 20px">발견위치</span>
+        </div>
+        <div>
+            <ul>
+                <li>
+                    <div>
+                        <span>홍길동</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <span>김연경</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
 <script>
     var map = new naver.maps.Map("map", {
         zoom: 10,
@@ -36,6 +62,18 @@
     var url = window.location.href;
     url=url.split("/");
     url = url[url.length - 1];
+
+    function selectTime(id) {
+        var el = document.getElementById(id);
+        el.style.backgroundColor = "blue";
+
+    }
+
+    function selectPlace(id) {
+        var el = document.getElementById(id);
+        el.style.backgroundColor = "red";
+
+    }
 
 
     function initMap() {

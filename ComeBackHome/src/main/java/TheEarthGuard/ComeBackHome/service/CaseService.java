@@ -51,6 +51,9 @@ public class CaseService {
     public Long uploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
         Case newCase = caseDto.toEntity();
 
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLat());
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLng());
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingArea());
         List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
         if (missing_pictures == null) {
             System.out.println("[CaseService - UploadCase] 유해이미지로 판단됨!");
@@ -187,16 +190,16 @@ public class CaseService {
     /**
      * 사건 검색
      */
-    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByMissingName(keyword, sex, age, area);
+    public Optional<List<Case>> findbyMissingName(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByMissingName(keyword, sex, age, area, feature);
     }
 
-    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByMissingArea(keyword, sex, age, area);
+    public Optional<List<Case>> findbyMissingArea(String keyword, Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByMissingArea(keyword, sex, age, area, feature);
     }
 
-    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area){
-        return caseRepository.searchByFilters(sex, age, area);
+    public Optional<List<Case>> findbyFilters(Optional<List<String>> sex, Optional<List<String>> age, Optional<List<String>> area, String feature){
+        return caseRepository.searchByFilters(sex, age, area, feature);
     }
 
     public Optional<List<Case>> sortCasebyTime(){
@@ -217,6 +220,5 @@ public class CaseService {
         //List<FileEntity> missing_pictures = caseRepository.findByMissingTimeStartOrderByMissingTimeStartDesc(missingTimeStart).get().get(0).getMissingPics();
         return missing_pictures;
     }
-
 
 }

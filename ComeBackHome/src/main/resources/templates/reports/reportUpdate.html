@@ -1,5 +1,8 @@
 <!DOCTYPE HTML>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
 <head>
     <meta charset="utf-8">
     <title>제보 수정하기</title>
@@ -9,7 +12,7 @@
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
 </head>
 <body>
-<div class="container">
+<div layout:fragment="content" class="container">
     <!--  <form action="/cases/new/submit" method="post">-->
     <form th:action="@{/reports/update/{id}(id = ${reportForm.getId()})}" method="post">
         <div class="form-group">

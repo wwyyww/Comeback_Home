@@ -64,7 +64,6 @@ public class Case extends BaseTimeEntity{
     @OrderBy("createdTime desc")
     private List<Report> reports;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> missingPics;
 
