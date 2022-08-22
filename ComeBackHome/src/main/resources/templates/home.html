@@ -14,7 +14,7 @@
   <script type="text/javascript" src="../static/assets/MarkerClustering.js"></script>
 
   <link rel="stylesheet" th:href="@{/static/plugins/bootstrap/bootstrap.min.css}">
-  <!--	icon-->
+  <!--   icon-->
   <link rel="stylesheet" th:href="@{/static/plugins/themify-icons/themify-icons.css}">
   <!--Favicon-->
   <link rel="icon" th:href="@{/static/images/earthguard.png}" type="image/x-icon">
@@ -44,9 +44,6 @@
         <ul class="navbar-nav ml-auto">
 
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/casesMap">지도보기</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link text-dark" href="/cases/searchCase">실종자 목록/제보</a>
           </li>
           <li class="nav-item">
@@ -54,10 +51,14 @@
           </li>
 
           <li class="nav-item">
-            <a sec:authorize="!isAuthenticated()" class="nav-link text-dark" href="/users/login">로그인</a>
-            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/logout">로그아웃</a>
             <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/mypage">마이페이지</a>
           </li>
+
+          <li class="nav-item">
+            <a sec:authorize="!isAuthenticated()" class="nav-link text-dark" href="/users/login">로그인</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/logout">로그아웃</a>
+          </li>
+
         </ul>
       </div>
     </div>
@@ -67,152 +68,171 @@
 
 <!-- call to action -->
 <section class="container-fluid" style="height: 100%;">
-<!--  <div class="container-fluid">-->
-    <div class="row" style="height: 100%">
-      <div class="col-4">
-        <div class="section bg-white shadow text-center">
-          <div class="position-relative">
-            <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
-                  class="ti-search search-icon"></i>
-          </div>
+  <!--  <div class="container-fluid">-->
+  <div class="row" style="height: 100%">
+    <div class="col-4">
+      <div class="section bg-white shadow text-center">
+        <div class="position-relative">
+          <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
+                class="ti-search search-icon"></i>
         </div>
+<!--        <div class="position-relative">-->
+<!--          <table style="width:40px;">-->
+<!--            <thead>-->
+<!--              <tr>-->
+<!--                <td>실종자 수</td>-->
+<!--                <td>찾은 사람 수</td>-->
+<!--              </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--              <td id="missingNum"></td>-->
+<!--              <td id="findNum"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+
+<!--        </div>-->
       </div>
-      <div id="map"class ="col-8" style="width:100%;height:100%;padding:0;margin:0;"></div>
-      <script>
-        var map = new naver.maps.Map("map", {
-          zoom: 7,
-          center: new naver.maps.LatLng(36.2253017, 127.6460516),
-          zoomControl: true,
-          zoomControlOptions: {
-            position: naver.maps.Position.TOP_LEFT,
-            style: naver.maps.ZoomControlStyle.SMALL
-          }
-        });
-
-        var htmlMarker1 = {
-                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-1.png);background-size:contain;"></div>',
-                  size: N.Size(40, 40),
-                  anchor: N.Point(20, 20)
-                },
-                htmlMarker2 = {
-                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-2.png);background-size:contain;"></div>',
-                  size: N.Size(40, 40),
-                  anchor: N.Point(20, 20)
-                },
-                htmlMarker3 = {
-                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-3.png);background-size:contain;"></div>',
-                  size: N.Size(40, 40),
-                  anchor: N.Point(20, 20)
-                },
-                htmlMarker4 = {
-                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-4.png);background-size:contain;"></div>',
-                  size: N.Size(40, 40),
-                  anchor: N.Point(20, 20)
-                },
-                htmlMarker5 = {
-                  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-5.png);background-size:contain;"></div>',
-                  size: N.Size(40, 40),
-                  anchor: N.Point(20, 20)
-                };
-
-
-        var markers = [],
-                infoWindows =[];
-
-        function initMap() {
-
-          $.ajax({
-            type:"get",
-            url:"data.json",
-            dataType:"json",
-            success: function(data){
-              console.log("통신성공");
-              $.each(data , function(i){
-                var x = data[i].missingLat;
-                var y = data[i].missingLng;
-                console.log(x, y)
-                var marker = new naver.maps.Marker({
-                  position: new naver.maps.LatLng(x, y),
-                  map: map,
-                  draggable: false
-                });
-                //클릭하면 해당 사건 출력
-                var infoWindow = new naver.maps.InfoWindow({
-                  content: '<div style="width:150px;text-align:center;padding:10px;">실종자 이름: <b>"'+ data[i].missingName +'"</b>.</div>'
-                });
-                markers.push(marker);
-                infoWindows.push(infoWindow);
-              });
-              console.log(markers);
-
-              //클러스터링
-              var markerClustering = new MarkerClustering({
-                minClusterSize: 2,
-                maxZoom: 8,
-                map: map,
-                markers: markers,
-                disableClickZoom: false,
-                gridSize: 120,
-                icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
-                indexGenerator: [10, 100, 200, 500, 1000],
-                stylingFunction: function(clusterMarker, count) {
-                  $(clusterMarker.getElement()).find('div:first-child').text(count);
-                }
-              });
-
-              function getClickHandler(seq){
-                return function(e) {
-                  var marker = markers[seq],
-                          infoWindow = infoWindows[seq];
-
-                  if (infoWindow.getMap()) {
-                    infoWindow.close();
-                  } else {
-                    infoWindow.open(map, marker);
-                  }
-                }
-              }
-
-              for (var i=0, ii=markers.length; i<ii; i++) {
-                console.log(markers[i] , getClickHandler(i));
-                naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
-              }
-            },
-            error:function(){
-              console.log("통신에러");
-            }
-          })
+    </div>
+    <div id="map"class ="col-8" style="width:100%;height:100%;padding:0;margin:0;"></div>
+    <script>
+      var map = new naver.maps.Map("map", {
+        zoom: 7,
+        center: new naver.maps.LatLng(36.2253017, 127.6460516),
+        zoomControl: true,
+        zoomControlOptions: {
+          position: naver.maps.Position.TOP_LEFT,
+          style: naver.maps.ZoomControlStyle.SMALL
         }
+      });
 
-      </script>
-      </div>
-<!--    </div>-->
+      var htmlMarker1 = {
+                content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-1.png);background-size:contain;"></div>',
+                size: N.Size(40, 40),
+                anchor: N.Point(20, 20)
+              },
+              htmlMarker2 = {
+                content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-2.png);background-size:contain;"></div>',
+                size: N.Size(40, 40),
+                anchor: N.Point(20, 20)
+              },
+              htmlMarker3 = {
+                content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-3.png);background-size:contain;"></div>',
+                size: N.Size(40, 40),
+                anchor: N.Point(20, 20)
+              },
+              htmlMarker4 = {
+                content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-4.png);background-size:contain;"></div>',
+                size: N.Size(40, 40),
+                anchor: N.Point(20, 20)
+              },
+              htmlMarker5 = {
+                content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-5.png);background-size:contain;"></div>',
+                size: N.Size(40, 40),
+                anchor: N.Point(20, 20)
+              };
+
+
+      var markers = [],
+              infoWindows =[];
+
+      function initMap() {
+
+        $.ajax({
+          type:"get",
+          url:"data.json",
+          dataType:"json",
+          success: function(data){
+            console.log("통신성공");
+            $.each(data , function(i){
+              var x = data[i].missingLat;
+              var y = data[i].missingLng;
+              var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(x, y),
+                map: map,
+                draggable: false
+              });
+
+
+
+              var picFullPath= "/images/" + data[i].missingPics[0].uploadPath + "/" + data[i].missingPics[0].savedFileName;
+              var checkGender = data[i].missingSex;
+              var gender;
+              if (checkGender === false)
+                gender="여성";
+              else
+                gender="남성";
+
+             var caseId = data[i].caseId;
+              var detailUrl = "/cases/detail/"+caseId;
+
+              //클릭하면 해당 사건 출력
+              var infoWindow = new naver.maps.InfoWindow({
+                content:'<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto"src='+ picFullPath +'></div>' +
+                        '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><b>실종자: '+ data[i].missingName +'</b></div>' +
+                        '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;font-size: small;">'+ data[i].missingAge +'세' + '/'+ gender +'</div>' +
+                        '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 10px;font-size: small;"><a href=' + detailUrl + '>상세보기</a></div>'
+              });
+              markers.push(marker);
+              infoWindows.push(infoWindow);
+            });
+            console.log(markers);
+
+            //클러스터링
+            var markerClustering = new MarkerClustering({
+              minClusterSize: 1,
+              maxZoom: 8,
+              map: map,
+              markers: markers,
+              disableClickZoom: false,
+              gridSize: 120,
+              icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+              indexGenerator: [10, 100, 200, 500, 1000],
+              stylingFunction: function(clusterMarker, count) {
+                $(clusterMarker.getElement()).find('div:first-child').text(count);
+              }
+            });
+
+            function getClickHandler(seq){
+              return function(e) {
+                var marker = markers[seq],
+                        infoWindow = infoWindows[seq];
+
+                if (infoWindow.getMap()) {
+                  infoWindow.close();
+                } else {
+                  infoWindow.open(map, marker);
+                }
+              }
+            }
+
+            for (var i=0, ii=markers.length; i<ii; i++) {
+              console.log(markers[i] , getClickHandler(i));
+              naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+            }
+          },
+          error:function(){
+            console.log("통신에러");
+          }
+        })
+      }
+
+    </script>
+  </div>
+  <!--    </div>-->
 </section>
 <!-- /call to action -->
 
-<!-- footer -->
-<footer class="section pb-4">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-8 text-md-left text-center">
-        <p class="mb-md-0 mb-4">Copyright © 2022 ComeBackHome by EarthGuard</p>
-      </div>
-      <div class="col-md-4 text-md-right text-center">
-        <p class="mb-md-0 mb-4">문의 earthguard@gmail.com</p>
-      </div>
-    </div>
-  </div>
-</footer>
-<!-- /footer -->
 
-<!-- ** JS Plugins Needed for the Project ** -->
-<!-- jquiry -->
+
+<!--jquiry -->
 <script src="/static/plugins/jquery/jquery-1.12.4.js"></script>
-<!-- Bootstrap JS -->
+<!--Bootstrap JS-->
 <script src="/static/plugins/bootstrap/bootstrap.min.js"></script>
-<!-- match-height JS -->
+<!--match-height JS-->
 <script src="/static/plugins/match-height/jquery.matchHeight-min.js"></script>
-<!-- Main Script -->
+<!--Main Script-->
 <script src="/static/assets/script.js"></script>
 </body>
 

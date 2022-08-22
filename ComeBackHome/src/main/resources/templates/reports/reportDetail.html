@@ -1,28 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>게시물 상세 페이지</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+    <style>
+        .layout {
+            width: 500px;
+            margin: 0 auto;
+            margin-top: 40px;
+        }
+
+        .layout input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .layout textarea {
+            width: 100%;
+            margin-top: 10px;
+            min-height: 300px;
+        }
+    </style>
 </head>
-<style>
-    .layout {
-        width: 500px;
-        margin: 0 auto;
-        margin-top: 40px;
-    }
 
-    .layout input {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .layout textarea {
-        width: 100%;
-        margin-top: 10px;
-        min-height: 300px;
-    }
-</style>
 <body>
+<div layout:fragment="content" class="container">
 <table class ="table table-bordered">
     <thead>
     <caption>제보 상세보기</caption>
@@ -64,6 +72,6 @@
     <a th:href="@{/reports/delete/{id}(id=${report.getId()})}">글 삭제</a>
     <a th:href="@{/reports/update/{id}(id=${report.getId()})}">글 수정</a>
 </div>
-
+</div>
 </body>
 </html>
