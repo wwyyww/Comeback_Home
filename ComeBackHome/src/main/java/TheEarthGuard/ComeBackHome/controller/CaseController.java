@@ -127,7 +127,7 @@ public class CaseController {
                 mav.addObject(key,validatorResult.get(key));
             }
 
-//            return "cases/createCaseForm";
+//            return "cases/createCaseForm";ㅅㄷ
 //            mav.addObject("data", new Message("모든 필드를 입력해주세요.", "cases/createCaseForm"));
             mav.setViewName("cases/createCaseForm");
             return mav;
