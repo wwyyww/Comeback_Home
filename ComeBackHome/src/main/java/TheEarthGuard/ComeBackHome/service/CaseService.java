@@ -51,6 +51,9 @@ public class CaseService {
     public Long uploadCase(CaseSaveRequestDto caseDto,  List<MultipartFile> files) throws Exception{
         Case newCase = caseDto.toEntity();
 
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLat());
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLng());
+        System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingArea());
         List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
         System.out.println("[CaseService-missing_pictures] 파일!" + missing_pictures);
         if(!missing_pictures.isEmpty()) {

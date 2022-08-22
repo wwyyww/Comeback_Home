@@ -548,101 +548,101 @@
 
               naver.maps.onJSContentLoaded = initGeocoder;
           </script>
-<!--        <script>-->
-<!--          var position = new naver.maps.LatLng(37.3595704, 127.105399);-->
+        <script>
+          var position = new naver.maps.LatLng(37.3595704, 127.105399);
 
-<!--          var map = new naver.maps.Map('map', {-->
-<!--            center: position,-->
-<!--            zoom: 15-->
-<!--          });-->
+          var map = new naver.maps.Map('map', {
+            center: position,
+            zoom: 15
+          });
 
-<!--          // var marker = new naver.maps.Marker({-->
-<!--          //   position: position,-->
-<!--          //   map: map-->
-<!--          // });-->
+          var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+          });
 
-<!--          function searchCoordinateToAddress(latlng) {-->
-<!--            naver.maps.Service.reverseGeocode({-->
-<!--              coords: latlng,-->
-<!--              orders: [-->
-<!--                naver.maps.Service.OrderType.ADDR,-->
-<!--                naver.maps.Service.OrderType.ROAD_ADDR-->
-<!--              ].join(',')-->
-<!--            }, function(status, response) {-->
-<!--              if (status === naver.maps.Service.Status.ERROR) {-->
-<!--                if (!latlng) {-->
-<!--                  return alert('ReverseGeocode Error, Please check latlng');-->
-<!--                }-->
-<!--                if (latlng.toString) {-->
-<!--                  return alert('ReverseGeocode Error, latlng:' + latlng.toString());-->
-<!--                }-->
-<!--                if (latlng.x && latlng.y) {-->
-<!--                  return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);-->
-<!--                }-->
-<!--                return alert('ReverseGeocode Error, Please check latlng');-->
-<!--              }-->
+          function searchCoordinateToAddress(latlng) {
+            naver.maps.Service.reverseGeocode({
+              coords: latlng,
+              orders: [
+                naver.maps.Service.OrderType.ADDR,
+                naver.maps.Service.OrderType.ROAD_ADDR
+              ].join(',')
+            }, function(status, response) {
+              if (status === naver.maps.Service.Status.ERROR) {
+                if (!latlng) {
+                  return alert('ReverseGeocode Error, Please check latlng');
+                }
+                if (latlng.toString) {
+                  return alert('ReverseGeocode Error, latlng:' + latlng.toString());
+                }
+                if (latlng.x && latlng.y) {
+                  return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
+                }
+                return alert('ReverseGeocode Error, Please check latlng');
+              }
 
-<!--              var address = response.v2.address,-->
-<!--                  htmlAddresses = [];-->
+              var address = response.v2.address,
+                  htmlAddresses = [];
 
-<!--              if (address.jibunAddress !== '') {-->
-<!--                htmlAddresses.push('[지번 주소] ' + address.jibunAddress);-->
-<!--              }-->
+              if (address.jibunAddress !== '') {
+                htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
+              }
 
-<!--              if (address.roadAddress !== '') {-->
-<!--                htmlAddresses.push('[도로명 주소] ' + address.roadAddress);-->
-<!--              }-->
+              if (address.roadAddress !== '') {
+                htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+              }
 
-<!--              missingArea.value = address.jibunAddress;-->
-<!--            });-->
-<!--          }-->
+              missingArea.value = address.jibunAddress;
+            });
+          }
 
-<!--          function searchAddressToCoordinate(address) {-->
-<!--            naver.maps.Service.geocode({-->
-<!--              query: address-->
-<!--            }, function(status, response) {-->
-<!--              if (status === naver.maps.Service.Status.ERROR) {-->
-<!--                if (!address) {-->
-<!--                  return alert('Geocode Error, Please check address');-->
-<!--                }-->
-<!--                return alert('Geocode Error, address:' + address);-->
-<!--              }-->
+          function searchAddressToCoordinate(address) {
+            naver.maps.Service.geocode({
+              query: address
+            }, function(status, response) {
+              if (status === naver.maps.Service.Status.ERROR) {
+                if (!address) {
+                  return alert('Geocode Error, Please check address');
+                }
+                return alert('Geocode Error, address:' + address);
+              }
 
-<!--              if (response.v2.meta.totalCount === 0) {-->
-<!--                return alert('No result.');-->
-<!--              }-->
+              if (response.v2.meta.totalCount === 0) {
+                return alert('No result.');
+              }
 
-<!--              var point = new naver.maps.Point(item.x, item.y);-->
+              var point = new naver.maps.Point(item.x, item.y);
 
-<!--              map.setCenter(point);-->
-<!--            });-->
-<!--          }-->
+              map.setCenter(point);
+            });
+          }
 
-<!--          naver.maps.Event.addListener(map, 'click', function(e) {-->
-<!--            // marker.setPosition(e.coord);-->
-<!--            // var message = marker.position.toString();-->
-<!--            // var resultDiv = document.getElementById('clickLatlng');-->
-<!--            // resultDiv.innerHTML =  message;-->
+          naver.maps.Event.addListener(map, 'click', function(e) {
+            marker.setPosition(e.coord);
+            // var message = marker.position.toString();
+            // var resultDiv = document.getElementById('clickLatlng');
+            // resultDiv.innerHTML =  message;
 
-<!--            var missingLat = document.getElementById('missingLat');-->
-<!--            var missingLng = document.getElementById('missingLng');-->
-<!--            var missingArea = document.getElementById('missingArea');-->
-<!--            // missingLat.value = marker.position.lat().toString();-->
-<!--            // missingLng.value = marker.position.lng().toString();-->
+            var missingLat = document.getElementById('missingLat');
+            var missingLng = document.getElementById('missingLng');
+            var missingArea = document.getElementById('missingArea');
+            missingLat.value = marker.position.lat().toString();
+            missingLng.value = marker.position.lng().toString();
 
-<!--            // searchCoordinateToAddress(marker.position);-->
-<!--          });-->
+            searchCoordinateToAddress(marker.position);
+          });
 
-<!--          $('#address').on('keydown', function(e) {-->
-<!--            var keyCode = e.which;-->
+          $('#address').on('keydown', function(e) {
+            var keyCode = e.which;
 
-<!--            if (keyCode === 13) { // Enter Key-->
-<!--              searchAddressToCoordinate($('#address').val());-->
-<!--            }-->
-<!--          });-->
+            if (keyCode === 13) { // Enter Key
+              searchAddressToCoordinate($('#address').val());
+            }
+          });
 
 
-<!--        </script>-->
+        </script>
 
       </div>
 
