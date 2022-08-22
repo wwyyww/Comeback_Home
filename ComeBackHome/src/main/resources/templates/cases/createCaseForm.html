@@ -42,7 +42,7 @@
         }
         .area_right {
             position: relative;
-            width: 600px;
+            width: 700px;
             height: 500px;
             background: #f5f5f5;
         }
@@ -143,10 +143,12 @@
         #menu_wrap .option p {margin:10px 0;}
         #menu_wrap .option button {margin-left:5px;}
         #placesList li {list-style: none;}
-        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 40px;}
         #placesList .item span {display: block;margin-top:4px;}
-        #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+        #placesList .item h6{margin-left: 20px; text-align: left}
+        #placesList .item h6, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
         #placesList .item .info{padding:10px 0 10px 55px;}
+        #placesList .info .road{font-size: 12px; text-align: left; margin-left: 20px;}
         #placesList .info .gray {color:#8a8a8a;}
         #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
         #placesList .info .tel {color:#009900;}
@@ -369,16 +371,16 @@
                   var el = document.createElement('li'),
                       itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                           '<div class="info">' +
-                          '   <h5>' + places.place_name + '</h5>';
+                          '   <h6>' + places.place_name + '</h6>';
 
                   if (places.road_address_name) {
-                      itemStr += '    <span>' + places.road_address_name + '</span>' +
-                          '   <span class="jibun gray">' +  places.address_name  + '</span>';
+                      itemStr += '    <span class="road">' + places.road_address_name + '</span>' +
+                          '   <span class="jibun gray road">' +  places.address_name  + '</span>';
                   } else {
                       itemStr += '    <span>' +  places.address_name  + '</span>';
                   }
 
-                  itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+                  itemStr += '  <span class="tel road">' + places.phone  + '</span>' +
                       '</div>';
 
                   el.innerHTML = itemStr;
