@@ -39,6 +39,8 @@ public class ReportRequestDto extends BaseTimeEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime witnessTime;
 
+    private LocalDateTime createdTime;
+
     private List<MultipartFile> witnessPics;
 
     public Report toEntity(){
