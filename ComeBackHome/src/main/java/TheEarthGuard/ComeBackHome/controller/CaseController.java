@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -49,8 +51,8 @@ public class CaseController {
         this.reportService = reportService;
     }
 
-    @GetMapping(value = "/casesMap")
-    public String caseMap(Model model) {
+    @GetMapping(value = "/")
+    public String caseMap(Model model, @CurrentUser User user) {
         List<Case> caseEntityList = caseService.getCaseList();
         List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
                 caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
@@ -64,7 +66,7 @@ public class CaseController {
 
         System.out.println(returnMap);
 //        model.addObject("casesList", caseDtoList);
-        return "/allmaps/casesMap/marker-clustering";
+        return "home";
     }
 
     @GetMapping(value = "/detailMap")

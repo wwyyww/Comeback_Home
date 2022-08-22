@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    public String home(@CurrentUser User user) {
-        if (user != null) {
-            log.info("사용자 정보 : "+user);
-            log.info("사용자 이메일 : "+user.getEmail());
-        }
-
-        return "home";
-    }
+//    @GetMapping("/")
+//    public String home(@CurrentUser User user) {
+//        if (user != null) {
+//            log.info("사용자 정보 : "+user);
+//            log.info("사용자 이메일 : "+user.getEmail());
+//        }
+//
+//        return "home";
+//    }
 
     @GetMapping("/mapTest")
     public String mapTest() {
