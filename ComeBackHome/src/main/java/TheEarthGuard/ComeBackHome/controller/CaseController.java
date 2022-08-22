@@ -29,15 +29,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Slf4j
+@CrossOrigin("*")
 @Controller
 @SessionAttributes({"caseDto", "RedirectURL"})
 public class CaseController {
@@ -99,6 +96,13 @@ public class CaseController {
 
         model.addAttribute("caseDto",  new CaseSaveRequestDto());
         return "cases/createCaseForm";
+    }
+
+
+    @CrossOrigin("*")
+    @GetMapping(value = "/test")
+    public String Form(Model model) {
+        return "reports/test";
     }
 
     // 사건 등록
