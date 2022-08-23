@@ -31,39 +31,34 @@
 
 <body onload="javascript:initMap()">
 <!-- header -->
-<header class="banner overlay bg-cover" >
-  <nav class="navbar navbar-expand-md navbar-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="padding-top:5px;padding-bottom: 5px;">
     <div class="container-fluid">
-      <a class="navbar-brand px-2" href="/">ComeBackHome</a>
-      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation"
-              aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="/">ComeBackHome</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse text-center" id="navigation">
+      <div class="collapse navbar-collapse text-center" id="navbarColor01">
         <ul class="navbar-nav ml-auto">
-
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/cases/searchCase">실종자 목록/제보</a>
+            <a class="nav-link" href="/cases/searchCase">실종자 목록/제보</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/cases/new">실종자 등록하기</a>
-          </li>
-
-          <li class="nav-item">
-            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/mypage">마이페이지</a>
+            <a class="nav-link" href="/cases/new">실종자 등록하기</a>
           </li>
 
           <li class="nav-item">
-            <a sec:authorize="!isAuthenticated()" class="nav-link text-dark" href="/users/login">로그인</a>
-            <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href="/users/logout">로그아웃</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/mypage">마이페이지</a>
           </li>
 
+          <li class="nav-item">
+            <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-</header>
 <!-- /header -->
 
 <!-- call to action -->
@@ -71,9 +66,9 @@
   <!--  <div class="container-fluid">-->
   <div class="row" style="height: 100%">
     <div class="col-4">
-      <div class="section bg-white shadow text-center">
+      <div>
         <div class="position-relative">
-          <input id="search" class="form-control" placeholder="실종자를 검색해주세요"><i
+          <input type="search" class="form-control" placeholder="실종자를 검색해주세요"><i
                 class="ti-search search-icon"></i>
         </div>
 <!--        <div class="position-relative">-->
