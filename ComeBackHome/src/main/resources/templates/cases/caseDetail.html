@@ -4,7 +4,7 @@
       layout:decorate="~{layout/layout}">
 <head>
   <meta charset="UTF-8">
-  <title>사건 상세 페이지</title>
+  <title>실종자 정보</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
@@ -29,7 +29,23 @@
 </head>
 <body>
 <div layout:fragment="content" class="container">
-<table class ="table table-bordered">
+  <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">실종자 정보</h2>
+  <section class="container-fluid" style="height: 100%;">
+    <div class="row" style="height: 100%">
+      <div class="col-4">
+        <div>
+          <div class="position-relative" style="text-align: center;">
+            <h4>실종자 사진</h4>
+            <span th:each="imageFile  : ${case.getMissingPics()}">
+            <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+            <a th:href="@{/download/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}">
+              <div th:text="${imageFile.getOrgFileName()}"></div>
+            </a>
+            </span>
+          </div>
+        </div>
+      </div>
+<table class ="table table-bordered col-6">
   <thead>
   <caption>사건 상세보기</caption>
   </thead>
@@ -39,16 +55,6 @@
     <td th:text="${case.getMissingName()}"></td>
   </tr>
   <tbody>
-<!--  <tr th:each="pic : ${missing_pics}">-->
-  <tr>
-    <th>실종자 사진</th>
-    <td th:each="imageFile  : ${case.getMissingPics()}">
-      <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
-      <a th:href="@{/download/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}">
-        <div th:text="${imageFile.getOrgFileName()}"></div>
-      </a>
-    </td>
-  </tr>
   <tr>
     <th>실종자 나이</th>
     <td th:text="${case.getMissingAge()} + '살'"></td>
