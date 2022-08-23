@@ -57,7 +57,7 @@
     <tr>
         <th>제보 사진</th>
         <img th:each="imageFile  : ${report.getWitnessPics()}"
-             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+             th:src="@{/images/{filename} (filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
     </tr>
     </tbody>
 </table>

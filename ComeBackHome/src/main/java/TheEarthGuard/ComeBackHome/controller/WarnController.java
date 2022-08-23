@@ -10,6 +10,7 @@ import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ public class WarnController {
     private UserService userService;
     private final ReportService reportService;
 
+    @SuppressFBWarnings(justification = "Generated code")
     public WarnController(CaseService caseService, UserService userService, ReportService reportService) {
         this.caseService = caseService;
         this.userService = userService;

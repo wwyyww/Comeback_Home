@@ -38,7 +38,7 @@
         </td>
         <td>
           <img th:each="imageFile  : ${case.getMissingPicThumb()}"
-               th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
+               th:src="@{/images/{filename} (filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
         </td>
         <td><a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" th:text="${case.getMissingName()}"></a></td>
         <td>

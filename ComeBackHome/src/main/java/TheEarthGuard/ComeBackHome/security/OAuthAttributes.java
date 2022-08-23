@@ -1,6 +1,7 @@
 package TheEarthGuard.ComeBackHome.security;
 import TheEarthGuard.ComeBackHome.domain.Role;
 import TheEarthGuard.ComeBackHome.domain.User;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class OAuthAttributes {
     private String email;
 
     @Builder
+    @SuppressFBWarnings(justification = "Generated code")
     public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;

@@ -43,8 +43,8 @@
   <tr>
     <th>실종자 사진</th>
     <td th:each="imageFile  : ${case.getMissingPics()}">
-      <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
-      <a th:href="@{/download/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}">
+      <img th:src="@{/images/{filename} (filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+      <a th:href="@{/download/{filename} (filename=${imageFile.getSavedFileName()})}">
         <div th:text="${imageFile.getOrgFileName()}"></div>
       </a>
     </td>
@@ -101,6 +101,7 @@
     </div>
 
   <form th:action="@{/cases/detail/{id}/submit(id=${case.getCaseId()})}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
       <table>
         <tbody>

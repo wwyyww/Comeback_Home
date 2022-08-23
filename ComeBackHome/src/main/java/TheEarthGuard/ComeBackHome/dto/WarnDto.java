@@ -2,6 +2,7 @@ package TheEarthGuard.ComeBackHome.dto;
 
 import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.domain.Warn;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class WarnDto {
     @NotBlank(message = "신고 이유는 필수 입력값입니다.")
     private String warnReason;
 
+    @SuppressFBWarnings(justification = "Generated code")
     public WarnDto(User warnSender, String warnReason)  {
         this.warnSender = warnSender;
         this.warnReason = warnReason;

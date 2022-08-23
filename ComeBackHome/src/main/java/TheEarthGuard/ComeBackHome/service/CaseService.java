@@ -92,7 +92,7 @@ public class CaseService {
             .ofNullable(caseRepository.findById(case_id).orElseThrow(() ->
                 new IllegalArgumentException("사건 수정 실패 : 존재하지 않는 사건입니다")));
 
-        if (caseEntity.get().getUser().getId() != user.get().getId()) {
+        if (! caseEntity.get().getUser().getId().equals(user.get().getId())) {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
@@ -107,10 +107,10 @@ public class CaseService {
     @Transactional
     public void deleteCase(Long id, User user) {
         Optional<Case> caseEntity = caseRepository.findByCaseId(id);
-        if (user.getId() == caseEntity.get().getUser().getId()) {
+        if (user.getId().equals(caseEntity.get().getUser().getId())) {
             caseRepository.deleteById(id);
         }else{
-            new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
+            throw new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
         }
     }
 
@@ -119,7 +119,7 @@ public class CaseService {
      */
     @Transactional
     public void countHitCase(Long caseId) {
-        Optional<Case> caseEntity = caseRepository.findById(caseId);
+        caseRepository.findById(caseId).orElseThrow();
         caseRepository.updateHitCase(caseId);
     }
 

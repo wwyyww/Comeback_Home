@@ -3,8 +3,6 @@ package TheEarthGuard.ComeBackHome.service;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.repository.FileRepository;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -23,12 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import net.coobird.thumbnailator.Thumbnailator;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -38,8 +37,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileService {
 
-//    @Value("${file.dir}/")
-    private final String fileDirPath = "D:\\ComeBackHome"; // parent 폴더
+//    @Value("${spring.servlet.multipart.location}")
+//    private String fileDirPath; // parent 폴더
+
 
     private final FileRepository fileRepository;
 
@@ -53,11 +53,16 @@ public class FileService {
 
         if (!CollectionUtils.isEmpty(files)) {
             // 파일 저장 디렉토리 있는지 확인
-            String uploadFolderPath = getFolder(); // child 폴더
-            File uploadPath = new File(fileDirPath, uploadFolderPath);
+            ResourceBundle bundle = ResourceBundle.getBundle("application");
+            String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
+
+            File uploadPath = new File(fileDirPath);
 
             if (!uploadPath.exists()) {
-                uploadPath.mkdirs();
+                if(!uploadPath.mkdirs())
+                {
+                    System.err.println("디렉토리 생성 실패");
+                }
             }
 
             for (MultipartFile multipartFile : files) {
@@ -86,7 +91,7 @@ public class FileService {
                     InputStream initialStream = multipartFile.getInputStream();
 
                     // 파일 저장
-                    File saveFile = new File(uploadPath.getAbsolutePath(), savedFilename);
+                    File saveFile = new File(fileDirPath, FilenameUtils.getName(savedFilename)) ; // <<해결 필요>>
                     multipartFile.transferTo(saveFile);
 
                     // 유해 이미지 검사
@@ -99,10 +104,9 @@ public class FileService {
                         return null;
                     }
 
-
                     // 썸네일 생성
                     if (checkImageType(saveFile)) {
-                        FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + savedFilename));
+                        FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, FilenameUtils.getName("s_" + savedFilename)));
                         Thumbnailator.createThumbnail(initialStream, thumbnail, 100, 100);
 
                         thumbnail.close();
@@ -114,7 +118,6 @@ public class FileService {
                         .savedFileName(savedFilename)
                         .fileSize(multipartFile.getSize())
                         .fileType(fileType)
-                        .uploadPath(uploadFolderPath)
                         .build();
 
                     // 리스트에 추가
@@ -128,39 +131,32 @@ public class FileService {
         return fileList;
     }
 
-
     // 파일 resource로 로드하기
-    public Resource loadAsResource(String filepath,String filename) throws MalformedURLException {
-        return new UrlResource("file:" + createPath(filepath, filename));
+    public Resource loadAsResource(String filename) throws MalformedURLException {
+        return new UrlResource("file:" + createPath(filename));
     }
 
 
-    public String createPath(String filepath, String filename) {
-        return fileDirPath + "\\" + filepath + "\\" + filename;
-    }
-    public String createPath1(String filepath) {
-        return fileDirPath + "\\" + filepath;
-    }
+    public String createPath(String filename) {
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
 
-
-    private String getFolder() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-        Date date = new Date();
-        String str = sdf.format(date);
-        return str;
+        return fileDirPath + "\\" +  FilenameUtils.getName(filename);
     }
 
     private Boolean checkImageType(File file){
         try {
             String contentType = Files.probeContentType(file.toPath());
-            return contentType.startsWith("image");
+            if(contentType != null){
+                return contentType.startsWith("image");
+            }
+            return false;
         }catch (IOException e){
             e.printStackTrace();
         }
         return false;
     }
 
-    //InputStream initialStream
     // 유해 이미지 여부 검사
     public Boolean detectSafeSearch(FileInputStream fileStream) throws IOException {
         List<AnnotateImageRequest> requests = new ArrayList<>();
@@ -216,11 +212,8 @@ public class FileService {
 
     // api key 연결
     public void authExplicit() throws IOException {
-        String jsonPath = "D:\\ComeBackHome-90c138d3d128.json";
-        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(jsonPath))
-            .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-
+        ClassPathResource keyPath = new ClassPathResource("credential/ComeBackHome-90c138d3d128.json");
+        GoogleCredentials.fromStream(keyPath.getInputStream()).createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
         System.out.println("Google Account Init Completed");
     }
 }

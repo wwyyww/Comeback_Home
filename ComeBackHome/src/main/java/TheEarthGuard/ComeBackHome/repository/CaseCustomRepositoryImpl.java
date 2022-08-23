@@ -48,7 +48,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         }
         if (age != null){
             Integer age1 = 0;
-            if (age.get().get(0).toString() == "80"){ // 80대 이상
+            if (age.get().get(0).toString().equals("80")){ // 80대 이상
                 age1 = Integer.parseInt(age.get().get(0))+100;
             } else {
                 age1 = Integer.parseInt(age.get().get(0))+9;
@@ -99,7 +99,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         }
         if (age != null){
             Integer age1 = 0;
-            if (age.get().get(0).toString() == "80"){ // 80대 이상
+            if (age.get().get(0).toString().equals("80")){ // 80대 이상
                 age1 = Integer.parseInt(age.get().get(0))+100;
             } else {
                 age1 = Integer.parseInt(age.get().get(0))+9;
@@ -151,7 +151,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         }
         if (age != null){
             Integer age1 = 0;
-            if (age.get().get(0).toString() == "80"){ // 80대 이상
+            if (age.get().get(0).toString().equals("80")){ // 80대 이상
                 age1 = Integer.parseInt(age.get().get(0))+100;
             } else {
                 age1 = Integer.parseInt(age.get().get(0))+9;

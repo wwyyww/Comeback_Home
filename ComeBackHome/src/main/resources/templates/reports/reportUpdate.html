@@ -15,6 +15,7 @@
 <div layout:fragment="content" class="container">
     <!--  <form action="/cases/new/submit" method="post">-->
     <form th:action="@{/reports/update/{id}(id = ${reportForm.getId()})}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="form-group">
 
             <label for="witness_title">제보 제목</label>
@@ -29,7 +30,7 @@
             <label for="witnessPics">제보 사진</label>
             <div th:if="${reportForm.witnessPics}">
                 <img th:each="imageFile  : ${reportForm.getWitnessPics()}"
-                     th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+                     th:src="@{/images/{filename} (filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
             </div>
             <div th:unless="${reportForm.witnessPics}">
                 <label for="witnessPics">제보 사진</label>

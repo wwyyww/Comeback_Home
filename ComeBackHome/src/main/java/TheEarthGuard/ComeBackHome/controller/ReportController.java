@@ -3,32 +3,33 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-
+import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
+import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.Valid;
-
-import TheEarthGuard.ComeBackHome.dto.*;
-import java.time.LocalDate;
-
 import java.util.stream.Collectors;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 
 @Slf4j
@@ -40,6 +41,7 @@ public class ReportController {
     private CaseService caseService;
 
     @Autowired
+    @SuppressFBWarnings(justification = "Generated code")
     public ReportController(ReportService reportService, UserService userService, CaseService caseService) {
 
         this.reportService = reportService;
@@ -116,7 +118,7 @@ public class ReportController {
 
         } else {
             System.out.println("nono");
-            if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+            if (user != null && (user.getId().equals(caseEntity.get().getUser().getId()))) {
                 //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
                 reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
                 //model.addAttribute("reports", reports);
@@ -179,7 +181,7 @@ public class ReportController {
     @GetMapping(value = "/reports/delete/{id}")
     public String deleteReport(@PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
-        if (user.getId() == report.getUser().getId()) {
+        if (user.getId().equals(report.getUser().getId())) {
             reportService.deleteReport(id, user);
             return "redirect:/cases";
         }
@@ -191,7 +193,7 @@ public class ReportController {
     public String updateReportForm(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
         ReportResponseDto responseDto = new ReportResponseDto(report, user);
-        if (user.getId() == report.getUser().getId()) {
+        if (user.getId().equals(report.getUser().getId())) {
             model.addAttribute("reportForm", responseDto);
             return "/reports/reportUpdate";
         }
