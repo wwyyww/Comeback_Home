@@ -536,14 +536,13 @@
                     //
                     //
                     //
-                    // var missingLat = document.getElementById('missingLat');
-                    // var missingLng = document.getElementById('missingLng');
-                    // var missingArea = document.getElementById('missingArea');
-                    // missingLat.value = cur_marker.position.lat().toString();
-                    // missingLng.value = cur_marker.position.lng().toString();
+                    var witnessLat = document.getElementById('witness_lat');
+                    var witnessLng = document.getElementById('witness_lng');
+                    var missingArea = document.getElementById('witness_area');
+                    witnessLat.value = cur_marker.position.lat().toString();
+                    witnessLng.value = cur_marker.position.lng().toString();
                     //
                     searchCoordinateToAddress(cur_marker.position);
-                    console.log("ffff");
 
                 });
 
