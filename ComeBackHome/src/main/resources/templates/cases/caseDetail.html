@@ -17,6 +17,7 @@
             margin-top: 40px;
         }
 
+
         .layout input {
             width: 100%;
             box-sizing: border-box;
@@ -66,6 +67,7 @@
             <div style="width:40%">
                 <div>
                     <div class="position-relative" style="text-align: center;">
+
             <span th:each="imageFile  : ${case.getMissingPics()}">
             <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}"
                  width="300" height="300" style="margin-right: 5px"/>
