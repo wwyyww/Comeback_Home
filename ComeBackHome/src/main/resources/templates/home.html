@@ -90,6 +90,34 @@
     #placesList .item .marker_13 {background-position: 0 -562px;}
     #placesList .item .marker_14 {background-position: 0 -608px;}
     #placesList .item .marker_15 {background-position: 0 -654px;}
+
+
+    #casesList li {list-style: none;}
+    #casesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 40px;}
+    #casesList .item span {display: block;margin-top:4px;}
+    #casesList .item h6{margin-left: 20px; text-align: left}
+    #casesList .item h6, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    #casesList .item .info{padding:10px 0 10px 55px;}
+    #casesList .info .road{font-size: 12px; text-align: left; margin-left: 20px;}
+    #casesList .info .gray {color:#8a8a8a;}
+    #casesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+    #casesList .info .tel {color:#009900;}
+    #casesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+    #casesList .item .marker_1 {background-position: 0 -10px;}
+    #casesList .item .marker_2 {background-position: 0 -56px;}
+    #casesList .item .marker_3 {background-position: 0 -102px}
+    #casesList .item .marker_4 {background-position: 0 -148px;}
+    #casesList .item .marker_5 {background-position: 0 -194px;}
+    #casesList .item .marker_6 {background-position: 0 -240px;}
+    #casesList .item .marker_7 {background-position: 0 -286px;}
+    #casesList .item .marker_8 {background-position: 0 -332px;}
+    #casesList .item .marker_9 {background-position: 0 -378px;}
+    #casesList .item .marker_10 {background-position: 0 -423px;}
+    #casesList .item .marker_11 {background-position: 0 -470px;}
+    #casesList .item .marker_12 {background-position: 0 -516px;}
+    #casesList .item .marker_13 {background-position: 0 -562px;}
+    #casesList .item .marker_14 {background-position: 0 -608px;}
+    #casesList .item .marker_15 {background-position: 0 -654px;}
     #pagination {margin:10px auto;text-align: center;}
     #pagination a {display:inline-block;margin-right:10px;}
     #pagination .on {font-weight: bold; cursor: default;color:#777;}
@@ -199,10 +227,10 @@
             var counter1 = document.getElementById("counter1");
             var counter2 = document.getElementById("counter2");
             var counter3 = document.getElementById("counter3");
-
+            console.log(parseInt(counter1.innerHTML));
 
             let counting = setInterval(function() {
-              if (count === parseInt(counter1.innerText)) {
+              if (count === 6) {
                 clearInterval(counting);
                 return false;
               }
@@ -259,11 +287,10 @@
           </div>
           <div id="tab-2" class="tab-content">
             <div class="search_page">
-<!--              <div id="area_wrap">-->
-<!--                <div class="option">-->
-<!--                  tab content2-->
-<!--                </div>-->
-<!--              </div>-->
+              <div class="option">
+                <ul id="casesList"></ul>
+                <div id="pagination2"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -311,6 +338,36 @@
           paginationEl.appendChild(fragment);
         }
 
+        function getCaseListItem(index, cases){
+          var sex;
+          var url = "/cases/detail/"+ cases.caseId;
+          console.log("여자 남자: "+ cases.caseId, cases.missingSex === 0);
+
+          if (cases.missingSex === 0){
+            sex = '여성';
+          } else {
+            sex = '남성';
+          }
+          var el = document.createElement('li'),
+                  itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                          '<div class="info">' +
+                          '   <h6>' + cases.missingName + '</h6>';
+
+          itemStr += '  <span class="road">' + cases.missingAge + '세 / ' + sex + '</span>' +
+                    '   <span class="gray road">' +  cases.missingArea  + '</span>';
+
+          itemStr += '  <span class="tel road" href="' + url + '">' + '상세보기'  + '</span>' +
+                  '</div>';
+          // var el = document.createElement('li'),
+          //         itemStr = '<div class="markerbg marker_' + (index+1) + '"></div>' +
+          //                 '<div class="test">' + '<div>' + 1 + '</div>' + '<div>' + 3 + '</div>' + '</div>';
+
+          el.innerHTML = itemStr;
+          el.className = 'item';
+
+          return el;
+        }
+
         function getListItem(index, places) {
 
           var el = document.createElement('li'),
@@ -328,6 +385,7 @@
           itemStr += '  <span class="tel road">' + places.phone  + '</span>' +
                   '</div>';
 
+
           el.innerHTML = itemStr;
           el.className = 'item';
 
@@ -338,6 +396,60 @@
           while(el.hasChildNodes()){
             el.removeChild(el.lastChild);
           }
+        }
+
+        var cases;
+
+        function displayCases(cases)
+        {
+          var listEl = document.getElementById('casesList'),
+                  menuEl = document.getElementById('area_wrap'),
+                  fragment = document.createDocumentFragment();
+          // 검색 결과 목록에 추가된 항목들을 제거합니다
+          removeAllChildNods(listEl);
+          for ( var i=0; i<cases.length; i++ ) {
+            // 마커를 생성하고 지도에 표시합니다
+            var placePosition = new naver.maps.LatLng(cases[i].missingLat, cases[i].missingLng),
+                    //marker = markers[i],
+                    itemEl = getCaseListItem(i, cases[i]); // 검색 결과 항목 Element를 생성합니다
+
+            (function(placePosition) {
+
+              itemEl.onclick = function (){
+
+                for (var k=0 ; k < infoWindows.length; k++){
+                  infoWindows[k].close();
+                }
+                // for (var k=0 ; k < markers.length; k++){
+                //   markers[k].setAnimation(null);
+                // }
+
+                console.log("case click2" + placePosition.x + placePosition.y); //lng lat
+                var casePoint = new naver.maps.Point(placePosition.x, placePosition.y);
+              // case click22(lat:126.9943022,lng:37.5924412)(lat:37.5924412,lng:126.9943022)
+                map.setZoom(15);
+                map.setCenter(casePoint);
+                // for( var j=0; j<markers.length; j++){
+                //   markers[j].setAnimation(null);
+                // }
+
+                for (var j=0; j < markers.length ; j++){
+                  console.log("case click22" + placePosition.x === markers[j].position.x); //
+                  if (placePosition.x === markers[j].position.x){
+                    if(placePosition.y === markers[j].position.y){
+                      //markers[j].setAnimation(naver.maps.Animation.BOUNCE);
+                      infoWindows[j].open(map, markers[j]);
+                    }
+                  }
+                }
+              }
+
+            })(placePosition);
+            fragment.appendChild(itemEl);
+          }
+          // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+          listEl.appendChild(fragment);
+          menuEl.scrollTop = 0;
         }
 
         function displayPlaces(places){
@@ -365,8 +477,11 @@
                 $("#tab-2").addClass('current');
                 cur_marker.setPosition(placePosition);
                 map.setCenter(placePosition);
-                caseListByLatLng(placePosition.y, placePosition.x);
-
+                cases = caseListByLatLng(placePosition.y, placePosition.x);
+                //console.log("제발 : " + JSON.stringify(cases[0]));
+                displayCases(cases);
+                //displayPagination(pagination);
+                //searchAddressToCoordinate(data); 지도 센터 이동
               }
 
             })(placePosition);
@@ -438,7 +553,12 @@
             if (keyCode === 13) { // Enter Key
               $ ('.main_chart').hide();
               $ ('.search_page_main').show();
-              console.log("검색어: ", ($('#address').val()));
+
+              $('ul.tabs li').removeClass('current');
+              $('.tab-content').removeClass('current');
+              $('#1').addClass('current');
+              $("#tab-1").addClass('current');
+
               searchPlaces($('#address').val());
               return false;
             }
@@ -494,43 +614,45 @@
       var markers = [],
               infoWindows =[];
 
-      function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
-        function deg2rad(deg) {
-          return deg * (Math.PI/180)
-        }
 
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2-lat1);  // deg2rad below
-        var dLon = deg2rad(lng2-lng1);
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        var d = R * c; // Distance in km
-        return d;
+
+
+      function getDistance(lat1, lon1, lat2, lon2) {
+        if ((lat1 === lat2) && (lon1 === lon2))
+          return 0;
+
+        var radLat1 = Math.PI * lat1 / 180;
+        var radLat2 = Math.PI * lat2 / 180;
+        var theta = lon1 - lon2;
+        var radTheta = Math.PI * theta / 180;
+        var dist = Math.sin(radLat1) * Math.sin(radLat2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+        if (dist > 1)
+          dist = 1;
+
+        dist = Math.acos(dist);
+        dist = dist * 180 / Math.PI;
+        dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+        if (dist < 100) dist = Math.round(dist / 10) * 10;
+        else dist = Math.round(dist / 100) * 100;
+
+        return dist;
       }
 
-
-      // List<Case> caseListinDist = new Array<Case>();
-
       function caseListByLatLng(center_lat, center_lng) {
+        let test;
         $.ajax({
           type: "get",
           url: "data.json",
           dataType: "json",
+          async: false,
           success: function (data) {
             console.log("통신성공");
-            $.each(data, function (i) {
-              var x = data[i].missingLat;
-              var y = data[i].missingLng;
-              var dist = getDistanceFromLatLonInKm(center_lat, center_lng, x, y);
-              console.log("좌표 간 거리 " + dist);
+            test = data
 
-              if (dist < 3){
-
-              }
-
-            })
           }
         })
+
+        return test;
       }
 
       function initMap() {
