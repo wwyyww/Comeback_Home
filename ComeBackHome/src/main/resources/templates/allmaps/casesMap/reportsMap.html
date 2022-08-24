@@ -21,11 +21,10 @@
     <style>
         html, body {
             width: 100%;
-            height: 100vh;
+            height: 94%;
             padding: 0;
             margin: 0;
         }
-        body{overflow: hidden}
     </style>
     <link rel="stylesheet" th:href="@{/static/plugins/bootstrap/bootstrap.min.css}">
     <!--   icon-->
@@ -93,14 +92,17 @@
 
     <script>
         var map = new naver.maps.Map("map", {
-            zoom: 15,
-            center: new naver.maps.LatLng(37.3598205, 127.1164068),
+            zoom: 10,
+            center: new naver.maps.LatLng(36.2253017, 127.6460516),
             zoomControl: true,
             zoomControlOptions: {
                 position: naver.maps.Position.TOP_LEFT,
                 style: naver.maps.ZoomControlStyle.SMALL
             }
         });
+
+        var markers = [],
+            infoWindows =[];
 
 
         var polyline = new naver.maps.Polyline({
@@ -126,8 +128,8 @@
                 dataType: "json",
                 success: function (data) {
                     map = new naver.maps.Map("map", {
-                        zoom: 15,
-                        center: new naver.maps.LatLng(37.3598205, 127.1164068),
+                        zoom: 10,
+                        center: new naver.maps.LatLng(36.2253017, 127.6460516),
                         zoomControl: true,
                         zoomControlOptions: {
                             position: naver.maps.Position.TOP_LEFT,
@@ -150,6 +152,7 @@
                     $.each(data, function (i) {
                         var x = data[i].witness_lat;
                         var y = data[i].witness_lng;
+
                         console.log(x, y);
                         path.push(new naver.maps.LatLng(x, y));
                         var marker = new naver.maps.Marker({
@@ -172,6 +175,70 @@
 
         }
 
+
+
+        function showMarker() {
+            $.ajax({
+                type: "get",
+                url: "report.json/" + url,
+                dataType: "json",
+                success: function (data) {
+                    markers=[]
+                    infoWindows=[]
+                    console.log("통신성공 in showMarker" + url);
+
+
+                    $.each(data, function (i) {
+                        var x = data[i].witness_lat;
+                        var y = data[i].witness_lng;
+                        console.log(x, y);
+                        var marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(x, y),
+                            map: map
+                        });
+                        var detailUrl = "/reports/detail/"+data[i].id;
+                        var picFullPath= "/images/" + data[i].witnessPics[0].savedFileName;
+
+                        //클릭하면 해당 사건 출력
+                        var infoWindow = new naver.maps.InfoWindow({
+                            content:'<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto" src='+ picFullPath +'></div>' +
+                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><b>제보제목: '+ data[i].witness_title +'</b></div>' +
+                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;font-size: small;">목격위치 : '+ data[i].witness_area  +'</div>' +
+                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 10px;font-size: small;"><a href=' + detailUrl + '>상세보기</a></div>'
+                        });
+                        markers.push(marker);
+                        infoWindows.push(infoWindow);
+
+                    });
+
+                    function getClickHandler(seq){
+                        return function(e) {
+                            var marker = markers[seq],
+                                infoWindow = infoWindows[seq];
+
+                            if (infoWindow.getMap()) {
+                                infoWindow.close();
+                            } else {
+                                infoWindow.open(map, marker);
+                            }
+                        }
+                    }
+
+                    for (var i=0, ii=markers.length; i<ii; i++) {
+                        console.log(markers[i] , getClickHandler(i));
+                        naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+                    }
+
+
+                },
+                error: function () {
+                    console.log("통신에러");
+                }
+            })
+
+
+        }
+
         function selectPlace() {
 
             $.ajax({
@@ -180,14 +247,15 @@
                 dataType: "json",
                 success: function (data) {
                     map = new naver.maps.Map("map", {
-                        zoom: 15,
-                        center: new naver.maps.LatLng(37.3598205, 127.1164068),
+                        zoom: 10,
+                        center: new naver.maps.LatLng(36.2253017, 127.6460516),
                         zoomControl: true,
                         zoomControlOptions: {
                             position: naver.maps.Position.TOP_LEFT,
                             style: naver.maps.ZoomControlStyle.SMALL
                         }
                     });
+                    showMarker();
 
 
                     $('.reportUl').empty();
@@ -215,8 +283,8 @@
                             var circle = new naver.maps.Circle({
                                 map: map,
                                 center: new naver.maps.LatLng(value[1], value[2]),
-                                radius: 1000,
-                                strokeWeight: 0.4,
+                                radius: 1300,
+                                strokeWeight: 0,
                                 fillColor: color,
                                 fillOpacity: 0.5
                             });
