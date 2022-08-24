@@ -13,6 +13,7 @@
 <div layout:fragment="content" class="container">
   <div th:if="${case != null}">
     <form th:action="@{/reports/reportList/{id}/submit(id=${case.getCaseId()})}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
       <div>
         <table>
           <tbody>
@@ -95,6 +96,28 @@
       </tbody>
     </table>
   </div>
+  <!-- 페이징처리 시작 -->
+  <div th:if="${!reports.isEmpty()}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{|?page=${reports.number-1}|}">
+          <span>이전</span>
+        </a>
+      </li>
+      <li th:each="page: ${#numbers.sequence(0, reports.totalPages-1)}"
+          th:classappend="${page == reports.number} ? 'active'"
+          class="page-item">
+        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+      </li>
+      <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
+        <a class="page-link" th:href="@{|?page=${reports.number+1}|}">
+          <span>다음</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- 페이징처리 끝 -->
 </div> <!-- /container -->
 </body>
 </html>

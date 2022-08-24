@@ -1,5 +1,6 @@
 package TheEarthGuard.ComeBackHome.controller;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.sql.Timestamp;
 
 public class ReportForm {
@@ -21,9 +22,10 @@ public class ReportForm {
     }
 
     public Timestamp getWitness_time() {
-        return witness_time;
+        return new Timestamp(witness_time.getTime());
     }
 
+    @SuppressFBWarnings(justification = "Generated code")
     public void setWitness_time(Timestamp witness_time) {
         this.witness_time = witness_time;
     }

@@ -10,13 +10,16 @@ import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.*;
 
 @Slf4j
 @Controller
@@ -33,7 +36,7 @@ public class AdminController  {
 
     private Map<String, String> warnReasonList=new HashMap<>();
 
-
+    @SuppressFBWarnings(justification = "Generated code")
     public AdminController(UserService userService, CaseService caseService, ReportService reportService, WarnRepository warnRepository, CaseRepository caseRepository) {
         this.userService = userService;
         this.caseService = caseService;

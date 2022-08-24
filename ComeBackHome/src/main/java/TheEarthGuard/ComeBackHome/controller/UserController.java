@@ -4,33 +4,39 @@ import TheEarthGuard.ComeBackHome.domain.User;
 import TheEarthGuard.ComeBackHome.dto.UserDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Map;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
 public class UserController {
     private final UserService userService;
 
-//    @InitBinder
-//    public void validatorBinder(WebDataBinder binder) {
-//        binder.addValidators(checkEmailValidator);
-//    }
+    @InitBinder
+    public void validatorBinder(WebDataBinder binder) {
+        binder.addValidators();
+    }
+
+
 
     @Autowired
+    @SuppressFBWarnings(justification = "Generated code")
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -53,9 +59,8 @@ public class UserController {
 
             Map<String, String> validatorResult = userService.validateHandling(errors);
 
-
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
+            for (Map.Entry<String,String> entry : validatorResult.entrySet()){
+                model.addAttribute(entry.getKey(), entry.getValue());
             }
             return "users/signup";
         }
@@ -91,11 +96,13 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/users/mypage")
-    public String myPage(@CurrentUser User user) {
-
-        return "/users/mypage";
-    }
+//    @GetMapping("/users/mypage")
+//    public String myPage(@CurrentUser User user) {
+//        if (user != null) {
+//            return "/users/mypage";
+//        }
+//        return "/users/login";
+//    }
 
     @GetMapping("/mypage/edit")
     public String myPageEditForm(@CurrentUser User user, UserDto userEntity, Model model, Errors errors) {
@@ -126,9 +133,10 @@ public class UserController {
 
             Map<String, String> validatorResult = userService.validateHandling(errors);
 
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
+            for (Map.Entry<String,String> entry : validatorResult.entrySet()){
+                model.addAttribute(entry.getKey(), entry.getValue());
             }
+
             return "/users/myedit";
         }
 

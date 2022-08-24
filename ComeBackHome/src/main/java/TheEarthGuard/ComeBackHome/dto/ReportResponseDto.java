@@ -4,6 +4,7 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,7 +44,7 @@ public class ReportResponseDto {
 
     private List<FileEntity> witnessPics;
 
-
+    @SuppressFBWarnings(justification = "Generated code")
     public ReportResponseDto(Report report, User user) {
         this.cases = report.getCases();
         this.user = user;

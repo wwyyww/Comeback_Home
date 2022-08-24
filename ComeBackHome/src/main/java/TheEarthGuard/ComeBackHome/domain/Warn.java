@@ -1,5 +1,6 @@
 package TheEarthGuard.ComeBackHome.domain;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Warn extends BaseTimeEntity {
     private String warnReason;
 
     @Builder
+    @SuppressFBWarnings(justification = "Generated code")
     public Warn(Long id, User warnSender, LocalDateTime warnDate, String warnReason) {
         this.id = id;
         this.warnSender = warnSender;

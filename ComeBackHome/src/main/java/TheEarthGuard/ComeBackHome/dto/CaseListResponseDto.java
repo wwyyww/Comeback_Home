@@ -4,9 +4,11 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.User;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
@@ -65,5 +67,59 @@ public class CaseListResponseDto {
             this.missingPicThumb = caseEntity.getMissingPics().get(0);
         }
         this.createdTime = caseEntity.getCreatedTime();
+    }
+
+    @Builder
+    public CaseListResponseDto(Long userId, String userEmail, String userName, Long caseId,
+        Boolean isFind, Integer hitCnt, String missingName, Integer missingAge,
+        Boolean missingSex, Integer missingFeature, String missingDesc, String missingArea,
+        String missingRegion, Double missingLng, Double missingLat,
+        LocalDateTime missingTimeStart, LocalDateTime missingTimeEnd,
+        FileEntity missingPicThumb, LocalDateTime createdTime) {
+        this.userId = userId;
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.caseId = caseId;
+        this.isFind = isFind;
+        this.hitCnt = hitCnt;
+        this.missingName = missingName;
+        this.missingAge = missingAge;
+        this.missingSex = missingSex;
+        this.missingFeature = missingFeature;
+        this.missingDesc = missingDesc;
+        this.missingArea = missingArea;
+        this.missingRegion = missingRegion;
+        this.missingLng = missingLng;
+        this.missingLat = missingLat;
+        this.missingTimeStart = missingTimeStart;
+        this.missingTimeEnd = missingTimeEnd;
+        this.missingPicThumb = missingPicThumb;
+        this.createdTime = createdTime;
+    }
+
+    public Page<CaseListResponseDto> toDtoList(Page<Case> pagingList) {
+        Page<CaseListResponseDto> caseListResponseDto = pagingList.map(m ->
+                CaseListResponseDto.builder()
+                        .userId(m.getUser().getId())
+                        .userEmail(m.getUser().getEmail())
+                        .userName(m.getUser().getName())
+                        .caseId(m.getCaseId())
+                        .isFind(m.getIsFind())
+                        .hitCnt(m.getHitCnt())
+                        .missingName(m.getMissingName())
+                        .missingAge(m.getMissingAge())
+                        .missingSex(m.getMissingSex())
+                        .missingDesc(m.getMissingDesc())
+                        .missingFeature(m.getMissingFeature())
+                        .missingArea(m.getMissingArea())
+                        .missingRegion(m.getMissingRegion())
+                        .missingLat(m.getMissingLat())
+                        .missingLng(m.getMissingLng())
+                        .missingTimeStart(m.getMissingTimeStart())
+                        .missingTimeEnd(m.getMissingTimeEnd())
+                        .missingPicThumb(m.getMissingPics().get(0))
+                        .createdTime(m.getCreatedTime())
+                        .build());
+            return caseListResponseDto;
     }
 }

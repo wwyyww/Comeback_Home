@@ -41,7 +41,7 @@
         </td>
         <td>
           <img th:each="imageFile  : ${case.getMissingPicThumb()}"
-               th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
+               th:src="@{/images/{filename} (filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
         </td>
         <td><a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" th:text="${case.getMissingName()}"></a></td>
         <td>
@@ -58,6 +58,30 @@
         </tr>
       </tbody>
     </table>
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!cases.isEmpty()}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${!cases.hasPrevious} ? 'disabled'">
+          <a class="page-link"
+             th:href="@{|?page=${cases.number-1}|}">
+            <span>이전</span>
+          </a>
+        </li>
+        <li th:each="page: ${#numbers.sequence(0, cases.totalPages-1)}"
+            th:classappend="${page == cases.number} ? 'active'"
+            class="page-item">
+          <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+        </li>
+        <li class="page-item" th:classappend="${!cases.hasNext} ? 'disabled'">
+          <a class="page-link" th:href="@{|?page=${cases.number+1}|}">
+            <span>다음</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+
+
   </div>
 </div> <!-- /container -->
 </body>
