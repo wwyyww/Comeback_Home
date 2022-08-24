@@ -224,13 +224,15 @@
             let countBox = document.querySelector('#counter1'), count = 0;
             let countBox2 = document.querySelector('#counter2'), count2 = 0;
             let countBox3 = document.querySelector('#counter3'), count3 = 0;
-            var counter1 = document.getElementById("counter1");
-            var counter2 = document.getElementById("counter2");
-            var counter3 = document.getElementById("counter3");
-            console.log(parseInt(counter1.innerHTML));
+            var counter1 = document.getElementById("counter1").innerHTML;
+            var counter2 = document.getElementById("counter2").innerHTML;
+            var counter3 = document.getElementById("counter3").innerHTML;
+            console.log("aaa  " + counter1);
+            console.log("aaa  " + counter2);
+            console.log("aaa  " + counter3);
 
             let counting = setInterval(function() {
-              if (count === 6) {
+              if (count === parseInt(counter1)) {
                 clearInterval(counting);
                 return false;
               }
@@ -238,7 +240,7 @@
               countBox.innerHTML = new Intl.NumberFormat().format(count);
             }, 20);
             let counting2 = setInterval(function() {
-              if (count2 === parseInt(counter2.innerText)) {
+              if (count2 ===  parseInt(counter2)) {
                 clearInterval(counting2);
                 return false;
               }
@@ -246,7 +248,7 @@
               countBox2.innerHTML = new Intl.NumberFormat().format(count2);
             }, 20);
             let counting3 = setInterval(function() {
-              if (count3 === parseInt(counter3.innerText)) {
+              if (count3 ===  parseInt(counter3)) {
                 clearInterval(counting3);
                 return false;
               }
@@ -340,27 +342,36 @@
 
         function getCaseListItem(index, cases){
           var sex;
+          var feature;
           var url = "/cases/detail/"+ cases.caseId;
-          console.log("여자 남자: "+ cases.caseId, cases.missingSex === 0);
+          console.log("여자 남자: "+ cases.caseId, cases.missingSex === false);
 
-          if (cases.missingSex === 0){
+          if (cases.missingSex === false){
             sex = '여성';
           } else {
             sex = '남성';
+          }
+
+          if (cases.missingFeature === 1){
+            feature = "비장애아동(18세 미만)";
+          } else if (cases.missingFeature === 2){
+            feature = "장애인";
+          } else if (cases.missingFeature === 3){
+            feature = "치매환자";
+          } else {
+            feature = "기타(18세 이상)";
           }
           var el = document.createElement('li'),
                   itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                           '<div class="info">' +
                           '   <h6>' + cases.missingName + '</h6>';
 
-          itemStr += '  <span class="road">' + cases.missingAge + '세 / ' + sex + '</span>' +
+          itemStr += '  <span class="road">' + cases.missingAge + '세 / ' + sex + ' / ' + feature + '</span>' +
                     '   <span class="gray road">' +  cases.missingArea  + '</span>';
 
-          itemStr += '  <span class="tel road" href="' + url + '">' + '상세보기'  + '</span>' +
+          itemStr += '  <span class="tel road">' + '<a href="' + url + '">' + '상세보기'  + '</a>' + '</span>' +
                   '</div>';
-          // var el = document.createElement('li'),
-          //         itemStr = '<div class="markerbg marker_' + (index+1) + '"></div>' +
-          //                 '<div class="test">' + '<div>' + 1 + '</div>' + '<div>' + 3 + '</div>' + '</div>';
+
 
           el.innerHTML = itemStr;
           el.className = 'item';
@@ -424,7 +435,7 @@
                 //   markers[k].setAnimation(null);
                 // }
 
-                console.log("case click2" + placePosition.x + placePosition.y); //lng lat
+                console.log("case click2" + placePosition.x + placePosition.y); //lat lng
                 var casePoint = new naver.maps.Point(placePosition.x, placePosition.y);
               // case click22(lat:126.9943022,lng:37.5924412)(lat:37.5924412,lng:126.9943022)
                 map.setZoom(15);
@@ -640,19 +651,28 @@
 
       function caseListByLatLng(center_lat, center_lng) {
         let test;
+        let result = [];
         $.ajax({
           type: "get",
           url: "data.json",
           dataType: "json",
           async: false,
           success: function (data) {
-            console.log("통신성공");
+            console.log("통신성공: "+center_lat+center_lng);
             test = data
 
           }
         })
 
-        return test;
+        for(var c=0 ; c<test.length ; c++) {
+          console.log("dist : " + getDistance(center_lat, center_lng, test[c].missingLat, test[c].missingLng));
+          if (parseInt(getDistance(center_lat, center_lng, test[c].missingLat, test[c].missingLng)) <= 3000){
+            result.push(test[c]);
+          }
+        }
+
+
+        return result;
       }
 
       function initMap() {
