@@ -27,5 +27,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
    Optional<List<Report>> findByWitnessRegionAndWitnessTimeBetween(String region, LocalDateTime start, LocalDateTime end);
 
+   List<Report> findAll();
    Page<Report> findAll(Pageable pageable);
 }

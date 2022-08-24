@@ -181,5 +181,9 @@ public class ReportService {
         return this.reportRepository.findAll(pageable);
     }
 
+    public Integer countReport(){
+        List<Report> all = reportRepository.findAll();
+        return all.size();
+    }
 
 }
