@@ -2,11 +2,10 @@ package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.User;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +20,9 @@ public interface CaseRepository extends JpaRepository<Case, Long>, CaseCustomRep
     Optional<List<Case>> findByMissingTimeStartOrderByMissingTimeStartDesc(LocalDateTime missingTimeStart);
 
     Page<Case> findAll(Pageable pageable);
+
+    List<Case> findAll();
+    Optional<List<Case>> findByIsFind(Boolean find);
 
     @Modifying
     @Query("update Case c set c.hitCnt = c.hitCnt + 1 where c.caseId = :caseId")

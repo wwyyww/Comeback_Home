@@ -74,7 +74,20 @@ public class CaseController {
         model.addAttribute("cases", returnMap);
 
         System.out.println(returnMap);
+        var a = caseService.countCase();
+        var b = caseService.countCase_find();
+        var c = reportService.countReport();
+        System.out.println("접수된 사건 수 : " + a);
+        System.out.println("해결된 사건 수 : " + b);
+        System.out.println("전체 제보 수 : " + c);
+
+        model.addAttribute("count1", a);
+        model.addAttribute("count2", b);
+        model.addAttribute("count3", c);
+//
+
 //        model.addObject("casesList", caseDtoList);
+
         return "home";
     }
 

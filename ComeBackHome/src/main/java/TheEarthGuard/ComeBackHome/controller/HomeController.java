@@ -1,15 +1,22 @@
 package TheEarthGuard.ComeBackHome.controller;
 
 
-import TheEarthGuard.ComeBackHome.domain.User;
-import TheEarthGuard.ComeBackHome.security.CurrentUser;
+import TheEarthGuard.ComeBackHome.service.CaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Scanner;
 
 @Slf4j
 @Controller
 public class HomeController {
+    private final CaseService caseService;
+
+    public HomeController(CaseService caseService) {
+        this.caseService = caseService;
+    }
 
 //    @GetMapping("/")
 //    public String home(@CurrentUser User user) {
@@ -22,7 +29,8 @@ public class HomeController {
 //    }
 
     @GetMapping("/mapTest")
-    public String mapTest() {
+    public String mapTest(Model model) {
+
 
         return "mapTest";
     }
