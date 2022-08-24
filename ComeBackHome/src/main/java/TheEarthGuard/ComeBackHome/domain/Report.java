@@ -2,6 +2,7 @@ package TheEarthGuard.ComeBackHome.domain;
 
 import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -63,6 +64,7 @@ public class Report extends BaseTimeEntity{
     private List<FileEntity> witnessPics;
 
     @Builder
+    @SuppressFBWarnings(justification = "Generated code")
     public Report(Long id, Case cases, User user, String witness_title, String witness_area, Double witness_lat, Double witness_lng, String witnessRegion, LocalDateTime witnessTime, String witness_desc, Boolean is_alert, List<Warn> warns, List<FileEntity> witnessPics) {
         this.id = id;
         this.cases = cases;

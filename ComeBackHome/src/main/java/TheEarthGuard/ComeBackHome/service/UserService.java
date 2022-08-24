@@ -8,6 +8,11 @@ import TheEarthGuard.ComeBackHome.domain.UserAdapter;
 import TheEarthGuard.ComeBackHome.dto.UserDto;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-
-import java.util.*;
 
 
 @Slf4j
@@ -37,6 +40,7 @@ public class UserService implements UserDetailsService {
 
 //    private final KakaoOAuth2 kakaoOAuth2;
 
+    @SuppressFBWarnings(justification = "Generated code")
     public UserService(UserRepository userRepository, CaseService caseService, ReportService reportService) {
         this.userRepository = userRepository;
         this.caseService = caseService;
@@ -111,7 +115,7 @@ public class UserService implements UserDetailsService {
             userRepository.delete(deleteUser.get());
 
         } else {
-            new IllegalArgumentException("회원 삭제 실패 : 관리자가 아님");
+            throw new IllegalArgumentException("회원 삭제 실패 : 관리자가 아님");
         }
 
 

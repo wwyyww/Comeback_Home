@@ -36,18 +36,20 @@
       background: #fff url(https://www.oliveyoung.co.kr/pc-static-root/image/pickup/ico_detail_search.png) 12px 11px no-repeat;
       background-size: 16px 16px;
     }
-    .main_chart strong{font-size: 40px; text-align: center}
+    .main_chart .introNum_01 strong{font-size: 40px; text-align: center}
     .main_chart{ position: relative; height: 590px; width: 100%; }
     .main_chart .introNum_01 { display: inline-block; width: 100%; height: 30%; align-content: center}
     .main_chart .introNum_01 img { align-content: center; }
     .main_chart .introNum_01 .image {width: 100%; text-align: center;}
-    .main_chart .introNum_01 p {text-align: center; margin-top: 10px;}
+    .main_chart .introNum_01 p{text-align: center; margin-top: 10px;}
 
+    .main_chart .introNum_02 strong{font-size: 40px; text-align: center}
     .main_chart .introNum_02 { display: inline-block; width: 100%; height: 30%; align-content: center}
     .main_chart .introNum_02 img { align-content: center; }
     .main_chart .introNum_02 .image {width: 100%; text-align: center;}
     .main_chart .introNum_02 p {text-align: center; margin-top: 10px;}
 
+    .main_chart .introNum_03 strong{font-size: 40px; text-align: center}
     .main_chart .introNum_03 { display: inline-block; width: 100%; height: 30%; align-content: center}
     .main_chart .introNum_03 img { align-content: center; }
     .main_chart .introNum_03 .image {width: 100%; text-align: center;}
@@ -125,34 +127,36 @@
 
 <body onload="javascript:initMap()">
 <!-- header -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="padding-top:5px;padding-bottom: 5px;">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">ComeBackHome</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<header >
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="padding-top:5px;padding-bottom: 5px;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">ComeBackHome</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="collapse navbar-collapse text-center" id="navbarColor01">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/cases/searchCase">실종자 목록/제보</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/cases/new">실종자 등록하기</a>
-        </li>
+      <div class="collapse navbar-collapse text-center" id="navbarColor01">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/cases/searchCase">실종자 목록/제보</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cases/new">실종자 등록하기</a>
+          </li>
 
-        <li class="nav-item">
-          <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/mypage">마이페이지</a>
-        </li>
+          <li class="nav-item">
+            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/mypage">마이페이지</a>
+          </li>
 
-        <li class="nav-item">
-          <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
-          <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
-        </li>
-      </ul>
+          <li class="nav-item">
+            <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
 <!-- /header -->
 
 <!-- call to action -->
@@ -170,19 +174,19 @@
           <div class="introNum_01">
             <div class="image"><img src="/static/images/people.png" alt="My Image"/></div>
             <p>접수된 실종사건 수</p>
-            <p><strong id="counter1">26, 000</strong>건</p>
+            <p><strong id="counter1" th:text="${count1}"></strong>건</p>
           </div>
           <hr/>
           <div class="introNum_02">
             <div class="image"><img src="/static/images/solve.png" alt="My Image"/></div>
             <p>해결된 실종사건 수</p>
-            <p><strong id="counter2">26, 353</strong>건</p>
+            <p><strong id="counter2" th:text="${count2}"></strong>건</p>
           </div>
           <hr/>
           <div class="introNum_03">
             <div class="image"><img src="/static/images/report.png" alt="My Image"/></div>
             <p>전체 제보 수</p>
-            <p><strong id="counter3">26, 353</strong>개</p>
+            <p><strong id="counter3" th:text="${count3}"></strong>건</p>
           </div>
         </div>
         <script>
@@ -192,48 +196,42 @@
             let countBox = document.querySelector('#counter1'), count = 0;
             let countBox2 = document.querySelector('#counter2'), count2 = 0;
             let countBox3 = document.querySelector('#counter3'), count3 = 0;
+            var counter1 = document.getElementById("counter1");
+            var counter2 = document.getElementById("counter2");
+            var counter3 = document.getElementById("counter3");
+
+
             let counting = setInterval(function() {
-              if (count === 26000) {
+              if (count === parseInt(counter1.innerText)) {
                 clearInterval(counting);
                 return false;
               }
-              count += 500;
+              count += 1;
               countBox.innerHTML = new Intl.NumberFormat().format(count);
             }, 20);
             let counting2 = setInterval(function() {
-              if (count2 === 26000) {
+              if (count2 === parseInt(counter2.innerText)) {
                 clearInterval(counting2);
                 return false;
               }
-              count2 += 500;
+              count2 += 1;
               countBox2.innerHTML = new Intl.NumberFormat().format(count2);
             }, 20);
             let counting3 = setInterval(function() {
-              if (count3 === 26000) {
+              if (count3 === parseInt(counter3.innerText)) {
                 clearInterval(counting3);
                 return false;
               }
-              count3 += 500;
+              count3 += 1;
               countBox3.innerHTML = new Intl.NumberFormat().format(count3);
             }, 20);
 
-            // $('#address').on('keydown', function(e) {
-            //   var keyCode = e.which;
-            //   if (keyCode === 13) { // Enter Key
-            //     $ ('.main_chart').hide();
-            //     $ ('.search_page').show();
-            //     console.log("검색어: ", ($('#address').val()));
-            //     searchPlaces($('#address').val());
-            //     //searchAddressToCoordinate($('#address').val());
-            //     return false;
-            //   }
-            // });
           });
         </script>
         <div class="search_page_main">
           <ul class="tabs">
-            <li class="tab-link current" data-tab="tab-1">주소</li>
-            <li class="tab-link" data-tab="tab-2">실종사건</li>
+            <li id="1" class="tab-link current" data-tab="tab-1">주소</li>
+            <li id="2" class="tab-link" data-tab="tab-2">실종사건</li>
           </ul>
           <script>
             $(document).ready(function(){
@@ -360,8 +358,15 @@
 
               itemEl.onclick = function (){
                 console.log("list click", placePosition);
+
+                $('ul.tabs li').removeClass('current');
+                $('.tab-content').removeClass('current');
+                $('#2').addClass('current');
+                $("#tab-2").addClass('current');
                 cur_marker.setPosition(placePosition);
                 map.setCenter(placePosition);
+                caseListByLatLng(placePosition.y, placePosition.x);
+
               }
 
             })(placePosition);
@@ -427,10 +432,6 @@
         }
 
         function initGeocoder() {
-          // map.addListener('click', function(e) {
-          //   cur_marker.setPosition(e.coord);
-          //   searchCoordinateToAddress(cur_marker.position);
-          // });
 
           $('#address').on('keydown', function(e) {
             var keyCode = e.which;
@@ -443,12 +444,6 @@
             }
           });
 
-          // $('#submit').on('click', function(e) {
-          //   e.preventDefault();
-          //   searchPlaces($('#address').val());
-          // });
-
-          //searchAddressToCoordinate('정자동 178-1');
         }
 
         naver.maps.onJSContentLoaded = initGeocoder;
@@ -468,6 +463,7 @@
           style: naver.maps.ZoomControlStyle.SMALL
         }
       });
+
       var htmlMarker1 = {
                 content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/static/images/cluster-marker-1.png);background-size:contain;"></div>',
                 size: N.Size(40, 40),
@@ -498,6 +494,45 @@
       var markers = [],
               infoWindows =[];
 
+      function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
+        function deg2rad(deg) {
+          return deg * (Math.PI/180)
+        }
+
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = deg2rad(lng2-lng1);
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+        return d;
+      }
+
+
+      // List<Case> caseListinDist = new Array<Case>();
+
+      function caseListByLatLng(center_lat, center_lng) {
+        $.ajax({
+          type: "get",
+          url: "data.json",
+          dataType: "json",
+          success: function (data) {
+            console.log("통신성공");
+            $.each(data, function (i) {
+              var x = data[i].missingLat;
+              var y = data[i].missingLng;
+              var dist = getDistanceFromLatLonInKm(center_lat, center_lng, x, y);
+              console.log("좌표 간 거리 " + dist);
+
+              if (dist < 3){
+
+              }
+
+            })
+          }
+        })
+      }
+
       function initMap() {
 
         $.ajax({
@@ -517,7 +552,7 @@
 
 
 
-              var picFullPath= "/images/" + data[i].missingPics[0].uploadPath + "/" + data[i].missingPics[0].savedFileName;
+              var picFullPath= "/images/" + data[i].missingPicThumb.savedFileName;
               var checkGender = data[i].missingSex;
               var gender;
               if (checkGender === false)
@@ -530,7 +565,7 @@
 
               //클릭하면 해당 사건 출력
               var infoWindow = new naver.maps.InfoWindow({
-                content:'<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto"src='+ picFullPath +'></div>' +
+                content:'<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto" src='+ picFullPath +'></div>' +
                         '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><b>실종자: '+ data[i].missingName +'</b></div>' +
                         '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;font-size: small;">'+ data[i].missingAge +'세' + '/'+ gender +'</div>' +
                         '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 10px;font-size: small;"><a href=' + detailUrl + '>상세보기</a></div>'

@@ -21,17 +21,15 @@ public class FileEntity extends BaseTimeEntity{
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
-    private String uploadPath;
     private String savedFileName;
     private String orgFileName;
     private String fileType;
     private Long fileSize;
 
     @Builder
-    public FileEntity(Long id, String uploadPath, String savedFileName, String orgFileName,
+    public FileEntity(Long id, String savedFileName, String orgFileName,
         String fileType, Long fileSize) {
         this.id = id;
-        this.uploadPath = uploadPath;
         this.savedFileName = savedFileName;
         this.orgFileName = orgFileName;
         this.fileType = fileType;

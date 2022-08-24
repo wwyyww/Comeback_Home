@@ -56,9 +56,11 @@
     <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">실종자 정보</h2>
     <div class="flex-container" th:if="${user != null}">
         <div class="flex-item-right" th:if="${case.getUserId() == user.getId()}">
-            <a class="btn btn-link" style="padding: 10px;" th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
+            <a class="btn btn-link" style="padding: 10px;" th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글
+                수정</a>
 
-            <a class="btn btn-link" style="padding:10px;" th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
+            <a class="btn btn-link" style="padding:10px;" th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글
+                삭제</a>
         </div>
     </div>
     <section class="container-fluid" style="height: 100%;">
@@ -69,9 +71,9 @@
                     <div class="position-relative" style="text-align: center;">
 
             <span th:each="imageFile  : ${case.getMissingPics()}">
-            <img th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}"
+            <img th:src="@{/images/{filename} ( filename=${imageFile.getSavedFileName()})}"
                  width="300" height="300" style="margin-right: 5px"/>
-            <a th:href="@{/download/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}">
+            <a th:href="@{/download/{filename} (filename=${imageFile.getSavedFileName()})}">
               <div th:text="${imageFile.getOrgFileName()}"></div>
             </a>
             </span>
@@ -122,8 +124,39 @@
 
             <div class="flex-container" style="padding-top: 50px;padding-bottom: 50px; " th:if="${user != null}">
                 <div class="flex-item-center" th:if="${case.getUserId() != user.getId()}">
-                    <a class="btn btn-primary" th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
-                    <a class="btn btn-danger" th:href="@{/cases/detail/{id}/warn (id=${case.getCaseId()})}">게시물 신고하기</a>
+                    <a class="btn btn-primary" th:href="@{/cases/new/{id}(id=${case.getCaseId()})}">제보하기</a>
+<!--                    <a class="btn btn-danger" th:href="@{/cases/detail/{id}/warn (id=${case.getCaseId()})}">게시물 신고하기</a>-->
+                    <a data-toggle="modal" href="#warnModal">게시물 신고하기</a>
+
+                    <div class="modal fade" id="warnModal" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" align="center">신고하기</h4>
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!--   모달창 내용 넣기  -->
+                                    <form th:action="@{/cases/detail/{id}/warn/submit (id=${case.getCaseId()})}" method="post">
+                                        <div class="form-group">
+                                            <div>
+                                                <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="3" id="3">낚시/놀람/도배</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="4" id="4">유출/사칭/사기</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는 괴롭힘</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남 및 대화</label></p>
+                                                <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및 선거운동</label></p>
+                                            </div>
+                                        </div>
+                                        <button type="submit">등록</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!--                </div>-->
                 <div class="flex-item-center">

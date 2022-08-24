@@ -57,7 +57,7 @@
     <tr>
         <th>제보 사진</th>
         <img th:each="imageFile  : ${report.getWitnessPics()}"
-             th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
+             th:src="@{/images/{filename} (filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
     </tr>
     </tbody>
 </table>
@@ -65,7 +65,39 @@
 <!--<form th:action="@{/reports/warn/{id}(id=${report.getId()})}" method="post">-->
 <!--    <button type="submit">사용자 신고하기</button>-->
 <!--</form>-->
-<a th:href="@{/reports/detail/{id}/warn (id=${report.getId()})}">사용자 신고하기</a>
+<!--<a th:href="@{/reports/detail/{id}/warn (id=${report.getId()})}">사용자 신고하기</a>-->
+    <a data-toggle="modal" href="#warnModal">사건 신고하기</a>
+
+
+    <div class="modal fade" id="warnModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" align="center">신고하기</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <!--   모달창 내용 넣기  -->
+                    <form th:action="@{/reports/detail/{id}/warn/submit (id=${report.getId()})}" method="post">
+                        <div class="form-group">
+                            <div>
+                                <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
+                                <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
+                                <p><label><input type="radio" name="warnReason" value="3" id="3">낚시/놀람/도배</label></p>
+                                <p><label><input type="radio" name="warnReason" value="4" id="4">유출/사칭/사기</label></p>
+                                <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label></p>
+                                <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는 괴롭힘</label></p>
+                                <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남 및 대화</label></p>
+                                <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및 선거운동</label></p>
+                            </div>
+                        </div>
+                        <button type="submit">등록</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <div th:if="${report.getUser().getId() == user.getId()}">

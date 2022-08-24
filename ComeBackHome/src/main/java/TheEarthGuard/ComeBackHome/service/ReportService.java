@@ -11,13 +11,18 @@ import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.ReportRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,8 +58,6 @@ public class ReportService {
     //실종 제보 등록
     @Transactional
     public Long uploadReport(Long user_id, Long case_id, ReportRequestDto reportObj, List<MultipartFile> files) throws Exception {
-        Report newReport = new Report();
-
         Optional<User> user = userRepository.findById(user_id);
         Case findCase=caseRepository.findByCaseId(case_id).orElseThrow(() ->
                 new IllegalArgumentException("제보 작성 실패 : 존재하지 않는 게시글"));
@@ -62,7 +65,7 @@ public class ReportService {
 
         reportObj.setUser(user.get());
         reportObj.setCases(findCase);
-        newReport = reportObj.toEntity();
+        Report newReport = reportObj.toEntity();
 
         if(!witPics.isEmpty()) {
             System.out.println("[ReportService-witnessPics] 파일 있음!" + witPics);
@@ -78,10 +81,10 @@ public class ReportService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Report> report = reportRepository.findById(report_id);
 
-        Case findCase=caseRepository.findByCaseId(report.get().getCases().getCaseId()).orElseThrow(() ->
+        caseRepository.findByCaseId(report.get().getCases().getCaseId()).orElseThrow(() ->
                 new IllegalArgumentException("제보 수정 실패 : 존재하지 않는 게시글"));
 
-        if (report.get().getUser().getId() != user.get().getId()) {
+        if (! report.get().getUser().getId().equals(user.get().getId())) {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
@@ -92,10 +95,10 @@ public class ReportService {
     @Transactional
     public void deleteReport(Long id, User user) {
         Optional<Report> report = reportRepository.findById(id);
-        if (user.getId() == report.get().getUser().getId()) {
+        if (user.getId().equals(report.get().getUser().getId())) {
             reportRepository.deleteById(id);
         }else{
-            new IllegalArgumentException("제보 삭제 실패 : 사용자가 일치하지 않음");
+            throw new IllegalArgumentException("제보 삭제 실패 : 사용자가 일치하지 않음");
         }
     }
 
@@ -173,5 +176,14 @@ public class ReportService {
         return reportList;
     }
 
+    public Page<Report> getPageList(int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        return this.reportRepository.findAll(pageable);
+    }
+
+    public Integer countReport(){
+        List<Report> all = reportRepository.findAll();
+        return all.size();
+    }
 
 }

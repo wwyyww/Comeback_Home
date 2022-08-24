@@ -8,7 +8,9 @@ import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ResourceBundle;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -33,9 +35,13 @@ public class FileController {
 
     // 사진 출력 (URL 접근)
     @ResponseBody
-    @GetMapping("/images/{filepath}/{filename}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String filepath, @PathVariable String filename){
-        File file = new File(fileService.createPath(filepath, filename));
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<byte[]> getFile( @PathVariable String filename){
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
+
+//        System.out.println("사진 출력 FilenameUtils  : " + FilenameUtils.getName(filename));
+        File file = new File(fileDirPath, FilenameUtils.getName(filename));
         ResponseEntity<byte[]> result = null;
 
         try{
@@ -50,10 +56,10 @@ public class FileController {
     }
 
     // 사진 다운로드
-    @GetMapping("/download/{filepath}/{filename}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable String filepath, @PathVariable String filename)
+    @GetMapping("/download/{filename}")
+    public ResponseEntity<Resource> downloadAttach(@PathVariable String filename)
         throws MalformedURLException {
-        Resource resource = fileService.loadAsResource(filepath, filename);
+        Resource resource = fileService.loadAsResource(filename);
         String resourceName = resource.getFilename();
 
         String resourceOrgName = resourceName.substring(resourceName.indexOf("_") + 1);
@@ -74,12 +80,18 @@ public class FileController {
     public ResponseEntity<String> deleteFile(String fileName, String fileType)
         throws UnsupportedEncodingException {
         File file;
+        fileName = FilenameUtils.getName(fileName);
 
         URLDecoder.decode(fileName,"UTF-8");
         System.out.println("DeleteFile "+ fileName + fileType );
         log.info("DeleteFile : ", URLDecoder.decode(fileName,"UTF-8"));
 
-        file = new File(fileService.createPath1(fileName));
+
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
+
+
+        file = new File(fileDirPath, FilenameUtils.getName(fileName));
         System.out.println("file : "+ file.getAbsolutePath());
         boolean result = file.delete();
         System.out.println("result :  "+ result);
@@ -88,8 +100,10 @@ public class FileController {
         if(fileType.equals("image")){
             System.out.println("원본도 삭제됨");
             String largeFileName = file.getAbsolutePath().replace("s_", "");
-            file = new File(largeFileName);
-            file.delete();
+            file = new File( FilenameUtils.getName(largeFileName));
+            if(!file.delete()){
+                System.err.println("파일 삭제 실패");
+            }
         }
 
         return new ResponseEntity<String>("deleted", HttpStatus.OK);

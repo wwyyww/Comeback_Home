@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -92,7 +95,7 @@ public class CaseService {
             .ofNullable(caseRepository.findById(case_id).orElseThrow(() ->
                 new IllegalArgumentException("사건 수정 실패 : 존재하지 않는 사건입니다")));
 
-        if (caseEntity.get().getUser().getId() != user.get().getId()) {
+        if (! caseEntity.get().getUser().getId().equals(user.get().getId())) {
             throw new IllegalAccessException("제보 업데이트 실패 : 올바른 사용자가 아닙니다.");
         }
 
@@ -107,10 +110,10 @@ public class CaseService {
     @Transactional
     public void deleteCase(Long id, User user) {
         Optional<Case> caseEntity = caseRepository.findByCaseId(id);
-        if (user.getId() == caseEntity.get().getUser().getId()) {
+        if (user.getId().equals(caseEntity.get().getUser().getId())) {
             caseRepository.deleteById(id);
         }else{
-            new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
+            throw new IllegalArgumentException("사건 삭제 실패 : 사용자가 일치하지 않음");
         }
     }
 
@@ -119,7 +122,7 @@ public class CaseService {
      */
     @Transactional
     public void countHitCase(Long caseId) {
-        Optional<Case> caseEntity = caseRepository.findById(caseId);
+        caseRepository.findById(caseId).orElseThrow();
         caseRepository.updateHitCase(caseId);
     }
 
@@ -171,6 +174,12 @@ public class CaseService {
         return caseRepository.findAll();
     }
 
+    public Page<Case> getCasePList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return this.caseRepository.findAll(pageable);
+    }
+
+
     /**
      *  특정 사용자가 등록한 사건들 조회 (사용자 id 기반)
      */
@@ -220,5 +229,16 @@ public class CaseService {
         //List<FileEntity> missing_pictures = caseRepository.findByMissingTimeStartOrderByMissingTimeStartDesc(missingTimeStart).get().get(0).getMissingPics();
         return missing_pictures;
     }
+
+    public Integer countCase(){
+        List<Case> all = caseRepository.findAll();
+        return all.size();
+    }
+
+    public Integer countCase_find(){
+        Optional<List<Case>> all_find = caseRepository.findByIsFind(true);
+        return all_find.get().size();
+    }
+
 
 }

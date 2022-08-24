@@ -3,32 +3,38 @@ package TheEarthGuard.ComeBackHome.controller;
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.Report;
 import TheEarthGuard.ComeBackHome.domain.User;
-
+import TheEarthGuard.ComeBackHome.dto.CaseResponseDto;
+import TheEarthGuard.ComeBackHome.dto.ReportRequestDto;
+import TheEarthGuard.ComeBackHome.dto.ReportResponseDto;
+import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.Valid;
-
-import TheEarthGuard.ComeBackHome.dto.*;
-import java.time.LocalDate;
-
 import java.util.stream.Collectors;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 
 @Slf4j
@@ -40,6 +46,7 @@ public class ReportController {
     private CaseService caseService;
 
     @Autowired
+    @SuppressFBWarnings(justification = "Generated code")
     public ReportController(ReportService reportService, UserService userService, CaseService caseService) {
 
         this.reportService = reportService;
@@ -81,7 +88,7 @@ public class ReportController {
     }
 
     @GetMapping(value = "/reports/reportList/{id}")
-    public String caseReportList(Model model, @PathVariable("id") Long id, @CurrentUser User user, HttpServletRequest request){
+    public String caseReportList(Model model, @PathVariable("id") Long id, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page, @CurrentUser User user, HttpServletRequest request){
         System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Report>> reportList = Optional.empty();
 
@@ -90,19 +97,6 @@ public class ReportController {
             caseService.countHitCase(caseEntity.get().getCaseId()); // hit ++
             model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
         }
-
-//        if(caseEntity.isPresent()) {
-//            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
-//        }
-
-//        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
-//            //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
-//            reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
-//            //model.addAttribute("reports", reports);
-//        }else{
-//            return "redirect:/";
-//        }
-
 
 
         if (RequestContextUtils.getInputFlashMap(request) != null){
@@ -116,7 +110,7 @@ public class ReportController {
 
         } else {
             System.out.println("nono");
-            if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
+            if (user != null && (user.getId().equals(caseEntity.get().getUser().getId()))) {
                 //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
                 reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
                 //model.addAttribute("reports", reports);
@@ -130,7 +124,16 @@ public class ReportController {
                     ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
             ).collect(Collectors.toList());
 
-            model.addAttribute("reports", reportDtoList);
+            // 페이징 변환 작업
+            final int startPage = (int)pageable.getOffset();
+            final int endPage = Math.min((startPage + pageable.getPageSize()), reportDtoList.size());
+            Page<ReportResponseDto> pagingDtoList = new PageImpl<>(reportDtoList.subList(startPage, endPage), pageable, reportDtoList.size());
+
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+            model.addAttribute("reports", pagingDtoList);
+
+//            model.addAttribute("reports", reportDtoList);
         } else {
             System.out.println("없음");
         }
@@ -141,7 +144,7 @@ public class ReportController {
 
 
     @PostMapping(value = "/reports/reportList/{id}/submit")
-    public String showCaseReportList(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+    public String showCaseReportList(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page, RedirectAttributes redirectAttributes){
         Optional<List<Report>> reportList = Optional.empty();
         String area = form.getMissing_area2();
         LocalDate start = form.getMissing_time_start();
@@ -179,7 +182,7 @@ public class ReportController {
     @GetMapping(value = "/reports/delete/{id}")
     public String deleteReport(@PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
-        if (user.getId() == report.getUser().getId()) {
+        if (user.getId().equals(report.getUser().getId())) {
             reportService.deleteReport(id, user);
             return "redirect:/cases";
         }
@@ -191,7 +194,7 @@ public class ReportController {
     public String updateReportForm(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report report = reportService.getReportDetail(id);
         ReportResponseDto responseDto = new ReportResponseDto(report, user);
-        if (user.getId() == report.getUser().getId()) {
+        if (user.getId().equals(report.getUser().getId())) {
             model.addAttribute("reportForm", responseDto);
             return "/reports/reportUpdate";
         }
@@ -222,6 +225,7 @@ public class ReportController {
 //        model.addAttribute("user", user);
 //        return "redirect:/reports/detail/{id}";
 //    }
+
 
 
 }

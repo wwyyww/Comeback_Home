@@ -17,7 +17,6 @@
             </div>
             <div class="modal-body">
               <!--   모달창 내용 넣기  -->
-              <body>
               <form th:action="@{/cases/detail/{id}/warn/submit (id=${case.getCaseId()})}" method="post">
                 <div class="form-group">
                   <label for="warnReason">신고 이유</label>
@@ -34,7 +33,6 @@
                 </div>
                 <button type="submit">등록</button>
               </form>
-              </body>
             </div>
           </div>
         </div>
