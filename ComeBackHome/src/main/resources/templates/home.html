@@ -188,7 +188,7 @@
         <script>
           $(document).ready(function() {
             $('.main_chart').show(); //페이지를 로드할 때 표시할 요소
-            $('.search_page').hide(); //페이지를 로드할 때 숨길 요소
+            $('.search_page_main').hide(); //페이지를 로드할 때 숨길 요소
             let countBox = document.querySelector('#counter1'), count = 0;
             let countBox2 = document.querySelector('#counter2'), count2 = 0;
             let countBox3 = document.querySelector('#counter3'), count3 = 0;
@@ -230,7 +230,7 @@
             // });
           });
         </script>
-        <div>
+        <div class="search_page_main">
           <ul class="tabs">
             <li class="tab-link current" data-tab="tab-1">주소</li>
             <li class="tab-link" data-tab="tab-2">실종사건</li>
@@ -436,7 +436,7 @@
             var keyCode = e.which;
             if (keyCode === 13) { // Enter Key
               $ ('.main_chart').hide();
-              $ ('.search_page').show();
+              $ ('.search_page_main').show();
               console.log("검색어: ", ($('#address').val()));
               searchPlaces($('#address').val());
               return false;
@@ -456,7 +456,7 @@
       </script>
 
     </div>
-    <div id="map"class ="col-8" style="width:100%;height:100%;padding:0;margin:0;"></div>
+    <div id="map"class ="col-8" style="width:100%;height:100%;padding:0;margin:0px;"></div>
     <script>
 
       var map = new naver.maps.Map("map", {
