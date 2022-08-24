@@ -107,11 +107,11 @@ public class CaseController {
     }
 
 
-    @CrossOrigin("*")
-    @GetMapping(value = "/test")
-    public String Form(Model model) {
-        return "reports/test";
-    }
+//    @CrossOrigin("*")
+//    @GetMapping(value = "/test")
+//    public String Form(Model model) {
+//        return "reports/test";
+//    }
 
     // 사건 등록
     @PostMapping(value = "/cases/new")
