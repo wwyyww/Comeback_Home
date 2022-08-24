@@ -40,8 +40,8 @@ public class FileController {
         ResourceBundle bundle = ResourceBundle.getBundle("application");
         String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
 
-        System.out.println("사진 출력 Uth, FilenameUtRL : " + FilenameUtils.getName(filename));
-        File file = new File(fileDirPails.getName(filename));
+//        System.out.println("사진 출력 FilenameUtils  : " + FilenameUtils.getName(filename));
+        File file = new File(fileDirPath, FilenameUtils.getName(filename));
         ResponseEntity<byte[]> result = null;
 
         try{
