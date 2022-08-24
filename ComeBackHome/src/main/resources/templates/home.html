@@ -173,12 +173,22 @@
             <a class="nav-link" href="/cases/new">실종자 등록하기</a>
           </li>
 
-          <li class="nav-item">
-            <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
-<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/cases">작성한 사건 목록</a>-->
-<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/reports">작성한 증언 목록</a>-->
-<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/edit">회원정보 수정</a>-->
-            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
+          <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link" href="/users/login">로그인</a>
+          </li>
+
+          <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+              마이페이지
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/mypage/cases">작성한 사건 목록</a>
+              <li><a class="dropdown-item"  href="/mypage/reports">작성한 증언 목록</a></li>
+              <li><a class="dropdown-item" href="/mypage/edit">회원정보 수정</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/users/logout">로그아웃</a>
+            </ul>
           </li>
         </ul>
       </div>
