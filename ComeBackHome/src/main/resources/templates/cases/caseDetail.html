@@ -3,163 +3,176 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>실종자 정보</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <script type="text/javascript"
-            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
-    <style>
-        .layout {
-            width: 500px;
-            margin: 0 auto;
-            margin-top: 40px;
-        }
+  <meta charset="UTF-8">
+  <title>실종자 정보</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <script type="text/javascript"
+          src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+  <style>
+    .layout {
+      width: 500px;
+      margin: 0 auto;
+      margin-top: 40px;
+    }
 
 
-        .layout input {
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .layout input {
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-        .layout textarea {
-            width: 100%;
-            margin-top: 10px;
-            min-height: 300px;
-        }
+    .layout textarea {
+      width: 100%;
+      margin-top: 10px;
+      min-height: 300px;
+    }
 
-        .flex-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
 
-        .flex-item {
-            flex: none;
-            flex: 1; /* flex: 1 1 0 */
-            overflow: auto;
-        }
+    .flex-item {
+      flex: none;
+      flex: 1; /* flex: 1 1 0 */
+      overflow: auto;
+    }
 
-        .flex-item-right {
-            margin-left: auto;
-        }
+    .flex-item-right {
+      margin-left: auto;
+    }
 
-        .flex-item-center {
-            margin: auto;
-        }
+    .flex-item-center {
+      margin: auto;
+    }
 
-    </style>
+  </style>
 </head>
 <body>
 <div layout:fragment="content" class="container">
-    <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">실종자 정보</h2>
-    <div class="flex-container" th:if="${user != null}">
-        <div class="flex-item-right" th:if="${case.getUserId() == user.getId()}">
-            <a class="btn btn-link" style="padding: 10px;" th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글
-                수정</a>
+  <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">실종자 정보</h2>
+  <div class="flex-container" th:if="${user != null}">
+    <div class="flex-item-right" th:if="${case.getUserId() == user.getId()}">
+      <a class="btn btn-link" style="padding: 10px;"
+         th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글
+        수정</a>
 
-            <a class="btn btn-link" style="padding:10px;" th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글
-                삭제</a>
-        </div>
+      <a class="btn btn-link" style="padding:10px;"
+         th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글
+        삭제</a>
     </div>
-    <section class="container-fluid" style="height: 100%;">
+  </div>
+  <section class="container-fluid" style="height: 100%;">
 
-        <div class="row" style="height: 100%">
-            <div style="width:40%">
-                <div>
-                    <div class="position-relative" style="text-align: center;">
-
+    <div class="row" style="height: 100%">
+      <div style="width:40%">
+        <div>
+          <div class="position-relative" style="text-align: center;">
             <span th:each="imageFile  : ${case.getMissingPics()}">
             <img th:src="@{/images/{filename} ( filename=${imageFile.getSavedFileName()})}"
-                 width="300" height="300" style="margin-right: 5px"/>
+                 width="300" height="300" style="margin-right: 5px"/><br>
             <a th:href="@{/download/{filename} (filename=${imageFile.getSavedFileName()})}">
-              <div th:text="${imageFile.getOrgFileName()}"></div>
+              <div class="btn btn-link" th:text="[다운로드]"></div>
             </a>
             </span>
-                    </div>
-                </div>
-            </div>
-            <div style="width: 60%">
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <th style="text-align: center;">실종자 이름</th>
-                        <td th:text="${case.getMissingName()}"></td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: center;">실종자 나이</th>
-                        <td th:text="${case.getMissingAge()} + '살'"></td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: center;">실종자 성별</th>
-                        <td th:if="${case.getMissingSex() == false}">여자</td>
-                        <td th:if="${case.getMissingSex() == true}">남자</td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: center;">실종자 정보</th>
-                        <td th:text="${case.getMissingDesc()}"></td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: center;">실종자 지역</th>
-                        <td th:text="${case.getMissingArea()}"></td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: center;">실종 추정 기간</th>
-                        <td>
-                            <span th:text="${#temporals.format(case.getMissingTimeStart(), 'yyyy-MM-dd HH:MM')}"></span>
-                            ~
-                            <span th:text="${#temporals.format(case.getMissingTimeEnd(), 'yyyy-MM-dd HH:MM')}"></span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+          </div>
         </div>
+      </div>
+      <div style="width: 60%">
+        <table class="table table-bordered">
+          <tbody>
+          <tr>
+            <th style="text-align: center;">실종자 이름</th>
+            <td th:text="${case.getMissingName()}"></td>
+          </tr>
+          <tr>
+            <th style="text-align: center;">실종자 나이</th>
+            <td th:text="${case.getMissingAge()} + '살'"></td>
+          </tr>
+          <tr>
+            <th style="text-align: center;">실종자 성별</th>
+            <td th:if="${case.getMissingSex() == false}">여자</td>
+            <td th:if="${case.getMissingSex() == true}">남자</td>
+          </tr>
+          <tr>
+            <th style="text-align: center;">실종자 정보</th>
+            <td th:text="${case.getMissingDesc()}"></td>
+          </tr>
+          <tr>
+            <th style="text-align: center;">실종자 지역</th>
+            <td th:text="${case.getMissingArea()}"></td>
+          </tr>
+          <tr>
+            <th style="text-align: center;">실종 추정 기간</th>
+            <td>
+              <span
+                  th:text="${#temporals.format(case.getMissingTimeStart(), 'yyyy-MM-dd HH:MM')}"></span>
+              ~
+              <span
+                  th:text="${#temporals.format(case.getMissingTimeEnd(), 'yyyy-MM-dd HH:MM')}"></span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        <div class="container">
-            <div style="text-align: center; padding-top:20px; padding-bottom: 70px;" th:unless="${user != null}">
-                <a class="btn btn-primary" th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
-            </div>
+    <div class="container">
+      <div style="text-align: center; padding-top:20px; padding-bottom: 70px;"
+           th:unless="${user != null}">
+        <a class="btn btn-primary" th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
+      </div>
 
-            <div class="flex-container" style="padding-top: 50px;padding-bottom: 50px; " th:if="${user != null}">
-                <div class="flex-item-center" th:if="${case.getUserId() != user.getId()}">
-                    <a class="btn btn-primary" th:href="@{/cases/new/{id}(id=${case.getCaseId()})}">제보하기</a>
-<!--                    <a class="btn btn-danger" th:href="@{/cases/detail/{id}/warn (id=${case.getCaseId()})}">게시물 신고하기</a>-->
-                    <a data-toggle="modal" href="#warnModal">게시물 신고하기</a>
+      <div class="flex-container" style="padding-top: 50px;padding-bottom: 50px; "
+           th:if="${user != null}">
+        <div class="flex-item-center" th:if="${case.getUserId() != user.getId()}">
+          <a class="btn btn-primary" th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
+          <a class="btn btn-danger" data-toggle="modal" href="#warnModal">게시물 신고하기</a>
 
-                    <div class="modal fade" id="warnModal" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" align="center">신고하기</h4>
-                                    <button type="button" class="close" data-dismiss="modal">×</button>
-                                </div>
-                                <div class="modal-body">
-                                    <!--   모달창 내용 넣기  -->
-                                    <form th:action="@{/cases/detail/{id}/warn/submit (id=${case.getCaseId()})}" method="post">
-                                        <div class="form-group">
-                                            <div>
-                                                <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="3" id="3">낚시/놀람/도배</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="4" id="4">유출/사칭/사기</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는 괴롭힘</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남 및 대화</label></p>
-                                                <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및 선거운동</label></p>
-                                            </div>
-                                        </div>
-                                        <button type="submit">등록</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+          <div class="modal fade" id="warnModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" align="center">신고하기</h4>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
-                <!--                </div>-->
-                <div class="flex-item-center">
+                <div class="modal-body">
+                  <!--   모달창 내용 넣기  -->
+                  <form th:action="@{/cases/detail/{id}/warn/submit (id=${case.getCaseId()})}"
+                        method="post">
+                    <div class="form-group">
+                      <div>
+                        <p><label><input type="radio" name="warnReason" value="1"
+                                         id="1">허위신고</label></p>
+                        <p><label><input type="radio" name="warnReason" value="2"
+                                         id="2">욕설/비하</label></p>
+                        <p><label><input type="radio" name="warnReason" value="3"
+                                         id="3">낚시/놀람/도배</label></p>
+                        <p><label><input type="radio" name="warnReason" value="4"
+                                         id="4">유출/사칭/사기</label></p>
+                        <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label>
+                        </p>
+                        <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는
+                          괴롭힘</label></p>
+                        <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남
+                          및 대화</label></p>
+                        <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및
+                          선거운동</label></p>
+                      </div>
+                    </div>
+                    <button type="submit">등록</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!--                </div>-->
+        <div class="flex-item-center">
                     <span th:if="${case.getUserId() == user.getId()}">
                     <a class="btn btn-primary"
                        th:href="@{/cases/detailReport/{id}(id=${case.getCaseId()})}">제보보기</a>
@@ -173,13 +186,13 @@
                     <button class="btn btn-success" disabled>해결 완료</button>
                     </span>
                     </span>
-                </div>
-
-
-            </div>
         </div>
-        <!--</div>-->
-    </section>
+
+
+      </div>
+    </div>
+    <!--</div>-->
+  </section>
 </div>
 </body>
 </html>
