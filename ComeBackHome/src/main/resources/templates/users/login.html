@@ -5,7 +5,10 @@
       layout:decorate="~{layout/layout}">
 
 <div layout:fragment="content" class="container">
-    <h1>로그인</h1>
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:10px;">로그인</h2>
+    <p style="text-align:center; padding-bottom: 50px;" class="text-decoration-underline">실종자 등록 혹은 제보를 하려면 로그인해주세요</p>
+    <hr>
+
     <div th:if="${param.error}">
         <p th:text="${exception}" class="alert alert-danger"></p>
     </div>
@@ -21,10 +24,6 @@
         </div>
         <button type="submit" class="btn btn-primary">로그인</button>
     </form>
-    <a class="p-2" href="https://kauth.kakao.com/oauth/authorize?client_id=a758e9f7b1f0c72d192b378bfb4b9b98
-&redirect_uri=http://localhost:8080/users/kakao&response_type=code">
-        <img th:src="@{/static/images/kakao_login_medium_narrow.png}" style="height:40px"/>
-    </a>
     <a href="/oauth2/authorization/google"><p>구글로그인</p></a>
     <p>아직 회원이 아니신가요?&nbsp;&nbsp;<a href="/users/signup">회원가입</a></p>
 

@@ -110,13 +110,13 @@ public class FileController {
     }
 
     // 유해 이미지 필터링
-    @GetMapping("/test")
-    public String detectSafeSearch() throws IOException {
-        fileService.authExplicit();
-        String filePath = "D:\\ComeBackHome\\220821\\MYH20200731003200038_P4.jpg";
-//        fileService.detectSafeSearch(filePath);
-
-        return "redirect:/";
-    }
+//    @GetMapping("/test")
+//    public String detectSafeSearch() throws IOException {
+//        fileService.authExplicit();
+//        String filePath = "D:\\ComeBackHome\\220821\\MYH20200731003200038_P4.jpg";
+////        fileService.detectSafeSearch(filePath);
+//
+//        return "redirect:/";
+//    }
 
 }

@@ -19,9 +19,6 @@ public interface CaseRepository extends JpaRepository<Case, Long>, CaseCustomRep
     Optional<List<Case>> findAllByUser(User user);
     Optional<List<Case>> findByMissingTimeStartOrderByMissingTimeStartDesc(LocalDateTime missingTimeStart);
 
-
-
-
     @Modifying
     @Query("update Case c set c.hitCnt = c.hitCnt + 1 where c.caseId = :caseId")
     int updateHitCase(@Param("caseId") Long caseId);
