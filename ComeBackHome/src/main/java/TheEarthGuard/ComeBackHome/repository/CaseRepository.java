@@ -2,7 +2,6 @@ package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
