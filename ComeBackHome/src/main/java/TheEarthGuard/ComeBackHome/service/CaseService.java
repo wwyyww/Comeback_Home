@@ -221,4 +221,14 @@ public class CaseService {
         return missing_pictures;
     }
 
+    public Integer countCase(){
+        List<Case> all = caseRepository.findAll();
+        return all.size();
+    }
+
+    public Integer countCase_find(){
+        Optional<List<Case>> all_find = caseRepository.findByIsFind(true);
+        return all_find.get().size();
+    }
+
 }

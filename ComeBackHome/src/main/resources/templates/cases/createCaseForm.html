@@ -4,20 +4,26 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df3c33f5950a30da0e53e3fcc48cb634&libraries=services"></script>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df3c33f5950a30da0e53e3fcc48cb634&libraries=services"></script>
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
+            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
     <style>
         ol, ul {
             list-style: none;
         }
+
         .map__list.etc-store {
             margin-top: 6px;
             height: 375px;
         }
+
         .map__list {
             overflow-y: auto;
             position: relative;
@@ -25,11 +31,13 @@
             padding: 0 14px 0 12px;
             height: 470px;
         }
+
         .box {
             position: relative;
             overflow: hidden;
             padding-left: 354px;
         }
+
         .area_left {
             padding: 0 21px 0 24px;
             width: 350px;
@@ -40,13 +48,15 @@
             box-shadow: 2px 0 4px 0 rgb(0 0 0 / 20%);
             background: #fff;
         }
+
         .area_right {
             position: relative;
             width: 700px;
             height: 500px;
             background: #f5f5f5;
         }
-        .search-box{
+
+        .search-box {
             position: relative;
         }
 
@@ -56,7 +66,7 @@
             height: 38px;
             border-radius: 24px;
             border: 1px solid #dadde0;
-            font-family: Montserrat,-apple-system,NotoSansCJKkr,AppleSDGothicNeo,Roboto,dotum,"돋움",sans-serif;
+            font-family: Montserrat, -apple-system, NotoSansCJKkr, AppleSDGothicNeo, Roboto, dotum, "돋움", sans-serif;
             font-size: 14px;
             font-weight: 400;
             line-height: 36px;
@@ -64,10 +74,12 @@
             background: #fff url(https://www.oliveyoung.co.kr/pc-static-root/image/pickup/ico_detail_search.png) 12px 11px no-repeat;
             background-size: 16px 16px;
         }
+
         .search-top {
             margin-top: 20px;
             background: #fff;
         }
+
         * {
             margin: 0;
             padding: 0;
@@ -83,9 +95,11 @@
             line-height: 16px;
             color: #506bda;
         }
+
         div {
             display: block;
         }
+
         .map-tab {
             height: 37px;
             font-size: 0;
@@ -95,21 +109,25 @@
             margin-top: 0;
             margin-bottom: 0;
         }
-        ul.map-tab li{
+
+        ul.map-tab li {
             /*background: none;*/
             /*color: #222;*/
             /*display: inline-block;*/
             /*padding: 10px 15px;*/
             /*cursor: pointer;*/
         }
-        ul.map-tab li.current{
+
+        ul.map-tab li.current {
             /*background: #ededed;*/
             /*color: #222;*/
         }
+
         .map-tab__list:nth-child(1) {
             padding-left: 3px;
         }
-        .map-tab__list.current{
+
+        .map-tab__list.current {
             /*display: inherit;*/
         }
 
@@ -118,6 +136,7 @@
             width: 115px;
             height: 37px;
         }
+
         .map-tab__list a {
             display: inline-block;
             width: 100%;
@@ -132,515 +151,667 @@
             margin-top: 3px;
             overflow: hidden;
         }
+
         a {
             color: #666;
             text-decoration: none;
         }
-        #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:330px;margin:90px 0 10px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
-        .bg_white {background:#fff;}
-        #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
-        #menu_wrap .option{text-align: center;}
-        #menu_wrap .option p {margin:10px 0;}
-        #menu_wrap .option button {margin-left:5px;}
-        #placesList li {list-style: none;}
-        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 40px;}
-        #placesList .item span {display: block;margin-top:4px;}
-        #placesList .item h6{margin-left: 20px; text-align: left}
-        #placesList .item h6, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-        #placesList .item .info{padding:10px 0 10px 55px;}
-        #placesList .info .road{font-size: 12px; text-align: left; margin-left: 20px;}
-        #placesList .info .gray {color:#8a8a8a;}
-        #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
-        #placesList .info .tel {color:#009900;}
-        #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
-        #placesList .item .marker_1 {background-position: 0 -10px;}
-        #placesList .item .marker_2 {background-position: 0 -56px;}
-        #placesList .item .marker_3 {background-position: 0 -102px}
-        #placesList .item .marker_4 {background-position: 0 -148px;}
-        #placesList .item .marker_5 {background-position: 0 -194px;}
-        #placesList .item .marker_6 {background-position: 0 -240px;}
-        #placesList .item .marker_7 {background-position: 0 -286px;}
-        #placesList .item .marker_8 {background-position: 0 -332px;}
-        #placesList .item .marker_9 {background-position: 0 -378px;}
-        #placesList .item .marker_10 {background-position: 0 -423px;}
-        #placesList .item .marker_11 {background-position: 0 -470px;}
-        #placesList .item .marker_12 {background-position: 0 -516px;}
-        #placesList .item .marker_13 {background-position: 0 -562px;}
-        #placesList .item .marker_14 {background-position: 0 -608px;}
-        #placesList .item .marker_15 {background-position: 0 -654px;}
-        #pagination {margin:10px auto;text-align: center;}
-        #pagination a {display:inline-block;margin-right:10px;}
-        #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+        #menu_wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 330px;
+            margin: 90px 0 10px 10px;
+            padding: 5px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
+            font-size: 12px;
+            border-radius: 10px;
+        }
+
+        .bg_white {
+            background: #fff;
+        }
+
+        #menu_wrap hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 2px solid #5F5F5F;
+            margin: 3px 0;
+        }
+
+        #menu_wrap .option {
+            text-align: center;
+        }
+
+        #menu_wrap .option p {
+            margin: 10px 0;
+        }
+
+        #menu_wrap .option button {
+            margin-left: 5px;
+        }
+
+        #placesList li {
+            list-style: none;
+        }
+
+        #placesList .item {
+            position: relative;
+            border-bottom: 1px solid #888;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 40px;
+        }
+
+        #placesList .item span {
+            display: block;
+            margin-top: 4px;
+        }
+
+        #placesList .item h6 {
+            margin-left: 20px;
+            text-align: left
+        }
+
+        #placesList .item h6, #placesList .item .info {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #placesList .item .info {
+            padding: 10px 0 10px 55px;
+        }
+
+        #placesList .info .road {
+            font-size: 12px;
+            text-align: left;
+            margin-left: 20px;
+        }
+
+        #placesList .info .gray {
+            color: #8a8a8a;
+        }
+
+        #placesList .info .jibun {
+            padding-left: 26px;
+            background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+        }
+
+        #placesList .info .tel {
+            color: #009900;
+        }
+
+        #placesList .item .markerbg {
+            float: left;
+            position: absolute;
+            width: 36px;
+            height: 37px;
+            margin: 10px 0 0 10px;
+            background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+        }
+
+        #placesList .item .marker_1 {
+            background-position: 0 -10px;
+        }
+
+        #placesList .item .marker_2 {
+            background-position: 0 -56px;
+        }
+
+        #placesList .item .marker_3 {
+            background-position: 0 -102px
+        }
+
+        #placesList .item .marker_4 {
+            background-position: 0 -148px;
+        }
+
+        #placesList .item .marker_5 {
+            background-position: 0 -194px;
+        }
+
+        #placesList .item .marker_6 {
+            background-position: 0 -240px;
+        }
+
+        #placesList .item .marker_7 {
+            background-position: 0 -286px;
+        }
+
+        #placesList .item .marker_8 {
+            background-position: 0 -332px;
+        }
+
+        #placesList .item .marker_9 {
+            background-position: 0 -378px;
+        }
+
+        #placesList .item .marker_10 {
+            background-position: 0 -423px;
+        }
+
+        #placesList .item .marker_11 {
+            background-position: 0 -470px;
+        }
+
+        #placesList .item .marker_12 {
+            background-position: 0 -516px;
+        }
+
+        #placesList .item .marker_13 {
+            background-position: 0 -562px;
+        }
+
+        #placesList .item .marker_14 {
+            background-position: 0 -608px;
+        }
+
+        #placesList .item .marker_15 {
+            background-position: 0 -654px;
+        }
+
+        #pagination {
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        #pagination a {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        #pagination .on {
+            font-weight: bold;
+            cursor: default;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 <div layout:fragment="content" class="container">
-  <form  method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
-    <div class="form-group">
-      <div>
-        <label for="missingName">실종자 이름</label>
-        <input type="text" id="missingName" name="missingName" th:value="${caseDto.missingName}" placeholder="이름을 입력하세요">
-        <span th:text="${valid_missingName}"></span>
-      </div>
+    <form method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
+        <div class="form-group">
+            <div className="form-group">
+                <!--            <div id="clickLatlng"></div>-->
+                <input type="hidden" id="missingLat" name="missingLat">
+                <input type="hidden" id="missingLng" name="missingLng">
+                <input type="text" id="missingArea" name="missingArea" placeholder="장소를 선택해주세요">
+                <span><em>지도를 클릭해주세요!</em></span>
+                <!--            <button type="submit">등록</button>-->
+            </div>
 
-      <div>
-        <label for="missingAge">실종자 나이</label>
-        <input type="number" id="missingAge" name="missingAge" min="1" max="150" th:value="${caseDto.missingAge}" > 세
-        <span th:text="${valid_missingAge}"></span>
-      </div>
+            <div>
+                <!--        &lt;!&ndash;장소 검색&ndash;&gt;-->
+                <!--        <div class="search" style="">-->
+                <!--          <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />-->
+                <!--          <input id="submit" type="button" value="주소 검색" />-->
+                <!--        </div>-->
+                <div class="box">
+                    <div class="area_left">
+                        <!--                <ul class="map-tab" id="mapTabArea">-->
+                        <!--                    <li class="map-tab__list current" data-tab="searchKeywordTab">키워드 검색</li>-->
+                        <!--                    <li class="map-tab__list" data-tab="searchAreaTab">지역 검색</li>-->
+                        <!--                </ul>-->
+                        <div class="search-top">
+                            <div class="search-box">
+                                <input id="address" type="text" class="search-box__inp" name="searchWord" value=""
+                                       title="주소 입력 (ex. 명동 또는 퇴계로)" placeholder="주소 입력">
+                                &nbsp;&nbsp;<input id="submit" type="button" value="검색"/>
+                            </div>
+                            <p class="search-store__top--noti">실종 지역을 검색하세요</p>
+                        </div>
+                        <div>
+                            <div id="menu_wrap" class="bg_white">
+                                <div class="option">
+                                    <ul id="placesList"></ul>
+                                    <div id="pagination"></div>
+                                </div>
+                            </div>
+                        </div>
 
-      <div>
-        <label for="missingSex">실종자 성별</label>
-        <label for="man">남자</label>
-        <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
-        <label for="woman">여자</label>
-        <input type="radio" name="missingSex" value=false id="woman" th:checked="${caseDto.missingSex eq false}"/>
-        <span th:text="${valid_missingSex}"></span>
-    </div>
+                        <!--                <div id="searchKeywordTab" class="ListArea">-->
+                        <!--                    <ul id="placesList" class="map__list etc-store"> </ul>-->
+                        <!--                    <div id="pagination"></div>-->
+                        <!--                </div>-->
+                        <!--                <div id="searchAreaTab" class="ListArea">-->
+                        <!--                    <p>지역 검색</p>-->
+                        <!--                </div>-->
+                        <div>
 
-      <div>
-        <label for="missingFeature">실종자 특징  </label>
-        <input type="radio" name="missingFeature" value=1 id="1" th:checked="${caseDto.missingFeature eq 1}">
-        <label for="missingFeature1">비장애아동(18세 미만)</label>
-
-        <input type="radio" name="missingFeature" value=2 id="2" th:checked="${caseDto.missingFeature eq 2}"/>
-        <label for="missingFeature2">장애인</label>
-
-        <input type="radio" name="missingFeature" value=3 id="3" th:checked="${caseDto.missingFeature eq 3}"/>
-        <label for="missingFeature3">치매환자</label>
-
-        <input type="radio" name="missingFeature" value=4 id="4" th:checked="${caseDto.missingFeature eq 4}"/>
-        <label for="missingFeature4">기타(18세 이상)</label>
-
-        <span th:text="${valid_missingFeature}"></span>
-      </div>
-
-
-      <div>
-        <label for="missingDesc">실종자 추가 정보</label>
-        <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}" placeholder="실종자 인상착의 등 실종자 추가 정보를 적어주세요"  style="width:500px; height:30px">
-        <span th:text="${valid_missingDesc}"></span>
-      </div>
-
-      <div>
-          <label for="missingTimeStart">실종 시간</label>
-          <input type="datetime-local" id="missingTimeStart" name="missingTimeStart" th:value="${caseDto.missingTimeStart}"> ~
-          <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" onchange="setMinValue()" th:value="${caseDto.missingTimeEnd}">
-          <span th:text="${valid_missingTimeStart}"></span>
-          <span th:text="${valid_missingTimeEnd}"></span>
-      </div>
-
-      <script>
-        let missingTimeStart = document.getElementById("missingTimeStart");
-        let missingTimeEnd = document.getElementById("missingTimeEnd");
-
-        function setMinValue() {
-            if( missingTimeStart.value >= missingTimeEnd.value) {
-                alert('실종 시간보다 이전의 날짜는 설정할 수 없습니다.');
-                missingTimeEnd.value = null;
-            }
-        }
-      </script>
-
-      <div>
-          <label for="missingPics">실종자 사진</label>
-          <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
-      </div>
-
-<!--        <p><em>지도를 클릭해주세요!</em></p>-->
-        <!--        <form action="/cases/new" method="post">-->
-        <div className="form-group">
-            <!--            <div id="clickLatlng"></div>-->
-            <input type="hidden" id="missingLat" name="missingLat">
-            <input type="hidden" id="missingLng" name="missingLng">
-            <input type="text" id="missingArea" name="missingArea"  placeholder="장소를 선택해주세요">
-            <span><em>지도를 클릭해주세요!</em></span>
-            <!--            <button type="submit">등록</button>-->
-        </div>
-
-      <div>
-<!--        &lt;!&ndash;장소 검색&ndash;&gt;-->
-<!--        <div class="search" style="">-->
-<!--          <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />-->
-<!--          <input id="submit" type="button" value="주소 검색" />-->
-<!--        </div>-->
-        <div class="box">
-            <div class="area_left">
-<!--                <ul class="map-tab" id="mapTabArea">-->
-<!--                    <li class="map-tab__list current" data-tab="searchKeywordTab">키워드 검색</li>-->
-<!--                    <li class="map-tab__list" data-tab="searchAreaTab">지역 검색</li>-->
-<!--                </ul>-->
-                <div class="search-top">
-                    <div class="search-box">
-                        <input id="address" type="text" class="search-box__inp" name="searchWord" value="" title="주소 입력 (ex. 명동 또는 퇴계로)" placeholder="주소 입력">
-                        &nbsp;&nbsp;<input id="submit" type="button" value="검색"/>
-                    </div>
-                    <p class="search-store__top--noti">실종 지역을 검색하세요</p>
-                </div>
-                <div>
-                    <div id="menu_wrap" class="bg_white">
-                        <div class="option">
-                            <ul id="placesList"></ul>
-                            <div id="pagination"></div>
                         </div>
                     </div>
+                    <!--            <script>-->
+                    <!--                $(document).ready(function(){-->
+
+                    <!--                    $('ul.tabs li').click(function(){-->
+                    <!--                        var tab_id = $(this).attr('data-tab');-->
+                    <!--                        $('ul.map-tab li').removeClass('current');-->
+                    <!--                        $('.ListArea').removeClass('current');-->
+
+                    <!--                        $(this).addClass('current');-->
+                    <!--                        $("#"+tab_id).addClass('current');-->
+                    <!--                    })-->
+
+                    <!--                })-->
+                    <!--            </script>-->
+                    <div class="area_right">
+                        <!-- 지도 표기 -->
+                        <div id="map" style="width:100%;height:500px;"></div>
+                    </div>
                 </div>
 
-<!--                <div id="searchKeywordTab" class="ListArea">-->
-<!--                    <ul id="placesList" class="map__list etc-store"> </ul>-->
-<!--                    <div id="pagination"></div>-->
-<!--                </div>-->
-<!--                <div id="searchAreaTab" class="ListArea">-->
-<!--                    <p>지역 검색</p>-->
-<!--                </div>-->
-                <div>
 
-                </div>
+                <!--        </form>-->
+                <script>
+                    var map = new naver.maps.Map("map", {
+                        center: new naver.maps.LatLng(37.3595316, 127.1052133),
+                        zoom: 15,
+                        mapTypeControl: true
+                    });
+                    let markers = new Array(); //
+                    var areaArr = new Array();  // 지역을 담는 배열 ( 지역명/위도경도 )
+                    // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+                    function removeAllChildNods(el) {
+                        while (el.hasChildNodes()) {
+                            el.removeChild(el.lastChild);
+                        }
+                    }
+
+                    // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+                    function displayPagination(pagination) {
+                        var paginationEl = document.getElementById('pagination'),
+                            fragment = document.createDocumentFragment(),
+                            i;
+
+                        // 기존에 추가된 페이지번호를 삭제합니다
+                        while (paginationEl.hasChildNodes()) {
+                            paginationEl.removeChild(paginationEl.lastChild);
+                        }
+
+                        for (i = 1; i <= pagination.last; i++) {
+                            var el = document.createElement('a');
+                            el.href = "#";
+                            el.innerHTML = i;
+
+                            if (i === pagination.current) {
+                                el.className = 'on';
+                            } else {
+                                el.onclick = (function (i) {
+                                    return function () {
+                                        pagination.gotoPage(i);
+                                    }
+                                })(i);
+                            }
+
+                            fragment.appendChild(el);
+                        }
+                        paginationEl.appendChild(fragment);
+                    }
+
+                    function getListItem(index, places) {
+
+                        var el = document.createElement('li'),
+                            itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
+                                '<div class="info">' +
+                                '   <h6>' + places.place_name + '</h6>';
+
+                        if (places.road_address_name) {
+                            itemStr += '    <span class="road">' + places.road_address_name + '</span>' +
+                                '   <span class="jibun gray road">' + places.address_name + '</span>';
+                        } else {
+                            itemStr += '    <span class="jibun gray road">' + places.address_name + '</span>';
+                        }
+
+                        itemStr += '  <span class="tel road">' + places.phone + '</span>' +
+                            '</div>';
+
+                        el.innerHTML = itemStr;
+                        el.className = 'item';
+
+                        return el;
+                    }
+
+                    function displayPlaces(places) {
+                        var listEl = document.getElementById('placesList'),
+                            menuEl = document.getElementById('menu_wrap'),
+                            fragment = document.createDocumentFragment(),
+                            listStr = '';
+                        // 검색 결과 목록에 추가된 항목들을 제거합니다
+                        removeAllChildNods(listEl);
+
+                        for (var i = 0; i < places.length; i++) {
+                            // 마커를 생성하고 지도에 표시합니다
+                            var placePosition = new naver.maps.LatLng(places[i].y, places[i].x),
+                                marker = markers[i],
+                                itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+                            (function (marker, title, placePosition) {
+
+                                itemEl.onclick = function () {
+                                    for (var j = 0; j < markers.length; j++) {
+                                        markers[j].setAnimation(null);
+                                    }
+                                    console.log("list click", title, placePosition);
+                                    marker.setAnimation(naver.maps.Animation.BOUNCE);
+                                    map.setCenter(placePosition);
+                                }
+
+                            })(marker, places[i].place_name, placePosition);
+
+
+                            fragment.appendChild(itemEl);
+                        }
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
+                        menuEl.scrollTop = 0;
+                    }
+
+                    //키워드 검색을 요청하는 함수
+                    function searchPlaces(keyword) {
+                        console.log("searchPlaces");
+                        // 장소 검색 객체를 생성합니다
+                        var ps = new kakao.maps.services.Places();
+                        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다.
+                        ps.keywordSearch(keyword, placesSearchCB);
+                    }
+
+                    function placesSearchCB(data, status, pagination) {
+                        if (status === kakao.maps.services.Status.OK) {
+
+                            removeMarker();
+                            for (var i = 0; i < data.length; i++) {
+                                console.log("marker: ", data[i], data[i].place_name.toString(), data[i].x.toString());
+                                areaArr.push(
+                                    {
+                                        location: data[i].place_name.toString(),
+                                        lat: data[i].y.toString(),
+                                        lng: data[i].x.toString()
+                                    }
+                                );
+
+                            }
+
+                            for (var i = 0; i < areaArr.length; i++) {
+                                // 지역을 담은 배열의 길이만큼 for문으로 마커와 정보창을 채워주자 !
+                                if (i === 0) {
+                                    var marker = new naver.maps.Marker({
+                                        map: map,
+                                        title: areaArr[i].location, // 지역구 이름
+                                        position: new naver.maps.LatLng(areaArr[i].lat, areaArr[i].lng), // 지역구의 위도 경도 넣기
+                                    });
+                                } else {
+                                    var marker = new naver.maps.Marker({
+                                        map: map,
+                                        title: areaArr[i].location, // 지역구 이름
+                                        position: new naver.maps.LatLng(areaArr[i].lat, areaArr[i].lng) // 지역구의 위도 경도 넣기
+                                    });
+                                }
+
+
+                                markers.push(marker); // 생성한 마커를 배열에 담는다.
+
+                            }
+
+                            displayPlaces(data);
+                            displayPagination(pagination);
+                            searchAddressToCoordinate(data);
+
+                        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                            alert('검색 결과가 존재하지 않습니다.');
+                            return;
+                        } else if (status === kakao.maps.services.Status.ERROR) {
+
+                            alert('검색 결과 중 오류가 발생했습니다.');
+                            return;
+
+                        }
+
+                    }
+
+                    function removeMarker() {
+                        for (var i = 0; i < markers.length; i++) {
+                            markers[i].setMap(null);
+                        }
+                        markers = [];
+                        areaArr = [];
+                    }
+
+
+                    var cur_marker;
+                    // map.setCursor('pointer');
+
+                    navigator.geolocation.getCurrentPosition(
+                        function (positions) {
+                            var lat = positions.coords.latitude;
+                            var lng = positions.coords.longitude;
+                            position = new naver.maps.LatLng(lat, lng);
+                            map.setCenter(position);
+                            map.setCursor('pointer');
+                            cur_marker = new naver.maps.Marker({
+                                map: map,
+                                title: "성북구", // 지역구 이름
+                                position: position,
+                                icon: {
+                                    url: '/static/images/marker_black.png'
+                                }// 지역구의 위도 경도 넣기
+                            });
+
+
+                        }
+                    )
+
+                    function searchCoordinateToAddress(latlng) { // 경도, 위도를 주소로 변환
+
+                        //infoWindow.close();
+
+                        naver.maps.Service.reverseGeocode({
+                            coords: latlng,
+                            orders: [
+                                naver.maps.Service.OrderType.ADDR,
+                                naver.maps.Service.OrderType.ROAD_ADDR
+                            ].join(',')
+                        }, function (status, response) {
+                            if (status === naver.maps.Service.Status.ERROR) {
+                                if (!latlng) {
+                                    return alert('ReverseGeocode Error, Please check latlng');
+                                }
+                                if (latlng.toString) {
+                                    return alert('ReverseGeocode Error, latlng:' + latlng.toString());
+                                }
+                                if (latlng.x && latlng.y) {
+                                    return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
+                                }
+                                return alert('ReverseGeocode Error, Please check latlng');
+                            }
+
+                            var address = response.v2.address,
+                                htmlAddresses = [];
+
+                            if (address.jibunAddress !== '') {
+                                htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
+                            }
+
+                            if (address.roadAddress !== '') {
+                                htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
+                            }
+
+                            missingArea.value = address.jibunAddress;
+
+
+                        });
+                    }
+
+                    function searchAddressToCoordinate(address) {
+
+                        if (address.length === 0) {
+                            return alert('No result.');
+                        }
+                        // if (response.v2.meta.totalCount === 0) {
+                        //     return alert('No result.');
+                        // }
+                        var htmlAddresses = [],
+                            item = address[0],
+                            point = new naver.maps.Point(item.x, item.y);
+                        console.log("items: " + address[0].x, point);
+                        // var htmlAddresses = [],
+                        //     item = response.v2.addresses[0],
+                        //     point = new naver.maps.Point(item.x, item.y);
+
+                        if (item.road_address_name) {
+                            htmlAddresses.push('[도로명 주소] ' + item.road_address_name);
+                        }
+
+                        if (item.address_name) {
+                            htmlAddresses.push('[지번 주소] ' + item.address_name);
+                        }
+
+
+                        map.setCenter(point);
+
+                        //infoWindow.open(map, point);
+                        //});
+                    }
+
+
+                    function initGeocoder() {
+                        map.addListener('click', function (e) {
+                            cur_marker.setPosition(e.coord);
+                            //
+                            //
+                            //
+                            var missingLat = document.getElementById('missingLat');
+                            var missingLng = document.getElementById('missingLng');
+                            var missingArea = document.getElementById('missingArea');
+                            missingLat.value = cur_marker.position.lat().toString();
+                            missingLng.value = cur_marker.position.lng().toString();
+                            //
+                            searchCoordinateToAddress(cur_marker.position);
+                            console.log("ffff");
+
+                        });
+
+                        $('#address').on('keydown', function (e) {
+                            var keyCode = e.which;
+
+                            if (keyCode === 13) { // Enter Key
+                                searchAddressToCoordinate($('#address').val());
+                            }
+                        });
+
+                        $('#submit').on('click', function (e) {
+                            e.preventDefault();
+                            //searchAddressToCoordinate($('#address').val());
+                            searchPlaces($('#address').val());
+                        });
+
+                        //searchAddressToCoordinate('정자동 178-1');
+                    }
+
+                    naver.maps.onJSContentLoaded = initGeocoder;
+                </script>
+
+
             </div>
-<!--            <script>-->
-<!--                $(document).ready(function(){-->
-
-<!--                    $('ul.tabs li').click(function(){-->
-<!--                        var tab_id = $(this).attr('data-tab');-->
-<!--                        $('ul.map-tab li').removeClass('current');-->
-<!--                        $('.ListArea').removeClass('current');-->
-
-<!--                        $(this).addClass('current');-->
-<!--                        $("#"+tab_id).addClass('current');-->
-<!--                    })-->
-
-<!--                })-->
-<!--            </script>-->
-            <div class="area_right">
-                <!-- 지도 표기 -->
-                <div id="map" style="width:100%;height:500px;"></div>
+            <div>
+                <label for="missingName">실종자 이름</label>
+                <input type="text" id="missingName" name="missingName" th:value="${caseDto.missingName}"
+                       placeholder="이름을 입력하세요">
+                <span th:text="${valid_missingName}"></span>
             </div>
+
+            <div>
+                <label for="missingAge">실종자 나이</label>
+                <input type="number" id="missingAge" name="missingAge" min="1" max="150"
+                       th:value="${caseDto.missingAge}"> 세
+                <span th:text="${valid_missingAge}"></span>
+            </div>
+
+            <div>
+                <label for="missingSex">실종자 성별</label>
+                <label for="man">남자</label>
+                <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
+                <label for="woman">여자</label>
+                <input type="radio" name="missingSex" value=false id="woman"
+                       th:checked="${caseDto.missingSex eq false}"/>
+                <span th:text="${valid_missingSex}"></span>
+            </div>
+
+            <div>
+                <label for="missingFeature">실종자 특징 </label>
+                <input type="radio" name="missingFeature" value=1 id="1" th:checked="${caseDto.missingFeature eq 1}">
+                <label for="missingFeature1">비장애아동(18세 미만)</label>
+
+                <input type="radio" name="missingFeature" value=2 id="2" th:checked="${caseDto.missingFeature eq 2}"/>
+                <label for="missingFeature2">장애인</label>
+
+                <input type="radio" name="missingFeature" value=3 id="3" th:checked="${caseDto.missingFeature eq 3}"/>
+                <label for="missingFeature3">치매환자</label>
+
+                <input type="radio" name="missingFeature" value=4 id="4" th:checked="${caseDto.missingFeature eq 4}"/>
+                <label for="missingFeature4">기타(18세 이상)</label>
+
+                <span th:text="${valid_missingFeature}"></span>
+            </div>
+
+
+            <div>
+                <label for="missingDesc">실종자 추가 정보</label>
+                <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}"
+                       placeholder="실종자 인상착의 등 실종자 추가 정보를 적어주세요" style="width:500px; height:30px">
+                <span th:text="${valid_missingDesc}"></span>
+            </div>
+
+            <div>
+                <label for="missingTimeStart">실종 시간</label>
+                <input type="datetime-local" id="missingTimeStart" name="missingTimeStart"
+                       th:value="${caseDto.missingTimeStart}"> ~
+                <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" onchange="setMinValue()"
+                       th:value="${caseDto.missingTimeEnd}">
+                <span th:text="${valid_missingTimeStart}"></span>
+                <span th:text="${valid_missingTimeEnd}"></span>
+            </div>
+
+            <script>
+                let missingTimeStart = document.getElementById("missingTimeStart");
+                let missingTimeEnd = document.getElementById("missingTimeEnd");
+
+                function setMinValue() {
+                    if (missingTimeStart.value >= missingTimeEnd.value) {
+                        alert('실종 시간보다 이전의 날짜는 설정할 수 없습니다.');
+                        missingTimeEnd.value = null;
+                    }
+                }
+            </script>
+
+            <div>
+                <label for="missingPics">실종자 사진</label>
+                <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
+            </div>
+
+            <!--        <p><em>지도를 클릭해주세요!</em></p>-->
+            <!--        <form action="/cases/new" method="post">-->
+
+
         </div>
-
-
-
-<!--        </form>-->
-          <script>
-              var map = new naver.maps.Map("map", {
-                  center: new naver.maps.LatLng(37.3595316, 127.1052133),
-                  zoom: 15,
-                  mapTypeControl: true
-              });
-              let markers = new Array(); //
-              var areaArr = new Array();  // 지역을 담는 배열 ( 지역명/위도경도 )
-              // 검색결과 목록의 자식 Element를 제거하는 함수입니다
-              function removeAllChildNods(el){
-                  while(el.hasChildNodes()){
-                      el.removeChild(el.lastChild);
-                  }
-              }
-
-              // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
-              function displayPagination(pagination) {
-                  var paginationEl = document.getElementById('pagination'),
-                      fragment = document.createDocumentFragment(),
-                      i;
-
-                  // 기존에 추가된 페이지번호를 삭제합니다
-                  while (paginationEl.hasChildNodes()) {
-                      paginationEl.removeChild (paginationEl.lastChild);
-                  }
-
-                  for (i=1; i<=pagination.last; i++) {
-                      var el = document.createElement('a');
-                      el.href = "#";
-                      el.innerHTML = i;
-
-                      if (i===pagination.current) {
-                          el.className = 'on';
-                      } else {
-                          el.onclick = (function(i) {
-                              return function() {
-                                  pagination.gotoPage(i);
-                              }
-                          })(i);
-                      }
-
-                      fragment.appendChild(el);
-                  }
-                  paginationEl.appendChild(fragment);
-              }
-
-              function getListItem(index, places) {
-
-                  var el = document.createElement('li'),
-                      itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                          '<div class="info">' +
-                          '   <h6>' + places.place_name + '</h6>';
-
-                  if (places.road_address_name) {
-                      itemStr += '    <span class="road">' + places.road_address_name + '</span>' +
-                          '   <span class="jibun gray road">' +  places.address_name  + '</span>';
-                  } else {
-                      itemStr += '    <span class="jibun gray road">' +  places.address_name  + '</span>';
-                  }
-
-                  itemStr += '  <span class="tel road">' + places.phone  + '</span>' +
-                      '</div>';
-
-                  el.innerHTML = itemStr;
-                  el.className = 'item';
-
-                  return el;
-              }
-
-              function displayPlaces(places){
-                  var listEl = document.getElementById('placesList'),
-                      menuEl = document.getElementById('menu_wrap'),
-                      fragment = document.createDocumentFragment(),
-                      listStr = '';
-                  // 검색 결과 목록에 추가된 항목들을 제거합니다
-                  removeAllChildNods(listEl);
-
-                  for ( var i=0; i<places.length; i++ ) {
-                      // 마커를 생성하고 지도에 표시합니다
-                      var placePosition = new naver.maps.LatLng(places[i].y, places[i].x),
-                          marker = markers[i],
-                          itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-
-                      (function(marker, title, placePosition) {
-
-                          itemEl.onclick = function (){
-                              for( var j=0; j<markers.length; j++){
-                                  markers[j].setAnimation(null);
-                              }
-                              console.log("list click", title, placePosition);
-                              marker.setAnimation(naver.maps.Animation.BOUNCE);
-                              map.setCenter(placePosition);
-                          }
-
-                      })(marker, places[i].place_name, placePosition);
-
-
-                      fragment.appendChild(itemEl);
-                  }
-                  // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
-                  listEl.appendChild(fragment);
-                  menuEl.scrollTop = 0;
-              }
-
-              //키워드 검색을 요청하는 함수
-              function searchPlaces(keyword){
-                  console.log("searchPlaces");
-                  // 장소 검색 객체를 생성합니다
-                  var ps = new kakao.maps.services.Places();
-                  // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다.
-                  ps.keywordSearch(keyword, placesSearchCB);
-              }
-
-              function placesSearchCB (data, status, pagination) {
-                  if (status === kakao.maps.services.Status.OK) {
-
-                      removeMarker();
-                      for (var i=0; i<data.length; i++) {
-                          console.log("marker: ", data[i], data[i].place_name.toString(), data[i].x.toString());
-                          areaArr.push(
-                              {location : data[i].place_name.toString(), lat : data[i].y.toString(), lng : data[i].x.toString()}
-                          );
-
-                      }
-
-                      for (var i = 0; i < areaArr.length; i++) {
-                          // 지역을 담은 배열의 길이만큼 for문으로 마커와 정보창을 채워주자 !
-                          if(i === 0){
-                              var marker = new naver.maps.Marker({
-                                  map: map,
-                                  title: areaArr[i].location, // 지역구 이름
-                                  position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng), // 지역구의 위도 경도 넣기
-                              });
-                          } else {
-                              var marker = new naver.maps.Marker({
-                                  map: map,
-                                  title: areaArr[i].location, // 지역구 이름
-                                  position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng) // 지역구의 위도 경도 넣기
-                              });
-                          }
-
-
-                          markers.push(marker); // 생성한 마커를 배열에 담는다.
-
-                      }
-
-                      displayPlaces(data);
-                      displayPagination(pagination);
-                      searchAddressToCoordinate(data);
-
-                  } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                      alert('검색 결과가 존재하지 않습니다.');
-                      return;
-                  } else if (status === kakao.maps.services.Status.ERROR) {
-
-                      alert('검색 결과 중 오류가 발생했습니다.');
-                      return;
-
-                  }
-
-              }
-
-              function removeMarker() {
-                  for ( var i = 0; i < markers.length; i++ ) {
-                      markers[i].setMap(null);
-                  }
-                  markers = [];
-                  areaArr = [];
-              }
-
-
-
-              var cur_marker;
-             // map.setCursor('pointer');
-
-              navigator.geolocation.getCurrentPosition(
-                  function (positions){
-                      var lat = positions.coords.latitude;
-                      var lng = positions.coords.longitude;
-                      position = new naver.maps.LatLng(lat, lng);
-                      map.setCenter(position);
-                      map.setCursor('pointer');
-                      cur_marker = new naver.maps.Marker({
-                          map: map,
-                          title: "성북구", // 지역구 이름
-                          position: position,
-                          icon: {
-                              url: '/static/images/marker_black.png'
-                          }// 지역구의 위도 경도 넣기
-                      });
-
-
-                  }
-              )
-
-              function searchCoordinateToAddress(latlng) { // 경도, 위도를 주소로 변환
-
-                  //infoWindow.close();
-
-                  naver.maps.Service.reverseGeocode({
-                      coords: latlng,
-                      orders: [
-                          naver.maps.Service.OrderType.ADDR,
-                          naver.maps.Service.OrderType.ROAD_ADDR
-                      ].join(',')
-                  }, function(status, response) {
-                      if (status === naver.maps.Service.Status.ERROR) {
-                          if (!latlng) {
-                              return alert('ReverseGeocode Error, Please check latlng');
-                          }
-                          if (latlng.toString) {
-                              return alert('ReverseGeocode Error, latlng:' + latlng.toString());
-                          }
-                          if (latlng.x && latlng.y) {
-                              return alert('ReverseGeocode Error, x:' + latlng.x + ', y:' + latlng.y);
-                          }
-                          return alert('ReverseGeocode Error, Please check latlng');
-                      }
-
-                      var address = response.v2.address,
-                          htmlAddresses = [];
-
-                      if (address.jibunAddress !== '') {
-                          htmlAddresses.push('[지번 주소] ' + address.jibunAddress);
-                      }
-
-                      if (address.roadAddress !== '') {
-                          htmlAddresses.push('[도로명 주소] ' + address.roadAddress);
-                      }
-
-                      missingArea.value = address.jibunAddress;
-
-
-                  });
-              }
-
-              function searchAddressToCoordinate(address) {
-
-                      if (address.length === 0) {
-                          return alert('No result.');
-                      }
-                      // if (response.v2.meta.totalCount === 0) {
-                      //     return alert('No result.');
-                      // }
-                      var htmlAddresses = [],
-                          item = address[0],
-                          point = new naver.maps.Point(item.x, item.y);
-                      console.log("items: " + address[0].x, point);
-                      // var htmlAddresses = [],
-                      //     item = response.v2.addresses[0],
-                      //     point = new naver.maps.Point(item.x, item.y);
-
-                      if (item.road_address_name) {
-                          htmlAddresses.push('[도로명 주소] ' + item.road_address_name);
-                      }
-
-                      if (item.address_name) {
-                          htmlAddresses.push('[지번 주소] ' + item.address_name);
-                      }
-
-
-                      map.setCenter(point);
-
-                      //infoWindow.open(map, point);
-                  //});
-              }
-
-
-              function initGeocoder() {
-                  map.addListener('click', function(e) {
-                      cur_marker.setPosition(e.coord);
-                      //
-                      //
-                      //
-                      var missingLat = document.getElementById('missingLat');
-                      var missingLng = document.getElementById('missingLng');
-                      var missingArea = document.getElementById('missingArea');
-                      missingLat.value = cur_marker.position.lat().toString();
-                      missingLng.value = cur_marker.position.lng().toString();
-                      //
-                      searchCoordinateToAddress(cur_marker.position);
-                      console.log("ffff");
-
-                  });
-
-                  $('#address').on('keydown', function(e) {
-                      var keyCode = e.which;
-
-                      if (keyCode === 13) { // Enter Key
-                          searchAddressToCoordinate($('#address').val());
-                      }
-                  });
-
-                  $('#submit').on('click', function(e) {
-                      e.preventDefault();
-                      //searchAddressToCoordinate($('#address').val());
-                      searchPlaces($('#address').val());
-                  });
-
-                  //searchAddressToCoordinate('정자동 178-1');
-              }
-
-              naver.maps.onJSContentLoaded = initGeocoder;
-          </script>
-
-
-      </div>
-
-    </div>
-    <button type="submit">등록</button>
-  </form>
+        <button type="submit">등록</button>
+    </form>
     <script>
-      // 파일 null인지 확인
-      let missingPics = document.getElementById("missingPics");
-      let newCaseForm = document.getElementById("newCaseForm");
-      function checkFileNull() {
-        if(! missingPics.value) {
-          alert("실종자 사진 등록은 필수입니다.");
-          return false;
+        // 파일 null인지 확인
+        let missingPics = document.getElementById("missingPics");
+        let newCaseForm = document.getElementById("newCaseForm");
+
+        function checkFileNull() {
+            if (!missingPics.value) {
+                alert("실종자 사진 등록은 필수입니다.");
+                return false;
+            }
         }
-      }
     </script>
 </div>
 
