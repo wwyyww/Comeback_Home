@@ -106,14 +106,8 @@ public class MapController {
         }
 
 
-        String[] keys = counter.keySet().toArray(new String[0]);
-        Float[] coords = new Float[2];
-
-
-        List<Object> results=new ArrayList<>();
         List<Map.Entry<String, Integer>> entries = new ArrayList<>(counter.entrySet());
         entries.sort((v1, v2) -> v2.getValue().compareTo(v1.getValue()));
-        results.addAll(entries);
 
         List<Object> resultTest=new ArrayList<>();
 

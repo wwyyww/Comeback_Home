@@ -187,7 +187,9 @@ public class CaseController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("cases", pagingDtoList);
-        return "cases/caseList";
+//        return "cases/caseList";
+        return "/cases/searchCaseForm";
+
     }
 
 //        List<Case> caseEntityList = caseService.getCaseList();
