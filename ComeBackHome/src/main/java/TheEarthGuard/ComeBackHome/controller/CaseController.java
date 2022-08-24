@@ -202,15 +202,23 @@ public class CaseController {
 
     // 로그인 한 사용자의 사건 리스트로 조회
     @GetMapping(value = "/mypage/cases")
-    public String caseListByUser(Model model, @CurrentUser User user) {
+    public String caseListByUser(Model model, @CurrentUser User user,@PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page) {
         Optional<List<Case>> caseEntityList = caseService.findCaseByUser(user);
 
         if (caseEntityList.isPresent()) {
             List<CaseListResponseDto> caseDtoList = caseEntityList.get().stream().map(
                     caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
             ).collect(Collectors.toList());
-            model.addAttribute("cases", caseDtoList);
+//            model.addAttribute("cases", caseDtoList);
 
+            // 페이징 변환 작업
+            final int startPage = (int)pageable.getOffset();
+            final int endPage = Math.min((startPage + pageable.getPageSize()), caseDtoList.size());
+            Page<CaseListResponseDto> pagingDtoList = new PageImpl<>(caseDtoList.subList(startPage, endPage), pageable, caseDtoList.size());
+
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+            model.addAttribute("cases", pagingDtoList);
         }
 
         return "cases/caseList";
