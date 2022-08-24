@@ -26,7 +26,8 @@
   <link th:href="@{/static/assets/style.css}" rel="stylesheet" media="screen" />
 
   <style>
-    html, body { width:100%;height:100%;padding:0;margin:0; }
+    html, body { width:100%;height:97%;padding:0;margin:0; }
+    /*body{overflow:hidden;}*/
     .below_area {margin-top: 10px; margin-left: 0px; margin-right: 0px;}
     .search-box{ position: relative; border-radius: 24px;}
     .search-top { margin-top: 20px; margin-left: 10px; margin-right: 10px;background: #fff;border-radius: 24px;}
@@ -173,11 +174,10 @@
           </li>
 
           <li class="nav-item">
-            <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/mypage">마이페이지</a>
-          </li>
-
-          <li class="nav-item">
             <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
+<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/cases">작성한 사건 목록</a>-->
+<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/reports">작성한 증언 목록</a>-->
+<!--            <a sec:authorize="isAuthenticated()" class="nav-link" href="/mypage/edit">회원정보 수정</a>-->
             <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
           </li>
         </ul>

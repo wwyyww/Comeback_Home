@@ -2,7 +2,6 @@ package TheEarthGuard.ComeBackHome.repository;
 
 import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public interface CaseRepository extends JpaRepository<Case, Long>, CaseCustomRep
     Optional<List<Case>> findAllByUser(User user);
     Optional<List<Case>> findByMissingTimeStartOrderByMissingTimeStartDesc(LocalDateTime missingTimeStart);
 
-    Page<Case> findAll(Pageable pageable);
+//    Page<Case> findAll(Pageable pageable);
 
     List<Case> findAll();
     Optional<List<Case>> findByIsFind(Boolean find);

@@ -107,7 +107,7 @@ public class FileService {
                     // 썸네일 생성
                     if (checkImageType(saveFile)) {
                         FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, FilenameUtils.getName("s_" + savedFilename)));
-                        Thumbnailator.createThumbnail(initialStream, thumbnail, 100, 100);
+                        Thumbnailator.createThumbnail(initialStream, thumbnail, 1000, 1000);
 
                         thumbnail.close();
                     }

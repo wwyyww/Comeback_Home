@@ -335,21 +335,11 @@
 </head>
 <body>
 <div layout:fragment="content" class="container">
-    <form method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
-        <div class="form-group">
-            <div className="form-group">
-                <!--            <div id="clickLatlng"></div>-->
-                <input type="hidden" id="missingLat" name="missingLat">
-                <input type="hidden" id="missingLng" name="missingLng">
-                <input type="text" id="missingArea" name="missingArea" placeholder="장소를 선택해주세요">
-                <span><em>지도를 클릭해주세요!</em></span>
-                <!--            <button type="submit">등록</button>-->
-            </div>
     <h2 style="text-align: center; margin-top:50px; margin-bottom:10px;">실종자 등록</h2>
     <p style="text-align:center; padding-bottom: 50px;" class="text-decoration-underline">실종자 정보를 작성해주세요</p>
     <hr>
     <form method="post" enctype="multipart/form-data" id="newCaseForm" onsubmit="return checkFileNull();">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="form-group">
 
             <div className="form-group" style="text-align: left; margin-bottom:20px;">
@@ -724,101 +714,15 @@
                             searchPlaces($('#address').val());
                         });
 
-                  //searchAddressToCoordinate('정자동 178-1');
-              }
-
-                    naver.maps.onJSContentLoaded = initGeocoder;
-                </script>
-
-
-            </div>
-            <div>
-                <label for="missingName">실종자 이름</label>
-                <input type="text" id="missingName" name="missingName" th:value="${caseDto.missingName}"
-                       placeholder="이름을 입력하세요">
-                <span th:text="${valid_missingName}"></span>
-            </div>
-
-            <div>
-                <label for="missingAge">실종자 나이</label>
-                <input type="number" id="missingAge" name="missingAge" min="1" max="150"
-                       th:value="${caseDto.missingAge}"> 세
-                <span th:text="${valid_missingAge}"></span>
-            </div>
-
-            <div>
-                <label for="missingSex">실종자 성별</label>
-                <label for="man">남자</label>
-                <input type="radio" name="missingSex" value=true id="man" th:checked="${caseDto.missingSex eq true}">
-                <label for="woman">여자</label>
-                <input type="radio" name="missingSex" value=false id="woman"
-                       th:checked="${caseDto.missingSex eq false}"/>
-                <span th:text="${valid_missingSex}"></span>
-            </div>
-
-            <div>
-                <label for="missingFeature">실종자 특징 </label>
-                <input type="radio" name="missingFeature" value=1 id="1" th:checked="${caseDto.missingFeature eq 1}">
-                <label for="missingFeature1">비장애아동(18세 미만)</label>
-
-                <input type="radio" name="missingFeature" value=2 id="2" th:checked="${caseDto.missingFeature eq 2}"/>
-                <label for="missingFeature2">장애인</label>
-
-                <input type="radio" name="missingFeature" value=3 id="3" th:checked="${caseDto.missingFeature eq 3}"/>
-                <label for="missingFeature3">치매환자</label>
-
-                <input type="radio" name="missingFeature" value=4 id="4" th:checked="${caseDto.missingFeature eq 4}"/>
-                <label for="missingFeature4">기타(18세 이상)</label>
-
-                <span th:text="${valid_missingFeature}"></span>
-            </div>
-
-
-            <div>
-                <label for="missingDesc">실종자 추가 정보</label>
-                <input type="text" id="missingDesc" name="missingDesc" th:value="${caseDto.missingDesc}"
-                       placeholder="실종자 인상착의 등 실종자 추가 정보를 적어주세요" style="width:500px; height:30px">
-                <span th:text="${valid_missingDesc}"></span>
-            </div>
-
-            <div>
-                <label for="missingTimeStart">실종 시간</label>
-                <input type="datetime-local" id="missingTimeStart" name="missingTimeStart"
-                       th:value="${caseDto.missingTimeStart}"> ~
-                <input type="datetime-local" id="missingTimeEnd" name="missingTimeEnd" onchange="setMinValue()"
-                       th:value="${caseDto.missingTimeEnd}">
-                <span th:text="${valid_missingTimeStart}"></span>
-                <span th:text="${valid_missingTimeEnd}"></span>
-            </div>
-
-            <script>
-                let missingTimeStart = document.getElementById("missingTimeStart");
-                let missingTimeEnd = document.getElementById("missingTimeEnd");
-
-                function setMinValue() {
-                    if (missingTimeStart.value >= missingTimeEnd.value) {
-                        alert('실종 시간보다 이전의 날짜는 설정할 수 없습니다.');
-                        missingTimeEnd.value = null;
+                        //searchAddressToCoordinate('정자동 178-1');
                     }
-                }
-            </script>
+
                     naver.maps.onJSContentLoaded = initGeocoder;
                 </script>
 
-            <div>
-                <label for="missingPics">실종자 사진</label>
-                <input type="file" id="missingPics" name="missingPics" multiple="multiple" placeholder="사진 경로를 입력하세요">
-            </div>
 
             </div>
 
-            <!--        <p><em>지도를 클릭해주세요!</em></p>-->
-            <!--        <form action="/cases/new" method="post">-->
-
-
-        </div>
-        <button type="submit">등록</button>
-    </form>
             <div>
                 <table class="table table-bordered" style="margin-top:40px; ">
                     <tbody>
