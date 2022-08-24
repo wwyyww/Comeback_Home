@@ -93,11 +93,11 @@ public class FileService {
                     FileInputStream inputStream = new FileInputStream(saveFile);
                     Boolean result = detectSafeSearch(inputStream);
 
-                    if (!result){ // 유해 이미지시 삭제
-                        Boolean deleteResult = saveFile.delete();
-                        System.out.println("deleteResult" + deleteResult);
-                        return null;
-                    }
+//                    if (!result){ // 유해 이미지시 삭제
+//                        Boolean deleteResult = saveFile.delete();
+//                        System.out.println("deleteResult" + deleteResult);
+//                        return null;
+//                    }
 
 
                     // 썸네일 생성

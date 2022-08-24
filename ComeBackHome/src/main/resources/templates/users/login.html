@@ -5,7 +5,10 @@
       layout:decorate="~{layout/layout}">
 
 <div layout:fragment="content" class="container">
-    <h1>로그인</h1>
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:10px;">로그인</h2>
+    <p style="text-align:center; padding-bottom: 50px;" class="text-decoration-underline">실종자 등록 혹은 제보를 하려면 로그인해주세요</p>
+    <hr>
+
     <div th:if="${param.error}">
         <p th:text="${exception}" class="alert alert-danger"></p>
     </div>
