@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -83,7 +86,7 @@ public class ReportController {
     }
 
     @GetMapping(value = "/reports/reportList/{id}")
-    public String caseReportList(Model model, @PathVariable("id") Long id, @CurrentUser User user, HttpServletRequest request){
+    public String caseReportList(Model model, @PathVariable("id") Long id, @RequestParam(value="page", defaultValue="0") int page, @CurrentUser User user, HttpServletRequest request){
         System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Report>> reportList = Optional.empty();
 
@@ -224,6 +227,15 @@ public class ReportController {
 //        model.addAttribute("user", user);
 //        return "redirect:/reports/detail/{id}";
 //    }
+
+
+    // 페이징 테스트
+    @RequestMapping("/list")
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<Report> paging = this.reportService.getPageList(page);
+        model.addAttribute("paging", paging);
+        return "reports/paging_report_list";
+    }
 
 
 }
