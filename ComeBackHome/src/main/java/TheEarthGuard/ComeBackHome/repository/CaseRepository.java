@@ -19,6 +19,8 @@ public interface CaseRepository extends JpaRepository<Case, Long>, CaseCustomRep
     Optional<List<Case>> findAllByUser(User user);
     Optional<List<Case>> findByMissingTimeStartOrderByMissingTimeStartDesc(LocalDateTime missingTimeStart);
 
+    Page<Case> findAll(Pageable pageable);
+
     List<Case> findAll();
     Optional<List<Case>> findByIsFind(Boolean find);
 

@@ -21,6 +21,9 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -28,7 +31,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -86,7 +88,7 @@ public class ReportController {
     }
 
     @GetMapping(value = "/reports/reportList/{id}")
-    public String caseReportList(Model model, @PathVariable("id") Long id, @RequestParam(value="page", defaultValue="0") int page, @CurrentUser User user, HttpServletRequest request){
+    public String caseReportList(Model model, @PathVariable("id") Long id, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page, @CurrentUser User user, HttpServletRequest request){
         System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Report>> reportList = Optional.empty();
 
@@ -95,19 +97,6 @@ public class ReportController {
             caseService.countHitCase(caseEntity.get().getCaseId()); // hit ++
             model.addAttribute("case", new CaseResponseDto(caseEntity.get(), caseEntity.get().getUser()));
         }
-
-//        if(caseEntity.isPresent()) {
-//            List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
-//        }
-
-//        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
-//            //List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
-//            reportList = Optional.ofNullable(reportService.getReportsListByCase(caseEntity.get()));
-//            //model.addAttribute("reports", reports);
-//        }else{
-//            return "redirect:/";
-//        }
-
 
 
         if (RequestContextUtils.getInputFlashMap(request) != null){
@@ -135,7 +124,16 @@ public class ReportController {
                     ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
             ).collect(Collectors.toList());
 
-            model.addAttribute("reports", reportDtoList);
+            // 페이징 변환 작업
+            final int startPage = (int)pageable.getOffset();
+            final int endPage = Math.min((startPage + pageable.getPageSize()), reportDtoList.size());
+            Page<ReportResponseDto> pagingDtoList = new PageImpl<>(reportDtoList.subList(startPage, endPage), pageable, reportDtoList.size());
+
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+            model.addAttribute("reports", pagingDtoList);
+
+//            model.addAttribute("reports", reportDtoList);
         } else {
             System.out.println("없음");
         }
@@ -146,7 +144,7 @@ public class ReportController {
 
 
     @PostMapping(value = "/reports/reportList/{id}/submit")
-    public String showCaseReportList(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+    public String showCaseReportList(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page, RedirectAttributes redirectAttributes){
         Optional<List<Report>> reportList = Optional.empty();
         String area = form.getMissing_area2();
         LocalDate start = form.getMissing_time_start();
@@ -228,14 +226,6 @@ public class ReportController {
 //        return "redirect:/reports/detail/{id}";
 //    }
 
-
-    // 페이징 테스트
-    @RequestMapping("/list")
-    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-        Page<Report> paging = this.reportService.getPageList(page);
-        model.addAttribute("paging", paging);
-        return "reports/paging_report_list";
-    }
 
 
 }

@@ -78,9 +78,8 @@
                 </div>
                 <div class="modal-body">
                     <!--   모달창 내용 넣기  -->
-                    <form th:action="@{/reports/detail/{id}/warn/submit (id=${case.getCaseId()})}" method="post">
+                    <form th:action="@{/reports/detail/{id}/warn/submit (id=${report.getId()})}" method="post">
                         <div class="form-group">
-                            <label for="warnReason">신고 이유</label>
                             <div>
                                 <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
                                 <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
