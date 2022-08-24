@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -170,6 +173,12 @@ public class CaseService {
     public List<Case> getCaseList() {
         return caseRepository.findAll();
     }
+
+    public Page<Case> getCasePList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return this.caseRepository.findAll(pageable);
+    }
+
 
     /**
      *  특정 사용자가 등록한 사건들 조회 (사용자 id 기반)

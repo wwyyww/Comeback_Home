@@ -24,6 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -158,16 +163,29 @@ public class CaseController {
 
     // 모든 사건 조회
     @GetMapping(value = "/cases")
-    public String caseList(Model model) {
-        List<Case> caseEntityList = caseService.getCaseList();
+    public String caseList(Model model, @RequestParam(value="page", defaultValue="0") int page){
+        Page<Case> pagingList = caseService.getCasePList(page);
+        Page<CaseListResponseDto> pagingDtoList = new CaseListResponseDto().toDtoList(pagingList);
+        model.addAttribute("cases", pagingDtoList);
 
-        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
-            caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
-        ).collect(Collectors.toList());
+        int startPage = Math.max(1, pagingDtoList.getPageable().getPageNumber() - 10);
+        int endPage = Math.min(pagingDtoList.getTotalPages(), pagingDtoList.getPageable().getPageNumber() + 10);
 
-        model.addAttribute("cases", caseDtoList);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("cases", pagingDtoList);
         return "cases/caseList";
     }
+
+//        List<Case> caseEntityList = caseService.getCaseList();
+//
+//        List<CaseListResponseDto> caseDtoList = caseEntityList.stream().map(
+//            caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
+//        ).collect(Collectors.toList());
+//
+//        model.addAttribute("cases", caseDtoList);
+//        return "cases/caseList";
+//    }
 
     // 로그인 한 사용자의 사건 리스트로 조회
     @GetMapping(value = "/mypage/cases")
@@ -296,7 +314,7 @@ public class CaseController {
 
     @Transactional(readOnly = true)
     @GetMapping(value = "/cases/searchCase")
-    public String searchCaseForm(SearchFormDto form, Model model, HttpServletRequest request) {
+    public String searchCaseForm(SearchFormDto form, Model model, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page, HttpServletRequest request) {
         System.out.println("redirect:  " + RequestContextUtils.getInputFlashMap(request));
         Optional<List<Case>> caseList = Optional.empty();
         if (RequestContextUtils.getInputFlashMap(request) != null){
@@ -325,7 +343,14 @@ public class CaseController {
                 caseEntity -> new CaseListResponseDto(caseEntity, caseEntity.getUser())
             ).collect(Collectors.toList());
 
-            model.addAttribute("cases", caseDtoList);
+            // 페이징 변환 작업
+            final int startPage = (int)pageable.getOffset();
+            final int endPage = Math.min((startPage + pageable.getPageSize()), caseDtoList.size());
+            Page<CaseListResponseDto> pagingDtoList = new PageImpl<>(caseDtoList.subList(startPage, endPage), pageable, caseDtoList.size());
+
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+            model.addAttribute("cases", pagingDtoList);
         } else {
             System.out.println("없음");
         }
@@ -334,7 +359,7 @@ public class CaseController {
 
     @Transactional(readOnly = true)
     @PostMapping(value = "/cases/search/submit")
-    public String showCaseForm(SearchFormDto form, Model model, RedirectAttributes redirectAttributes) {
+    public String showCaseForm(SearchFormDto form, Model model, RedirectAttributes redirectAttributes, @PageableDefault(size=12) Pageable pageable, @RequestParam(value="page", defaultValue="0") int page) {
         Optional<List<Case>> caseList = Optional.empty();
         Optional<List<String>> sex = form.getMissing_sex();
         Optional<List<String>> age = form.getMissing_age();
@@ -351,9 +376,6 @@ public class CaseController {
         //Optional<Case> searchList = caseService.findOnebyMissingName(form.getMissing_name());
         if(caseList.isPresent()) {
             System.out.println(caseList.get());
-            //System.out.println(caseList.get().getMissing_name());
-            model.addAttribute("searchList", caseList.get());
-            //System.out.println("redirect1: " + caseList.get());
         } else {
             System.out.println("없음");
         }
