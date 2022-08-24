@@ -96,7 +96,7 @@ h6,
 }
 
 .btn-primary:hover {
-  background: var(--primary-color)
+  background: #0b5ed7;
 }
 
 .btn-primary:not(:disabled):not(.disabled).active,
@@ -491,17 +491,17 @@ pre {
   display: block
 }
 
-.form-control {
-  height: 50px;
-  border-radius: 25px;
-  border: 0;
-  padding: 0 20px
-}
+/*.form-control {*/
+/*  height: 50px;*/
+/*  border-radius: 25px;*/
+/*  border: 0;*/
+/*  padding: 0 20px*/
+/*}*/
 
-.form-control:focus {
-  border: 0;
-  box-shadow: none !important
-}
+/*.form-control:focus {*/
+/*  border: 0;*/
+/*  box-shadow: none !important*/
+/*}*/
 
 textarea.form-control {
   height: 150px;

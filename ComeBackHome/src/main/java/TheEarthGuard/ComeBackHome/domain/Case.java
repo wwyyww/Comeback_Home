@@ -2,6 +2,7 @@ package TheEarthGuard.ComeBackHome.domain;
 
 import TheEarthGuard.ComeBackHome.dto.CaseSaveRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -27,6 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="cases")
+@SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Case extends BaseTimeEntity{
     @Id
@@ -68,6 +70,7 @@ public class Case extends BaseTimeEntity{
     private List<FileEntity> missingPics;
 
     @Builder
+    @SuppressFBWarnings(justification = "Generated code")
     public Case(Long caseId, User user, Boolean isFind, Integer hitCnt, Integer missingFeature,
         String missingName, Integer missingAge, Boolean missingSex, String missingDesc,
         String missingArea, String missingRegion, Double missingLat, Double missingLng,

@@ -10,17 +10,15 @@ import TheEarthGuard.ComeBackHome.dto.Message;
 import TheEarthGuard.ComeBackHome.dto.SearchFormDto;
 import TheEarthGuard.ComeBackHome.security.CurrentUser;
 import TheEarthGuard.ComeBackHome.service.CaseService;
-import TheEarthGuard.ComeBackHome.service.FileService;
 import TheEarthGuard.ComeBackHome.service.ReportService;
 import TheEarthGuard.ComeBackHome.service.UserService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,9 +28,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -42,15 +44,14 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 @SessionAttributes({"caseDto", "RedirectURL"})
 public class CaseController {
     private final CaseService caseService;
-    private UserService userService;
-    private FileService fileService;
+    private final UserService userService;
     private final ReportService reportService;
 
+    @SuppressFBWarnings(justification = "Generated code")
     @Autowired
-    public CaseController(CaseService caseService, UserService userService, FileService fileService, ReportService reportService) {
+    public CaseController(CaseService caseService, UserService userService, ReportService reportService) {
         this.caseService = caseService;
         this.userService = userService;
-        this.fileService = fileService;
         this.reportService = reportService;
     }
 
@@ -130,10 +131,8 @@ public class CaseController {
             mav.addObject("caseDto", caseDto);
 
             Map<String, String> validatorResult = caseService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
-//                model.addAttribute(key, validatorResult.get(key));
-                System.out.println("error 존재함");
-                mav.addObject(key,validatorResult.get(key));
+            for (Map.Entry<String,String> entry : validatorResult.entrySet()){
+                mav.addObject(entry.getKey(), entry.getValue());
             }
 
 //            return "cases/createCaseForm";ㅅㄷ
@@ -206,22 +205,23 @@ public class CaseController {
         }
         model.addAttribute("user", user);
 
-        if (user != null && (user.getId() == caseEntity.get().getUser().getId())) {
-            List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
-            model.addAttribute("reports", reports);
-        }
+        if (caseEntity.isPresent()) {
+            if (user != null && (user.getId().equals(caseEntity.get().getUser().getId()))) {
+                List<Report> reports = reportService.getReportsListByCase(caseEntity.get());
+                model.addAttribute("reports", reports);
+            }
 
         if (user != null) {
-
             List<Report> reportList = reportService.getReportsListByCase(caseEntity.get());
             List<Report> reports = new ArrayList<>();
             for (Report report : reportList) {
-                if (report.getUser().getId() == user.getId()) {
+                if (report.getUser().getId().equals(user.getId())) {
                     reports.add(report);
                 }
             }
             log.info("reports : " + reports);
             model.addAttribute("reports", reports);
+        }
         }
         return "/cases/caseDetail";
     }
@@ -229,13 +229,16 @@ public class CaseController {
     @GetMapping(value = "/cases/detailReport/{id}")
     public String caseDetailMap(@PathVariable("id") Long id, Model model) {
         Optional<Case> caseEntity = caseService.findCase(id);
-        model.addAttribute("caseEntity", caseEntity.get());
+        caseEntity.ifPresent(aCase -> model.addAttribute("caseEntity", aCase));
         return "/allmaps/casesMap/reportsMap";
     }
 
 
     @PostMapping(value = "/cases/detail/{id}/submit")
     public String showCaseDetail(@ModelAttribute SearchFormDto form, Model model, @PathVariable("id") Long id, @CurrentUser User user, RedirectAttributes redirectAttributes) {
+       if(user == null){
+           return "/";
+       }
         Optional<List<Report>> reportList = Optional.empty();
         String area = form.getMissing_area2();
         LocalDate start = form.getMissing_time_start();
@@ -265,7 +268,7 @@ public class CaseController {
     public String createEditCase(Model model, @PathVariable("id") Long caseId, @CurrentUser User user) {
         Optional<Case> caseDto = caseService.findCase(caseId);
 
-        if(caseDto.isPresent() && user.getId() == caseDto.get().getUser().getId()){
+        if(caseDto.isPresent() && user.getId().equals(caseDto.get().getUser().getId())){
             CaseResponseDto caseResponseDto =  new CaseResponseDto(caseDto.get(), caseDto.get().getUser());
             model.addAttribute("caseDto", caseResponseDto);
 
@@ -293,7 +296,7 @@ public class CaseController {
     public String findCase(@PathVariable("id") Long caseId, @CurrentUser User user) {
         Optional<Case> caseEntity = caseService.findCase(caseId);
 
-        if(caseEntity.isPresent() && user.getId() == caseEntity.get().getUser().getId()){
+        if(caseEntity.isPresent() && user.getId().equals(caseEntity.get().getUser().getId())){
             caseService.foundCase(caseId,true);
         }
 
@@ -374,6 +377,4 @@ public class CaseController {
     public String searchPlace() {
         return "/cases/searchPlace";
     }
-
-
 }

@@ -3,144 +3,190 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="utf-8">
+    <title>ComeBackHome</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <style>
+        .flex-container {
+            display: flex;
+        }
+    </style>
+
+</head>
 
 <div layout:fragment="content" class="container">
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:10px;">실종자 목록</h2>
+    <p style="text-align:center; padding-bottom: 50px;" class="text-decoration-underline">실종자를 검색하고 찾을 수 있습니다</p>
+    <hr>
     <form action="/cases/search/submit" method="post">
-        <div class="form-group">
-                <!--<label for="missing_name">실종자 이름</label>-->
-                <input type="text" id="missing_name" name="missing_name" placeholder="검색 내용을 입력하세요">
-                <select name = "search_type" id = "search_type">
-                    <option selected value="">검색 내용 선택</option>
-                    <option value="name">이름</option>
-                    <option value="area">주소</option>
-                </select>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div class="input-group mb-3">
+            <!--<label for="missing_name">실종자 이름</label>-->
+            <span class="input-group-text" id="inputGroup-sizing-default">검색</span>
+            <input type="text" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-default" id="missing_name" name="missing_name"
+                   placeholder="검색 내용을 입력하세요">
+            <select name="search_type" id="search_type">
+                <option selected value="">필터링</option>
+                <option value="name">이름</option>
+                <option value="area">주소</option>
+            </select>
         </div>
         <div>
-            <table>
+            <table class="table table-bordered">
                 <tbody>
                 <tr>
-                    <td>성별</td>
+                    <th style="text-align: center;">성별</th>
                     <td>
-                        <span>
-                            <label>
-                                여성 <input type="checkbox" name="missing_sex" id="woman" value="0">
-                            </label>
-                        </span>
-                        <span>
-                            <label>
-                                남성 <input type="checkbox" name="missing_sex" id="man" value="1">
-                            </label>
-                        </span>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_sex" id="woman" value="0">
+                            <label class="form-check-label" for="woman">여성</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="missing_sex" id="man" value="1">
+                            <label class="form-check-label" for="man">남성</label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>연령대</td>
+                    <th style="text-align: center;">연령대</th>
                     <td>
-                        <input type="radio" name="missing_age" id="age00" value="0">10세 이하
-                        <span><input type="radio" name="missing_age" id="age01" value="10">10대</span>
-                        <span><input type="radio" name="missing_age" id="age02" value="20">20대</span>
-                        <span><input type="radio" name="missing_age" id="age03" value="30">30대</span>
-                        <span><input type="radio" name="missing_age" id="age04" value="40">40대</span>
-                        <span><input type="radio" name="missing_age" id="age05" value="50">50대</span>
-                        <span><input type="radio" name="missing_age" id="age06" value="60">60대</span>
-                        <span><input type="radio" name="missing_age" id="age07" value="70">70대</span>
-                        <span><input type="radio" name="missing_age" id="age08" value="80">80세 이상</span>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age00" value="0">
+                            <label class="form-check-label" for="age00">10세 이하</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age01" value="10">
+                            <label class="form-check-label" for="age01">10대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age02" value="10">
+                            <label class="form-check-label" for="age02">20대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age03" value="10">
+                            <label class="form-check-label" for="age03">30대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age04" value="10">
+                            <label class="form-check-label" for="age04">40대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age05" value="10">
+                            <label class="form-check-label" for="age05">50대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age06" value="10">
+                            <label class="form-check-label" for="age06">60대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age07" value="10">
+                            <label class="form-check-label" for="age07">70대</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_age" id="age08" value="10">
+                            <label class="form-check-label" for="age08">80세 이상</label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>실종 지역</td>
+                    <th style="text-align: center;">실종 지역</th>
                     <td>
-                        <span><input type="checkbox" name="missing_area" id="area00" value="서울"> 서울</span>
-                        <span><input type="checkbox" name="missing_area" id="area01" value="경기"> 경기도</span>
-                        <span><input type="checkbox" name="missing_area" id="area02" value="강원"> 강원도</span>
-                        <span><input type="checkbox" name="missing_area" id="area03" value="전남"> 전라남도</span>
-                        <span><input type="checkbox" name="missing_area" id="area04" value="전북"> 전라북도</span>
-                        <span><input type="checkbox" name="missing_area" id="area05" value="경북"> 경상북도</span>
-                        <span><input type="checkbox" name="missing_area" id="area06" value="경남"> 경상남도</span>
-                        <span><input type="checkbox" name="missing_area" id="area07" value="충남"> 충청남도</span>
-                        <span><input type="checkbox" name="missing_area" id="area08" value="충북"> 충청북도</span>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area00" value="서울">
+                            <label class="form-check-label" for="area00">서울</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area01" value="경기">
+                            <label class="form-check-label" for="area01">경기도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area02" value="강원">
+                            <label class="form-check-label" for="area02">강원도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area03" value="전남">
+                            <label class="form-check-label" for="area03">전라남도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area04" value="전북">
+                            <label class="form-check-label" for="area04">전라북도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area05" value="경북">
+                            <label class="form-check-label" for="area05">경상북도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area06" value="경남">
+                            <label class="form-check-label" for="area06">경상남도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area07" value="충남">
+                            <label class="form-check-label" for="area07">충청남도</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area08" value="충북">
+                            <label class="form-check-label" for="area08">충청북도</label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>특징</td>
+                    <th style="text-align: center;">특징</th>
                     <td>
-                        <input type="radio" name="missing_feature" id="feature00" value="1">비장애아동
-                        <span><input type="radio" name="missing_feature" id="feature01" value="2">장애인</span>
-                        <span><input type="radio" name="missing_feature" id="feature02" value="3">치매환자</span>
-                        <span><input type="radio" name="missing_feature" id="feature03" value="4">기타(18세 이상)</span>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_feature" id="feature00"
+                                   value="1">
+                            <label class="form-check-label" for="feature00">비장애아동</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_feature" id="feature01"
+                                   value="2">
+                            <label class="form-check-label" for="feature01">장애인</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_feature" id="feature02"
+                                   value="3">
+                            <label class="form-check-label" for="feature02">치매환자</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="missing_feature" id="feature03"
+                                   value="4">
+                            <label class="form-check-label" for="feature03">기타(18세 이상)</label>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <button type="submit">사건 조회</button> <button type="reset">조건 초기화</button>
+        <div class="container" style="text-align:center;">
+            <button class="btn btn-dark" type="submit">사건 조회</button>
+            <button class="btn btn-dark" type="reset">조건 초기화</button>
+        </div>
+
     </form>
+    <hr>
 
-    <div>
-        <table class="table table-bordered">
-            <!-- CONTENTS !-->
-            <thead>
-            <tr>
-                <th class="col-md-1">번호</th>
-                <th class="col-md-2">실종 여부</th>
-                <th class="col-md-2">사진</th>
-                <th class="col-md-4">실종자 이름</th>
-                <th class="col-md-3">실종자 정보 (나이/성별)</th>
-                <th class="col-md-3">지역</th>
-                <th class="col-md-2">작성자</th>
-                <th class="col-md-2">작성일</th>
-                <th class="col-md-2">조회수</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <!-- CONTENTS !-->
-            <tr th:each="case : ${cases}">
-                <td th:text="${case.getCaseId()}"></td>
-                <td>
-                    <span th:if="${case.getIsFind() == false}">실종</span>
-                    <span th:if="${case.getIsFind() == true}">찾음</span>
-                </td>
-                <td>
-                    <img th:each="imageFile  : ${case.getMissingPicThumb()}"
-                         th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}" width="100" height="100" style="margin-right: 5px"/>
-                </td>
-                <td><a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" th:text="${case.getMissingName()}"></a></td>
-                <td>
-                    <p>
-                        <span th:text="${case.getMissingAge()} + '살 '"/>
-                        <span th:if="${case.getMissingSex() == false}">(여자)</span>
-                        <span th:if="${case.getMissingSex() == true}">(남자)</span>
-                    </p>
-                </td>
-                <td th:text="${case.getMissingRegion()}"></td>
-                <td th:text="${case.getUserName()}"></td>
-                <td th:text="${case.getCreatedTime()}"></td>
-                <td th:text="${case.getHitCnt()}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="flex-container">
+        <div class="card" style="width: 18rem;" th:each="case : ${cases}" >
+            <img class="card-img-top" th:each="imageFile  : ${case.getMissingPicThumb()}"
+                 th:src="@{/images/{filename} (filename='s_' + ${imageFile.getSavedFileName()})}"
+                 width="100" height="100">
+            <div class="card-body">
+                <h5 th:text="${case.getMissingName()}"></h5>
+                <p class="card-text">
+                    <span th:text="${case.getMissingAge()} + '세 '"/>
+                    <span th:if="${case.getMissingSex() == false}">(여자)</span>
+                    <span th:if="${case.getMissingSex() == true}">(남자)</span>
+                </p>
+                <p class="card-text" th:text="'실종 지역: ' + ${case.getMissingRegion()}"/>
+                <p class="card-text" th:text="'조회수: ' + ${case.getHitCnt()}"/>
+                <a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" class="btn btn-primary">상세보기</a>
+            </div>
+        </div>
     </div>
-
-</div> <!-- /container -->
-<!--<div class="container">-->
-<!--    <div>-->
-<!--        <table>-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>#</th>-->
-<!--                <th>사건 조회</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="search : ${searchList}">-->
-<!--                <td th:text="${search.missing_name}"></td>-->
-<!--                <td th:text="${search.missing_age}"></td>-->
-<!--                <td th:text="${search.missing_sex}"></td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
+</div>
 
 </html>
