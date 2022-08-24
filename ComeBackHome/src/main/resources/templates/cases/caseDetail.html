@@ -56,9 +56,11 @@
     <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">실종자 정보</h2>
     <div class="flex-container" th:if="${user != null}">
         <div class="flex-item-right" th:if="${case.getUserId() == user.getId()}">
-            <a class="btn btn-link" style="padding: 10px;" th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글 수정</a>
+            <a class="btn btn-link" style="padding: 10px;" th:href="@{/cases/update/{id}(id=${case.getCaseId()})}">글
+                수정</a>
 
-            <a class="btn btn-link" style="padding:10px;" th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글 삭제</a>
+            <a class="btn btn-link" style="padding:10px;" th:href="@{/cases/delete/{id}(id=${case.getCaseId()})}">글
+                삭제</a>
         </div>
     </div>
     <section class="container-fluid" style="height: 100%;">

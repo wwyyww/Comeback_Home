@@ -65,16 +65,16 @@ h6,
 }
 
 .btn {
-  font-size: 14px;
+  /*font-size: 14px;*/
   font-family: var(--font-family), sans-serif;
-  text-transform: uppercase;
-  padding: 16px 44px;
-  border-radius: 0;
-  font-weight: 600;
-  border: 0;
-  position: relative;
-  z-index: 1;
-  transition: .2s ease
+  /*text-transform: uppercase;*/
+  /*padding: 16px 44px;*/
+  /*border-radius: 0;*/
+  /*font-weight: 600;*/
+  /*border: 0;*/
+  /*position: relative;*/
+  /*z-index: 1;*/
+  /*transition: .2s ease*/
 }
 
 .btn:focus {
@@ -86,26 +86,26 @@ h6,
   box-shadow: none
 }
 
-.btn-primary {
-  background: var(--primary-color);
-  color: var(--white-color)
-}
+/*.btn-primary {*/
+/*  background: var(--primary-color);*/
+/*  color: var(--white-color)*/
+/*}*/
 
-.btn-primary:active {
-  background: var(--primary-color)
-}
+/*.btn-primary:active {*/
+/*  background: var(--primary-color)*/
+/*}*/
 
-.btn-primary:hover {
-  background: #0b5ed7;
-}
+/*.btn-primary:hover {*/
+/*  background: #0b5ed7;*/
+/*}*/
 
-.btn-primary:not(:disabled):not(.disabled).active,
-.btn-primary:not(:disabled):not(.disabled):active,
-.show>.btn-primary.dropdown-toggle {
-  color: var(--white-color);
-  background-color: var(--primary-color);
-  border-color: var(--primary-color)
-}
+/*.btn-primary:not(:disabled):not(.disabled).active,*/
+/*.btn-primary:not(:disabled):not(.disabled):active,*/
+/*.show>.btn-primary.dropdown-toggle {*/
+/*  color: var(--white-color);*/
+/*  background-color: var(--primary-color);*/
+/*  border-color: var(--primary-color)*/
+/*}*/
 
 .inline-button {
   line-height: .8rem !important;

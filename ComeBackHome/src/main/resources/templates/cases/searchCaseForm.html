@@ -10,9 +10,27 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <style>
+        .article{
+
+        }
         .flex-container {
             display: flex;
+            padding-bottom: 20px;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
+
+        .flex-item {
+            flex: none;
+            flex: 1; /* flex: 1 1 0 */
+            overflow: auto;
+            /*flex-basis: 25%;*/
+        }
+
+        .flex-image{
+            flex: auto;
+        }
+
     </style>
 
 </head>
@@ -168,21 +186,29 @@
     </form>
     <hr>
 
-    <div class="flex-container">
-        <div class="card" style="width: 18rem;" th:each="case : ${cases}" >
-            <img class="card-img-top" th:each="imageFile  : ${case.getMissingPicThumb()}"
-                 th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}"
-                 width="100" height="100">
-            <div class="card-body">
-                <h5 th:text="${case.getMissingName()}"></h5>
-                <p class="card-text">
-                    <span th:text="${case.getMissingAge()} + '세 '"/>
-                    <span th:if="${case.getMissingSex() == false}">(여자)</span>
-                    <span th:if="${case.getMissingSex() == true}">(남자)</span>
-                </p>
-                <p class="card-text" th:text="'실종 지역: ' + ${case.getMissingRegion()}"/>
-                <p class="card-text" th:text="'조회수: ' + ${case.getHitCnt()}"/>
-                <a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" class="btn btn-primary">상세보기</a>
+    <div class="container" style="padding-top:20px; padding-bottom: 70px;">
+        <div class="flex-container">
+            <div class="card mb-lg-5" style="width: 15rem;" th:each="case : ${cases}">
+                <div class="flex-image">
+                    <img class="card-img-top" th:each="imageFile  : ${case.getMissingPicThumb()}"
+                         th:src="@{/images/{filepath}/{filename} (filepath=${imageFile.getUploadPath()}, filename='s_' + ${imageFile.getSavedFileName()})}"
+                         width="100%" height="230px">
+                </div>
+                <div class="card-body">
+                    <h5 th:text="${case.getMissingName()}"></h5>
+                    <div class="card-text">
+                        <span th:text="${case.getMissingAge()} + '세 '"/>
+                        <span th:if="${case.getMissingSex() == false}">(여자)</span>
+                        <span th:if="${case.getMissingSex() == true}">(남자)</span>
+                    </div>
+                    <p th:text="'실종 지역: ' + ${case.getMissingRegion()}"/>
+                    <p th:if="${case.getIsFind() == false}" style="color:red;">상태: 실종</p>
+                    <p th:if="${case.getIsFind() == true}" style="color:green;">상태: 찾음</p>
+                    <div style="text-align: right;">
+                        <a th:href="@{/cases/detail/{id} (id=${case.getCaseId()})}" class="btn btn-primary btn-sm">상세보기</a>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
