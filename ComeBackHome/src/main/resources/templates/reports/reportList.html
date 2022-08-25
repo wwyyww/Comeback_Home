@@ -89,8 +89,8 @@
             <tr style="text-align: center;">
                 <th class="col-md-1">번호</th>
                 <th class="col-md-6">글제목</th>
-                <th class="col-md-2">작성일</th>
                 <th class="col-md-2">목격일</th>
+                <th class="col-md-2">작성일</th>
                 <th class="col-md-1">작성자</th>
             </tr>
             </thead>
@@ -101,8 +101,8 @@
                 <td style="text-align: center;" th:text="${index.index} +1"></td>
                 <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}"
                        th:text="${report.getWitness_title()}"></a></td>
-                <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
                 <td th:text="${#temporals.format(report.witnessTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
                 <td th:text="${report.getUser().getName()}"></td>
             </tr>
             </tbody>

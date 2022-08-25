@@ -84,7 +84,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/mypage/cases">작성한 사건 목록</a>
-                            <li><a class="dropdown-item" href="/mypage/reports">작성한 증언 목록</a></li>
+                            <li><a class="dropdown-item" href="/mypage/reports">작성한 제보 목록</a></li>
                             <li><a class="dropdown-item" href="/mypage/edit">회원정보 수정</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -166,6 +166,11 @@
         var center = new naver.maps.LatLng(x, y);
         map.setCenter(center);
         map.setZoom(15);
+    }
+
+    function makeAnimation(index) {
+        var marker = markers[index];
+        marker.setAnimation(naver.maps.Animation.BOUNCE);
     }
 
 
@@ -273,7 +278,6 @@
                 }
 
                 for (var i = 0, ii = markers.length; i < ii; i++) {
-                    console.log(markers[i], getClickHandler(i));
                     naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
                 }
 
@@ -283,9 +287,9 @@
                 console.log("통신에러");
             }
         })
-
-
     }
+
+
 
     function selectPlace() {
 
@@ -355,7 +359,6 @@
                 console.log("통신에러");
             }
         })
-
 
     }
 

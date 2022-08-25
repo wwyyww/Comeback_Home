@@ -178,8 +178,9 @@ public class ReportController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("reports", pagingDtoList);
+        model.addAttribute("user", user);
 
-        return "reports/reportList";
+        return "reports/myReportList";
     }
 
     //제보 상세보기

@@ -218,12 +218,13 @@ public class CaseController {
             final int endPage = Math.min((startPage + pageable.getPageSize()), caseDtoList.size());
             Page<CaseListResponseDto> pagingDtoList = new PageImpl<>(caseDtoList.subList(startPage, endPage), pageable, caseDtoList.size());
 
+            model.addAttribute("user", user);
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             model.addAttribute("cases", pagingDtoList);
         }
 
-        return "cases/caseList";
+        return "/cases/myCaseList";
     }
 
     // 사건 상세보기
@@ -312,14 +313,15 @@ public class CaseController {
 
     // 사건 수정하기 (제출)
     @PostMapping(value = "/cases/update/{id}")
-    public String uploadEditCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
+    public String uploadEditCase(@ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!");
             return "redirect:/cases";
         }
 
-        caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
+
+        caseService.updateCase(user.getId(), caseId, caseDto);
         return "redirect:/cases/detail/{id}";
     }
 
@@ -408,9 +410,4 @@ public class CaseController {
     }
 
 
-    // (1) 장소 검색 (new Case)
-    @GetMapping(value = "/searchPlace")
-    public String searchPlace() {
-        return "/cases/searchPlace";
-    }
 }

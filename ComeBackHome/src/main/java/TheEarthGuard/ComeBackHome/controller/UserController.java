@@ -117,7 +117,7 @@ public class UserController {
         model.addAttribute("userDto", userDto);
 
         if (errors.hasErrors()) {
-            return "/users/mypage";
+            return "/";
         }
 
 
@@ -148,7 +148,7 @@ public class UserController {
 //        newAuth.setDetails(authentication.getDetails());
 //        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        return "redirect:/users/mypage";
+        return "redirect:/";
     }
 
 }
