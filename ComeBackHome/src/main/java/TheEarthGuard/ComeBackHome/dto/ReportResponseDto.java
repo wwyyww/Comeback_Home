@@ -44,6 +44,8 @@ public class ReportResponseDto {
 
     private List<FileEntity> witnessPics;
 
+    private String secureEmail;
+
     @SuppressFBWarnings(justification = "Generated code")
     public ReportResponseDto(Report report, User user) {
         this.cases = report.getCases();
@@ -58,6 +60,25 @@ public class ReportResponseDto {
         this.witnessTime = report.getWitnessTime();
         this.witnessPics = report.getWitnessPics();
         this.createdTime = report.getCreatedTime();
+        this.secureEmail = parsingEmail(user.getEmail());
 
     }
+
+    public String parsingEmail(String email) {
+
+        String [] tmp = email.split("@");
+        String parseEmail="";
+        Integer idx=tmp[0].length()/2;
+        char ch = '*';
+
+        StringBuilder sb = new StringBuilder(email);
+        for(int i=idx; i<tmp[0].length();i++){
+            sb.setCharAt(i, ch);
+        }
+        parseEmail = sb.toString();
+
+
+        return parseEmail;
+    }
+
 }

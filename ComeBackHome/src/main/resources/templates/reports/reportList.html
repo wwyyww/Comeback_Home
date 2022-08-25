@@ -103,7 +103,7 @@
                        th:text="${report.getWitness_title()}"></a></td>
                 <td th:text="${#temporals.format(report.witnessTime, 'yyyy-MM-dd')}"></td>
                 <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
-                <td th:text="${report.getUser().getName()}"></td>
+                <td th:text="${report.getSecureEmail()}"></td>
             </tr>
             </tbody>
         </table>

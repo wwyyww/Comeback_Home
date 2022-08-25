@@ -132,7 +132,6 @@ public class ReportController {
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             model.addAttribute("reports", pagingDtoList);
-
 //            model.addAttribute("reports", reportDtoList);
         } else {
             System.out.println("없음");
