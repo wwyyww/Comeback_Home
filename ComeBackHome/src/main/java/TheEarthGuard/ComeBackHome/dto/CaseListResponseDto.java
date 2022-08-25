@@ -4,6 +4,8 @@ import TheEarthGuard.ComeBackHome.domain.Case;
 import TheEarthGuard.ComeBackHome.domain.FileEntity;
 import TheEarthGuard.ComeBackHome.domain.User;
 import java.time.LocalDateTime;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -70,6 +72,7 @@ public class CaseListResponseDto {
     }
 
     @Builder
+    @SuppressFBWarnings(justification = "Generated code")
     public CaseListResponseDto(Long userId, String userEmail, String userName, Long caseId,
         Boolean isFind, Integer hitCnt, String missingName, Integer missingAge,
         Boolean missingSex, Integer missingFeature, String missingDesc, String missingArea,

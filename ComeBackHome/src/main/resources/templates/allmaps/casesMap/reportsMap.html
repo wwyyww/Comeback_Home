@@ -84,7 +84,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/mypage/cases">작성한 사건 목록</a>
-                            <li><a class="dropdown-item" href="/mypage/reports">작성한 증언 목록</a></li>
+                            <li><a class="dropdown-item" href="/mypage/reports">작성한 제보 목록</a></li>
                             <li><a class="dropdown-item" href="/mypage/edit">회원정보 수정</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -102,25 +102,27 @@
 
 <section class="container-fluid" style="padding: 0; height:97%;">
     <div id="map" style="width:75%;height:100%;padding:0;margin:0; float: left"></div>
-    <div id="right-list" style="background-color: #9fcdff; height: 100%; width: 25%; float: right">
+    <div id="right-list" style="height: 100%; width: 25%; float: right">
         <div style="width: 100%; height: 100%">
-            <div style="height: 20%">
-                <input type="button" style="width: 90%; margin-top: 10px; margin-bottom: 5px; margin-left: 15px"
-                       class="btn btn-primary"
-                       value="제보 모두보기"
-                       th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
-                <br>
-                <div style="display: flex; flex-direction: row;  margin-right: 10px">
+            <div style="height: 17.5%; width: 100%">
+                <div style="width: 100%; display: flex">
+                    <input type="button" style="margin-top: 10px; margin-bottom: 5px; margin-left: 15px; margin-right: 15px; flex: 1"
+                           class="btn btn-primary"
+                           value="제보 모두보기"
+                           th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
+                </div>
+
+                <div style="display: flex; flex-direction: row; width: 100%">
                     <input type="button" class="btn btn-primary timebtn"
-                           style="flex: 1;  overflow: auto; margin-top: 5px; margin-left: 15px; margin-bottom: 5px"
+                           style="flex: 1;  overflow: auto; margin-top: 5px; margin-left: 15px;"
                            value="시간별 보기" th:onclick="selectTime()">
                     <input type="button" class="btn btn-primary placebtn"
-                           style="flex: 1; overflow: auto; margin-top: 5px; margin-left: 15px; margin-bottom: 5px"
+                           style="flex: 1; overflow: auto; margin-top: 5px; margin-left: 15px; margin-right: 15px;"
                            value="장소별 보기" th:onclick="selectPlace()">
                 </div>
             </div>
 
-            <div style="height: 80%">
+            <div style="height: 82.5%">
                 <div style="position: relative; height: 100%; width: 100%;">
                     <div id="area_wrap">
                         <ul style="list-style:none; margin-right: auto; width: 100%;" class="reportUl list-group">
@@ -136,28 +138,6 @@
 </section>
 
 <script>
-    $(document).ready(function () {
-        $("#timebtn").click(function () {
-            console.log("timebtn click");
-            if ($(this).hasClass("btn-primary")) {
-                $(this).removeClass('btn-primary')
-                $(this).addClass('btn-outline-primary')
-                $("#placebtn").removeClass('btn-outline-primary')
-                $("#placebtn").addClass('btn-primary')
-            }
-
-        })
-
-        $("#placebtn").click(function () {
-            if ($(this).hasClass("btn-primary")) {
-                $(this).removeClass('btn-primary')
-                $(this).addClass('btn-outline-primary')
-                $("#timebtn").removeClass('btn-outline-primary')
-                $("#timebtn").addClass('btn-primary')
-            }
-        })
-
-    })
 
 
     var map = new naver.maps.Map("map", {
@@ -186,6 +166,11 @@
         var center = new naver.maps.LatLng(x, y);
         map.setCenter(center);
         map.setZoom(15);
+    }
+
+    function makeAnimation(index) {
+        var marker = markers[index];
+        marker.setAnimation(naver.maps.Animation.BOUNCE);
     }
 
 
@@ -293,7 +278,6 @@
                 }
 
                 for (var i = 0, ii = markers.length; i < ii; i++) {
-                    console.log(markers[i], getClickHandler(i));
                     naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
                 }
 
@@ -303,9 +287,9 @@
                 console.log("통신에러");
             }
         })
-
-
     }
+
+
 
     function selectPlace() {
 
@@ -357,9 +341,11 @@
                             fillOpacity: 0.5
                         });
 
-                        str = "<li class='list-group-item' onclick='moveMapCenter(" + value[1] + "," + value[2] + ")'><span>";
-                        str += key + '</span>';
+                        str = "<li class='list-group-item' onclick='moveMapCenter(" + value[1] + "," + value[2] + ")'>";
+                        str+='<span style="color: '+color+'"+>●  </span>'
+                        str += "<span style='margin-left: 30px'>"+key + '</span>';
                         str += '<span style="margin-left: 10px">' + value[0] + '개</span></li>';
+                        // str += '<span style="margin-left: 10px; color: '+color+'">' + value[0] + '개</span></li>';
                         $('.reportUl').append(str);
 
 
@@ -373,7 +359,6 @@
                 console.log("통신에러");
             }
         })
-
 
     }
 

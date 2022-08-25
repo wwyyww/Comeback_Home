@@ -313,14 +313,15 @@ public class CaseController {
 
     // 사건 수정하기 (제출)
     @PostMapping(value = "/cases/update/{id}")
-    public String uploadEditCase(@Valid @ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
+    public String uploadEditCase(@ModelAttribute CaseSaveRequestDto caseDto, @PathVariable("id") Long caseId,
         @CurrentUser User user, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             log.info("error!!");
             return "redirect:/cases";
         }
 
-        caseService.updateCase(user.getId(), caseId, caseDto, caseDto.getMissingPics());
+
+        caseService.updateCase(user.getId(), caseId, caseDto);
         return "redirect:/cases/detail/{id}";
     }
 

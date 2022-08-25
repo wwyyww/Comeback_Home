@@ -48,7 +48,7 @@ public class CaseSaveRequestDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime missingTimeEnd;
 
-    @NotNull(message = "실종자 사진 등록은 필수입니다.")
+
     private List<MultipartFile> missingPics;
 
     public Case toEntity(){

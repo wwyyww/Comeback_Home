@@ -58,7 +58,7 @@ public class CaseService {
         System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLng());
         System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingArea());
         List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
-        if (missing_pictures == null) {
+        if (missing_pictures.isEmpty()) {
             System.out.println("[CaseService - UploadCase] 유해이미지로 판단됨!");
             return null;
         }
@@ -89,7 +89,7 @@ public class CaseService {
      * 사건  수정하기
      */
     @Transactional
-    public Long updateCase(Long user_id,  Long case_id, CaseSaveRequestDto caseDto, List<MultipartFile> files) throws Exception{
+    public Long updateCase(Long user_id,  Long case_id, CaseSaveRequestDto caseDto) throws Exception{
         Optional<User> user = userRepository.findById(user_id);
         Optional<Case> caseEntity = Optional
             .ofNullable(caseRepository.findById(case_id).orElseThrow(() ->
