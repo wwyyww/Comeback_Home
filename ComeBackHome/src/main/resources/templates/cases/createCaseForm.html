@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>실종자 등록</title>
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <script type="text/javascript"
@@ -346,23 +347,13 @@
                 <!--            <div id="clickLatlng"></div>-->
                 <input type="hidden" id="missingLat" name="missingLat">
                 <input type="hidden" id="missingLng" name="missingLng">
-                <input type="text" class="form-control col-md-6" id="missingArea" name="missingArea"
-                       placeholder="지도에서 장소를 선택해주세요">
-                <!--            <button type="submit">등록</button>-->
+                <input type="text" class="form-control col-md-6" id="missingArea" name="missingArea" placeholder="지도에서 장소를 선택해주세요" readonly>
+
             </div>
 
             <div>
-                <!--        &lt;!&ndash;장소 검색&ndash;&gt;-->
-                <!--        <div class="search" style="">-->
-                <!--          <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />-->
-                <!--          <input id="submit" type="button" value="주소 검색" />-->
-                <!--        </div>-->
                 <div class="box">
                     <div class="area_left">
-                        <!--                <ul class="map-tab" id="mapTabArea">-->
-                        <!--                    <li class="map-tab__list current" data-tab="searchKeywordTab">키워드 검색</li>-->
-                        <!--                    <li class="map-tab__list" data-tab="searchAreaTab">지역 검색</li>-->
-                        <!--                </ul>-->
                         <div class="search-top">
                             <div class="search-box">
                                 <input id="address" type="text" class="search-box__inp" name="searchWord" value=""
@@ -389,8 +380,6 @@
                     </div>
                 </div>
 
-
-                <!--        </form>-->
                 <script>
                     var map = new naver.maps.Map("map", {
                         center: new naver.maps.LatLng(37.3595316, 127.1052133),
@@ -698,8 +687,6 @@
 
                     naver.maps.onJSContentLoaded = initGeocoder;
                 </script>
-
-
             </div>
 
             <div>
@@ -729,12 +716,12 @@
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="missingSex" id="man" value=true
                                        th:checked="${caseDto.missingSex eq true}">
-                                <label class="form-check-label" for="man">남자</label>
+                                <label class="form-check-label" for="man">남성</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="missingSex" id="woman" value=false
                                        th:checked="${caseDto.missingSex eq false}">
-                                <label class="form-check-label" for="woman">여자</label>
+                                <label class="form-check-label" for="woman">여성</label>
                             </div>
                             <span th:text="${valid_missingSex}"></span>
                         </td>

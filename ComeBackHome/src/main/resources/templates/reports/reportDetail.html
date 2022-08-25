@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>게시물 상세 페이지</title>
+    <title>제보 내용</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
     <style>
         .layout {
             width: 500px;
@@ -26,47 +27,92 @@
             margin-top: 10px;
             min-height: 300px;
         }
+
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .flex-item {
+            flex: none;
+            flex: 1; /* flex: 1 1 0 */
+            overflow: auto;
+        }
+
+        .flex-item-right {
+            margin-left: auto;
+        }
+
+        .flex-item-center {
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
 <div layout:fragment="content" class="container">
-<table class ="table table-bordered">
-    <thead>
-    <caption>제보 상세보기</caption>
-    </thead>
-    <tbody>
-    <tr>
-        <th>제목</th>
-        <td th:text="${report.getWitness_title()}"></td>
-    </tr>
-    <tbody>
-    <tr>
-        <th>작성자</th>
-        <td th:text="${report.getUser().getName()}"></td>
-    </tr>
-    <tr>
-        <th>목격 지역</th>
-        <td th:text="${report.getWitness_area()}"></td>
-    </tr>
-    <tr>
-        <th>본문 내용</th>
-        <td th:text="${report.getWitness_desc()}"></td>
-    </tr>
+    <h2 style="text-align: center; margin-top:70px; margin-bottom:70px;">제보 내용</h2>
 
-    <tr>
-        <th>제보 사진</th>
-        <img th:each="imageFile  : ${report.getWitnessPics()}"
-             th:src="@{/images/{filename} (filename=${imageFile.getSavedFileName()})}" width="300" height="300" style="margin-right: 5px"/>
-    </tr>
-    </tbody>
-</table>
+    <div class="flex-container" th:if="${report.getUser().getId() == user.getId()}">
+        <div class="flex-item-right">
+            <a class="btn btn-link" style="padding: 10px;" th:href="@{/reports/update/{id}(id=${report.getId()})}">글
+                수정</a>
+            <a class="btn btn-link" style="padding:10px;" th:href="@{/reports/delete/{id}(id=${report.getId()})}">글
+                삭제</a>
+        </div>
+    </div>
 
-<!--<form th:action="@{/reports/warn/{id}(id=${report.getId()})}" method="post">-->
-<!--    <button type="submit">사용자 신고하기</button>-->
-<!--</form>-->
-<!--<a th:href="@{/reports/detail/{id}/warn (id=${report.getId()})}">사용자 신고하기</a>-->
-    <a data-toggle="modal" href="#warnModal">사건 신고하기</a>
+    <section class="container-fluid" style="height: 100%;">
+        <div class="row" style="height: 100%">
+            <div style="width:40%">
+                <div>
+                    <div class="position-relative" style="text-align: center;">
+            <span th:each="imageFile  : ${report.getWitnessPics()}">
+            <img th:src="@{/images/{filename} ( filename=${imageFile.getSavedFileName()})}"
+                 width="300" height="300" style="margin-right: 5px"/><br>
+            <a th:href="@{/download/{filename} (filename=${imageFile.getSavedFileName()})}">
+              <div class="btn btn-link" th:text="[다운로드]"></div>
+            </a>
+            </span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width: 60%">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th style="text-align: center;">제보 제목</th>
+                        <td th:text="${report.getWitness_title()}"></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;">작성자</th>
+                        <td th:text="${report.getUser().getName()}"></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;">목격 지역</th>
+                        <td th:text="${report.getWitness_area()}"></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;">목격 시간</th>
+                        <td th:text="${report.getWitnessTime()}"></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;">제보 내용</th>
+                        <td th:text="${report.getWitness_desc()}"></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <div class="container">
+        <div style="text-align: center; padding-top:20px; padding-bottom: 70px;" th:if="${report.getUser().getId() != user.getId()}">
+            <a class="btn btn-danger" data-toggle="modal" href="#warnModal">신고하기</a>
+        </div>
+    </div>
 
 
     <div class="modal fade" id="warnModal" role="dialog">
@@ -81,29 +127,52 @@
                     <form th:action="@{/reports/detail/{id}/warn/submit (id=${report.getId()})}" method="post">
                         <div class="form-group">
                             <div>
-                                <p><label><input type="radio" name="warnReason" value="1" id="1">허위신고</label></p>
-                                <p><label><input type="radio" name="warnReason" value="2" id="2">욕설/비하</label></p>
-                                <p><label><input type="radio" name="warnReason" value="3" id="3">낚시/놀람/도배</label></p>
-                                <p><label><input type="radio" name="warnReason" value="4" id="4">유출/사칭/사기</label></p>
-                                <p><label><input type="radio" name="warnReason" value="5" id="5">상업적 광고 및 판매</label></p>
-                                <p><label><input type="radio" name="warnReason" value="6" id="6">희롱 또는 괴롭힘</label></p>
-                                <p><label><input type="radio" name="warnReason" value="7" id="7">음란물/불건전한 만남 및 대화</label></p>
-                                <p><label><input type="radio" name="warnReason" value="8" id="8">정당/정치인 비하 및 선거운동</label></p>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="1" id="1">
+                                    <label class="form-check-label" for="1">허위신고</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="2" id="2">
+                                    <label class="form-check-label" for="2">욕설/비하</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="3" id="3">
+                                    <label class="form-check-label" for="3">낚시/놀람/도배</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="4" id="4">
+                                    <label class="form-check-label" for="4">유출/사칭/사기</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="5" id="5">
+                                    <label class="form-check-label" for="5">상업적 광고 및 판매</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="6" id="6">
+                                    <label class="form-check-label" for="6">희롱 또는 괴롭힘</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="7" id="7">
+                                    <label class="form-check-label" for="7">음란물/불건전한 만남 및
+                                        대화</label>
+                                </p><br>
+                                <p class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="warnReason" value="8" id="8">
+                                    <label class="form-check-label" for="8">정당/정치인 비하 및
+                                        선거운동</label>
+                                </p><br>
                             </div>
                         </div>
-                        <button type="submit">등록</button>
+                        <div style="text-align: center; padding-top:20px; padding-bottom: 30px;">
+                            <button class="btn btn-danger btn-block" type="submit">신고하기</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-    <div th:if="${report.getUser().getId() == user.getId()}">
-    <a th:href="@{/reports/delete/{id}(id=${report.getId()})}">글 삭제</a>
-    <a th:href="@{/reports/update/{id}(id=${report.getId()})}">글 수정</a>
+    </section>
 </div>
-</div>
+
 </body>
 </html>
