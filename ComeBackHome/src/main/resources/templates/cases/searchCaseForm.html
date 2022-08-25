@@ -10,9 +10,6 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <style>
-        .article{
-
-        }
         .flex-container {
             display: flex;
             padding-bottom: 20px;
@@ -199,8 +196,8 @@
                     <h5 th:text="${case.getMissingName()}"></h5>
                     <div class="card-text">
                         <span th:text="${case.getMissingAge()} + '세 '"/>
-                        <span th:if="${case.getMissingSex() == false}">(여자)</span>
-                        <span th:if="${case.getMissingSex() == true}">(남자)</span>
+                        <span th:if="${case.getMissingSex() == false}">(여성)</span>
+                        <span th:if="${case.getMissingSex() == true}">(남성)</span>
                     </div>
                     <p th:text="'실종 지역: ' + ${case.getMissingRegion()}"/>
                     <p th:if="${case.getIsFind() == false}" style="color:red;">상태: 실종</p>
@@ -214,7 +211,7 @@
         </div>
     </div>
     <!-- 페이징처리 시작 -->
-    <div th:if="${!cases.isEmpty()}">
+    <div th:if="${!cases.isEmpty()}" style="margin-bottom:70px;">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${!cases.hasPrevious} ? 'disabled'">
                 <a class="page-link"
@@ -222,10 +219,10 @@
                     <span>이전</span>
                 </a>
             </li>
-            <li th:each="page: ${#numbers.sequence(0, cases.totalPages-1)}"
+            <li th:each="page: ${#numbers.sequence(1, cases.totalPages)}"
                 th:classappend="${page == cases.number} ? 'active'"
                 class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page - 1}|}"></a>
             </li>
             <li class="page-item" th:classappend="${!cases.hasNext} ? 'disabled'">
                 <a class="page-link" th:href="@{|?page=${cases.number+1}|}">

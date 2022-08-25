@@ -161,9 +161,23 @@ public class ReportController {
         return "redirect:/reports/reportList/{id}";
     }
     @GetMapping(value = "/mypage/reports")
-    public String myReportList(Model model, @CurrentUser User user) {
+    public String myReportList(Model model, @CurrentUser User user, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page) {
         List<Report> reports = reportService.getReportsListByUser(user);
-        model.addAttribute("reports", reports);
+//        model.addAttribute("reports", reports);
+
+        List<ReportResponseDto> reportDtoList = reports.stream().map(
+                ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
+        ).collect(Collectors.toList());
+
+        // 페이징 변환 작업
+        final int startPage = (int)pageable.getOffset();
+        final int endPage = Math.min((startPage + pageable.getPageSize()), reportDtoList.size());
+        Page<ReportResponseDto> pagingDtoList = new PageImpl<>(reportDtoList.subList(startPage, endPage), pageable, reportDtoList.size());
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("reports", pagingDtoList);
+
         return "reports/reportList";
     }
 
@@ -172,12 +186,12 @@ public class ReportController {
     public String reportDetail(Model model, @PathVariable("id") Long id, @CurrentUser User user) {
         Report reportDto = reportService.getReportDetail(id);
 
-        ReportResponseDto responseDto = new ReportResponseDto(reportDto, user);
+        ReportResponseDto responseDto = new ReportResponseDto(reportDto, reportDto.getUser());
         model.addAttribute("report", responseDto);
         model.addAttribute("user", user);
         return "reports/reportDetail";
     }
-    
+
     //제보 삭제하기
     @GetMapping(value = "/reports/delete/{id}")
     public String deleteReport(@PathVariable("id") Long id, @CurrentUser User user) {
