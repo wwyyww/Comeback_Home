@@ -166,7 +166,8 @@ public class ReportController {
 //        model.addAttribute("reports", reports);
 
         List<ReportResponseDto> reportDtoList = reports.stream().map(
-                ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
+
+            ReportEntity -> new ReportResponseDto(ReportEntity, ReportEntity.getUser())
         ).collect(Collectors.toList());
 
         // 페이징 변환 작업
