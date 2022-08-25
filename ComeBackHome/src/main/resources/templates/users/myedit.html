@@ -1,48 +1,67 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>마이페이지 - 회원정보수정</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+</head>
 <body>
-
 <div layout:fragment="content" class="container">
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:40px;">회원정보 수정</h2>
+    <hr>
+
+    <div class="container col-6" style="padding-top:30px;">
     <form th:action="@{/mypage/edit}" method="post" modelAttribute="userDto">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div class="form-group">
-            <div>
-                <label for="email">email</label>
-                <input type="text" id="email" name="email" readonly th:value="${userDto.email}" placeholder="이메일">
+        <div class="form-group" style="margin:auto;margin-bottom:30px;">
+            <div style="margin:auto;margin-bottom:30px;">
+                <label>성별</label>&nbsp;
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="sex" id="0" value="0">
+                    <label class="form-check-label" for="0">여성</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="sex" id="1" value="1">
+                    <label class="form-check-label" for="1">남성</label>
+                </div>
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_sex}"></p>
             </div>
-            <div>
-                <label for="pw">password</label>
-                <input type="password" id="pw" name="pw" placeholder="비밀번호">
-                <span th:text="${valid_pw}"></span>
-            </div>
-            <div>
-                <label for="name">이름</label>
-                <input type="text" id="name" name="name" th:value="${userDto.name}" placeholder="이름">
-                <span th:text="${valid_name}"></span>
-            </div>
-            <div>
-                <label for="phone">전화번호</label>
-                <input type="text" id="phone" name="phone" th:value="${userDto.phone}" placeholder="전화번호">
-                <span th:text="${valid_phone}"></span>
-            </div>
-            <div>
-                <label for="birth">생년월일</label>
+            <div style="margin:auto;margin-bottom:30px;">
+                <label for="birth">생년월일</label>&nbsp;
                 <input type="date" id="birth" name="birth" th:value="${userDto.birth}" placeholder="생년월일">
-                <span th:text="${valid_birth}"></span>
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_birth}"></p>
             </div>
-            <div>
-                <label>성별</label>
-                <input type="radio" name="sex" value="0">여자
-                <input type="radio" name="sex" value="1">남자
-                <span th:text="${valid_sex}"></span>
+            <div style="margin:auto;margin-bottom:30px;">
+                <label for="email">이메일</label>
+                <input type="text" id="email" name="email" class="form-control" th:value="${userDto.email}">
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_email}"></p>
             </div>
+            <div style="margin:auto;margin-bottom:30px;">
+                <label for="pw">비밀번호</label>
+                <input type="password" id="pw" name="pw" class="form-control">
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_pw}"></p>
+            </div>
+            <div style="margin:auto;margin-bottom:30px;">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" class="form-control" th:value="${userDto.name}">
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_name}"></p>
+            </div>
+            <div style="margin:auto;margin-bottom:30px;">
+                <label for="phone">전화번호</label>
+                <input type="text" id="phone" name="phone" class="form-control" th:value="${userDto.phone}">
+                <p class="fw-lighter" style ="color: blue;" th:text="${valid_phone}"></p>
+            </div>
+
         </div>
-        <button type="submit">수정완료</button>
+        <div style="text-align: center;margin:auto; margin-top:40px;margin-bottom: 40px;">
+            <button class="btn btn-primary btn-block" type="submit">수정완료</button>
+        </div>
     </form>
 </div>
-
-
+</div>
 </body>
+</html>

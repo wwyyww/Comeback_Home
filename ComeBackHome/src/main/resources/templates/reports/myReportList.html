@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="utf-8">
+    <title>마이페이지 - 제보 목록</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:50px;" th:text="${user.getName()} + ' 님이 작성한 제보글 목록'"/>
+    <hr>
+    <div>
+        <table class="table table-bordered" style="margin-top:40px; margin-bottom: 40px;">
+            <!-- CONTENTS !-->
+            <thead>
+            <tr style="text-align: center;">
+                <th class="col-md-1">번호</th>
+                <th class="col-md-5">글제목</th>
+                <th class="col-md-2">목격일</th>
+                <th class="col-md-2">작성일</th>
+                <th class="col-md-1">실종자 정보</th>
+            </tr>
+            </thead>
+
+            <tbody style="text-align: center; vertical-align: middle;">
+            <!-- CONTENTS !-->
+            <tr th:each="report, index : ${reports}">
+                <td style="text-align: center;" th:text="${index.index} +1"></td>
+                <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}"
+                       th:text="${report.getWitness_title()}"></a></td>
+                <td th:text="${#temporals.format(report.witnessTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
+                <td>
+                    <a class="btn btn-primary"
+                       th:href="@{/cases/detail/{id} (id=${report.getCases().getCaseId()})}">실종자 정보</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!reports.isEmpty()}" style="margin-bottom: 70px;">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|?page=${reports.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(1, reports.totalPages)}"
+                th:classappend="${page == reports.number} ? 'active'"
+                class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page - 1}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${reports.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+</div> <!-- /container -->
+</body>
+</html>

@@ -117,7 +117,7 @@ public class UserController {
         model.addAttribute("userDto", userDto);
 
         if (errors.hasErrors()) {
-            return "/users/mypage";
+            return "/";
         }
 
 
