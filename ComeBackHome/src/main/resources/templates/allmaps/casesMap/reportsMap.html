@@ -21,10 +21,25 @@
     <style>
         html, body {
             width: 100%;
-            height: 94%;
+            height: 96.5%;
             padding: 0;
             margin: 0;
         }
+
+        #area_wrap {
+            position: relative;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0 0 0px 0px;
+            padding: 0px;
+            overflow-y: auto;
+            z-index: 1;
+            font-size: 12px;
+        }
+
     </style>
     <link rel="stylesheet" th:href="@{/static/plugins/bootstrap/bootstrap.min.css}">
     <!--   icon-->
@@ -34,16 +49,18 @@
     <!-- fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
     <!-- Main Stylesheet -->
-    <link th:href="@{/static/assets/style.css}" rel="stylesheet" media="screen" />
+    <link th:href="@{/static/assets/style.css}" rel="stylesheet" media="screen"/>
 
 
 </head>
 <body onload="javascript:initMap()">
-<header >
+<!-- header -->
+<header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="padding-top:5px;padding-bottom: 5px;">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">ComeBackHome</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -56,298 +73,349 @@
                         <a class="nav-link" href="/cases/new">실종자 등록하기</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/mypage">마이페이지</a>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" href="/users/login">로그인</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a sec:authorize="!isAuthenticated()" class="nav-link" href="/users/login">로그인</a>
-                        <a sec:authorize="isAuthenticated()" class="nav-link" href="/users/logout">로그아웃</a>
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            마이페이지
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/mypage/cases">작성한 사건 목록</a>
+                            <li><a class="dropdown-item" href="/mypage/reports">작성한 증언 목록</a></li>
+                            <li><a class="dropdown-item" href="/mypage/edit">회원정보 수정</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/users/logout">로그아웃</a>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-    <input type="button" class="btn btn-primary" style="margin-top: 10px; margin-left: 15px; margin-bottom: 5px"
-           value="시간별 보기" th:onclick="selectTime()">
-    <input type="button" class="btn btn-primary" style="margin-top: 10px; margin-left: 15px; margin-bottom: 5px"
-           value="장소별 보기" th:onclick="selectPlace()">
+<!-- /header -->
 
-    <input type="button" style="position: absolute; right: 1%; margin-top: 10px; margin-bottom: 5px" class="btn btn-primary"
-           value="제보 모두보기" th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
-    <section class="container-fluid" style="height: 100%;">
-        <div id="map" style="width:75%;height:100%;padding:0;margin:0; float: left"></div>
-        <div id="right-list" style="background-color: #9fcdff; height: 100%; width: 25%; float: right">
-            <div class="upMenu" style="display: flex; flex-direction: row; margin-top: 10px;">
-                <span style="flex: 1; margin-left: 10px; justify-content: space-between">발견시간</span>
-                <span style="flex: 1; justify-content: space-between">발견위치</span>
+
+<section class="container-fluid" style="padding: 0; height:97%;">
+    <div id="map" style="width:75%;height:100%;padding:0;margin:0; float: left"></div>
+    <div id="right-list" style="background-color: #9fcdff; height: 100%; width: 25%; float: right">
+        <div style="width: 100%; height: 100%">
+            <div style="height: 20%">
+                <input type="button" style="width: 90%; margin-top: 10px; margin-bottom: 5px; margin-left: 15px"
+                       class="btn btn-primary"
+                       value="제보 모두보기"
+                       th:onclick="|location.href='@{/reports/reportList/{id}(id=${caseEntity.caseId})}'|">
+                <br>
+                <div style="display: flex; flex-direction: row;  margin-right: 10px">
+                    <input type="button" class="btn btn-primary timebtn"
+                           style="flex: 1;  overflow: auto; margin-top: 5px; margin-left: 15px; margin-bottom: 5px"
+                           value="시간별 보기" th:onclick="selectTime()">
+                    <input type="button" class="btn btn-primary placebtn"
+                           style="flex: 1; overflow: auto; margin-top: 5px; margin-left: 15px; margin-bottom: 5px"
+                           value="장소별 보기" th:onclick="selectPlace()">
+                </div>
             </div>
-            <div style="display: flex; justify-content: left">
-                <ul style="list-style:none; margin-right: auto;" class="reportUl">
-                </ul>
+
+            <div style="height: 80%">
+                <div style="position: relative; height: 100%; width: 100%;">
+                    <div id="area_wrap">
+                        <ul style="list-style:none; margin-right: auto; width: 100%;" class="reportUl list-group">
+                        </ul>
+                    </div>
+
+                </div>
+
             </div>
         </div>
-    </section>
 
-    <script>
-        var map = new naver.maps.Map("map", {
-            zoom: 10,
-            center: new naver.maps.LatLng(36.2253017, 127.6460516),
-            zoomControl: true,
-            zoomControlOptions: {
-                position: naver.maps.Position.TOP_LEFT,
-                style: naver.maps.ZoomControlStyle.SMALL
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $("#timebtn").click(function () {
+            console.log("timebtn click");
+            if ($(this).hasClass("btn-primary")) {
+                $(this).removeClass('btn-primary')
+                $(this).addClass('btn-outline-primary')
+                $("#placebtn").removeClass('btn-outline-primary')
+                $("#placebtn").addClass('btn-primary')
             }
-        });
 
-        var markers = [],
-            infoWindows =[];
+        })
+
+        $("#placebtn").click(function () {
+            if ($(this).hasClass("btn-primary")) {
+                $(this).removeClass('btn-primary')
+                $(this).addClass('btn-outline-primary')
+                $("#timebtn").removeClass('btn-outline-primary')
+                $("#timebtn").addClass('btn-primary')
+            }
+        })
+
+    })
 
 
-        var polyline = new naver.maps.Polyline({
-            map: map,
-            path: []
-        });
-        var url = window.location.href;
-        url = url.split("/");
-        url = url[url.length - 1];
-
-        function moveMapCenter(x, y) {
-            var center = new naver.maps.LatLng(x, y);
-            map.setCenter(center);
-            map.setZoom(15);
+    var map = new naver.maps.Map("map", {
+        zoom: 10,
+        center: new naver.maps.LatLng(36.2253017, 127.6460516),
+        zoomControl: true,
+        zoomControlOptions: {
+            position: naver.maps.Position.TOP_LEFT,
+            style: naver.maps.ZoomControlStyle.SMALL
         }
+    });
+
+    var markers = [],
+        infoWindows = [];
 
 
-        function selectTime() {
+    var polyline = new naver.maps.Polyline({
+        map: map,
+        path: []
+    });
+    var url = window.location.href;
+    url = url.split("/");
+    url = url[url.length - 1];
 
-            $.ajax({
-                type: "get",
-                url: "report.json/" + url,
-                dataType: "json",
-                success: function (data) {
-                    map = new naver.maps.Map("map", {
-                        zoom: 10,
-                        center: new naver.maps.LatLng(36.2253017, 127.6460516),
-                        zoomControl: true,
-                        zoomControlOptions: {
-                            position: naver.maps.Position.TOP_LEFT,
-                            style: naver.maps.ZoomControlStyle.SMALL
-                        }
+    function moveMapCenter(x, y) {
+        var center = new naver.maps.LatLng(x, y);
+        map.setCenter(center);
+        map.setZoom(15);
+    }
+
+
+    function selectTime() {
+
+        $.ajax({
+            type: "get",
+            url: "report.json/" + url,
+            dataType: "json",
+            success: function (data) {
+                map = new naver.maps.Map("map", {
+                    zoom: 10,
+                    center: new naver.maps.LatLng(36.2253017, 127.6460516),
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        position: naver.maps.Position.TOP_LEFT,
+                        style: naver.maps.ZoomControlStyle.SMALL
+                    }
+                });
+
+                console.log("통신성공" + url);
+                $('.reportUl').empty();
+                $('.reportUl').css("list-style", "none");
+                $('.upMenu').empty();
+                $('.upMenu').append("<span style=\"flex: 1; margin-left: 10px; justify-content: space-between\">발견시간</span>" +
+                    "<span style=\"flex: 1; justify-content: space-between\">발견위치</span>");
+                var newpolyline = new naver.maps.Polyline({
+                    map: map,
+                    path: []
+                });
+                var path = newpolyline.getPath();
+
+                $.each(data, function (i) {
+                    var x = data[i].witness_lat;
+                    var y = data[i].witness_lng;
+
+                    console.log(x, y);
+                    path.push(new naver.maps.LatLng(x, y));
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(x, y),
+                        map: map
                     });
 
-                    console.log("통신성공" + url);
-                    $('.reportUl').empty();
-                    $('.reportUl').css("list-style", "none");
-                    $('.upMenu').empty();
-                    $('.upMenu').append("<span style=\"flex: 1; margin-left: 10px; justify-content: space-between\">발견시간</span>" +
-                        "<span style=\"flex: 1; justify-content: space-between\">발견위치</span>");
-                    var newpolyline = new naver.maps.Polyline({
-                        map: map,
-                        path: []
+                    str = "<li class='list-group-item' onclick='moveMapCenter(" + x + "," + y + ")'><span style='font-size: small'>목격시간</span><br>";
+                    str += "<span>" + moment(data[i].witnessTime).format('YYYY-MM-DD') + '</span>';
+                    str += '<br><span style="font-size: small">목격 장소</span><br><span>' + data[i].witness_area + '</span></li>';
+                    $('.reportUl').append(str);
+                });
+
+
+            },
+            error: function () {
+                console.log("통신에러");
+            }
+        })
+
+    }
+
+
+    function showMarker() {
+        $.ajax({
+            type: "get",
+            url: "report.json/" + url,
+            dataType: "json",
+            success: function (data) {
+                markers = []
+                infoWindows = []
+                console.log("통신성공 in showMarker" + url);
+
+
+                $.each(data, function (i) {
+                    var x = data[i].witness_lat;
+                    var y = data[i].witness_lng;
+                    console.log(x, y);
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(x, y),
+                        map: map
                     });
-                    var path = newpolyline.getPath();
+                    var detailUrl = "/reports/detail/" + data[i].id;
+                    var picFullPath = "/images/" + data[i].witnessPics[0].savedFileName;
 
-                    $.each(data, function (i) {
-                        var x = data[i].witness_lat;
-                        var y = data[i].witness_lng;
-
-                        console.log(x, y);
-                        path.push(new naver.maps.LatLng(x, y));
-                        var marker = new naver.maps.Marker({
-                            position: new naver.maps.LatLng(x, y),
-                            map: map
-                        });
-
-                        str = "<li onclick='moveMapCenter(" + x + "," + y + ")'><span>";
-                        str += moment(data[i].witnessTime).format('YYYY-MM-DD') + '</span>';
-                        str += '<span style="margin-left: 10px">' + data[i].witness_area + '</span></li>';
-                        $('.reportUl').append(str);
+                    //클릭하면 해당 사건 출력
+                    var infoWindow = new naver.maps.InfoWindow({
+                        content: '<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto" src=' + picFullPath + '></div>' +
+                            '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><b>제보제목: ' + data[i].witness_title + '</b></div>' +
+                            '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;font-size: small;">목격위치 : ' + data[i].witness_area + '</div>' +
+                            '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 10px;font-size: small;"><a href=' + detailUrl + '>상세보기</a></div>'
                     });
+                    markers.push(marker);
+                    infoWindows.push(infoWindow);
 
+                });
 
-                },
-                error: function () {
-                    console.log("통신에러");
-                }
-            })
+                function getClickHandler(seq) {
+                    return function (e) {
+                        var marker = markers[seq],
+                            infoWindow = infoWindows[seq];
 
-        }
-
-
-
-        function showMarker() {
-            $.ajax({
-                type: "get",
-                url: "report.json/" + url,
-                dataType: "json",
-                success: function (data) {
-                    markers=[]
-                    infoWindows=[]
-                    console.log("통신성공 in showMarker" + url);
-
-
-                    $.each(data, function (i) {
-                        var x = data[i].witness_lat;
-                        var y = data[i].witness_lng;
-                        console.log(x, y);
-                        var marker = new naver.maps.Marker({
-                            position: new naver.maps.LatLng(x, y),
-                            map: map
-                        });
-                        var detailUrl = "/reports/detail/"+data[i].id;
-                        var picFullPath= "/images/" + data[i].witnessPics[0].savedFileName;
-
-                        //클릭하면 해당 사건 출력
-                        var infoWindow = new naver.maps.InfoWindow({
-                            content:'<div style="width:200px;height: 200px;text-align:center; overflow:hidden; line-height: 200px; padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><img style="vertical-align: middle" width="150px" height="auto" src='+ picFullPath +'></div>' +
-                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;"><b>제보제목: '+ data[i].witness_title +'</b></div>' +
-                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 5px;font-size: small;">목격위치 : '+ data[i].witness_area  +'</div>' +
-                                '<div style="width:200px;text-align:left;padding-left:10px;padding-right: 10px; padding-bottom: 10px;font-size: small;"><a href=' + detailUrl + '>상세보기</a></div>'
-                        });
-                        markers.push(marker);
-                        infoWindows.push(infoWindow);
-
-                    });
-
-                    function getClickHandler(seq){
-                        return function(e) {
-                            var marker = markers[seq],
-                                infoWindow = infoWindows[seq];
-
-                            if (infoWindow.getMap()) {
-                                infoWindow.close();
-                            } else {
-                                infoWindow.open(map, marker);
-                            }
+                        if (infoWindow.getMap()) {
+                            infoWindow.close();
+                        } else {
+                            infoWindow.open(map, marker);
                         }
                     }
+                }
 
-                    for (var i=0, ii=markers.length; i<ii; i++) {
-                        console.log(markers[i] , getClickHandler(i));
-                        naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+                for (var i = 0, ii = markers.length; i < ii; i++) {
+                    console.log(markers[i], getClickHandler(i));
+                    naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+                }
+
+
+            },
+            error: function () {
+                console.log("통신에러");
+            }
+        })
+
+
+    }
+
+    function selectPlace() {
+
+        $.ajax({
+            type: "get",
+            url: "area.json/" + url,
+            dataType: "json",
+            success: function (data) {
+                map = new naver.maps.Map("map", {
+                    zoom: 10,
+                    center: new naver.maps.LatLng(36.2253017, 127.6460516),
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        position: naver.maps.Position.TOP_LEFT,
+                        style: naver.maps.ZoomControlStyle.SMALL
                     }
+                });
+                showMarker();
 
 
-                },
-                error: function () {
-                    console.log("통신에러");
-                }
-            })
+                $('.reportUl').empty();
+                $('.upMenu').empty();
+                $('.upMenu').append('<span style="margin: auto;">제보 많은 지역</span>');
+                $('.reportUl').css("list-style", "decimal");
+                var colors = ["FireBrick", "Gold", "SeaGreen"];
 
 
-        }
+                $.each(data, function (key, value) {
+                    $.each(value, function (key, value) {
+                        console.log("each 문 " + key + value[1] + value[2]);
 
-        function selectPlace() {
-
-            $.ajax({
-                type: "get",
-                url: "area.json/" + url,
-                dataType: "json",
-                success: function (data) {
-                    map = new naver.maps.Map("map", {
-                        zoom: 10,
-                        center: new naver.maps.LatLng(36.2253017, 127.6460516),
-                        zoomControl: true,
-                        zoomControlOptions: {
-                            position: naver.maps.Position.TOP_LEFT,
-                            style: naver.maps.ZoomControlStyle.SMALL
+                        var x, y;
+                        var color;
+                        if (value[0] > 2) {
+                            color = colors[0];
+                        } else if (value[0] == 2) {
+                            color = colors[1];
+                        } else {
+                            color = colors[2];
                         }
-                    });
-                    showMarker();
 
 
-                    $('.reportUl').empty();
-                    $('.upMenu').empty();
-                    $('.upMenu').append('<span style="margin: auto;">제보 많은 지역</span>');
-                    $('.reportUl').css("list-style", "decimal");
-                    var colors = ["FireBrick", "Gold", "SeaGreen"];
-
-
-                    $.each(data, function (key, value) {
-                        $.each(value, function (key, value) {
-                            console.log("each 문 " + key + value[1] + value[2]);
-
-                            var x, y;
-                            var color;
-                            if (value[0] > 2) {
-                                color = colors[0];
-                            } else if (value[0] == 2) {
-                                color = colors[1];
-                            } else {
-                                color = colors[2];
-                            }
-
-
-                            var circle = new naver.maps.Circle({
-                                map: map,
-                                center: new naver.maps.LatLng(value[1], value[2]),
-                                radius: 1300,
-                                strokeWeight: 0,
-                                fillColor: color,
-                                fillOpacity: 0.5
-                            });
-
-                            str = "<li onclick='moveMapCenter(" + value[1] + "," + value[2] + ")'><span>";
-                            str += key + '</span>';
-                            str += '<span style="margin-left: 10px">' + value[0] + '개</span></li>';
-                            $('.reportUl').append(str);
-
-
+                        var circle = new naver.maps.Circle({
+                            map: map,
+                            center: new naver.maps.LatLng(value[1], value[2]),
+                            radius: 1300,
+                            strokeWeight: 0,
+                            fillColor: color,
+                            fillOpacity: 0.5
                         });
 
-                    });
-
-
-                },
-                error: function () {
-                    console.log("통신에러");
-                }
-            })
-
-
-        }
-
-
-        function initMap() {
-
-            $.ajax({
-                type: "get",
-                url: "report.json/" + url,
-                dataType: "json",
-                success: function (data) {
-                    console.log("통신성공" + url);
-                    $('.reportUl').empty();
-                    var path = polyline.getPath();
-
-                    $.each(data, function (i) {
-                        var x = data[i].witness_lat;
-                        var y = data[i].witness_lng;
-                        console.log(x, y);
-                        path.push(new naver.maps.LatLng(x, y));
-                        var marker = new naver.maps.Marker({
-                            position: new naver.maps.LatLng(x, y),
-                            map: map
-                        });
-                        str = "<li onclick='moveMapCenter(" + x + "," + y + ")'><span>";
-                        str += moment(data[i].witnessTime).format('YYYY-MM-DD') + '</span>';
-                        str += '<span style="margin-left: 10px">' + data[i].witness_area + '</span></li>';
+                        str = "<li class='list-group-item' onclick='moveMapCenter(" + value[1] + "," + value[2] + ")'><span>";
+                        str += key + '</span>';
+                        str += '<span style="margin-left: 10px">' + value[0] + '개</span></li>';
                         $('.reportUl').append(str);
 
+
                     });
 
-                },
-                error: function () {
-                    console.log("통신에러");
-                }
-            })
+                });
 
 
-        }
+            },
+            error: function () {
+                console.log("통신에러");
+            }
+        })
 
 
-    </script>
+    }
+
+
+    function initMap() {
+
+        $.ajax({
+            type: "get",
+            url: "report.json/" + url,
+            dataType: "json",
+            success: function (data) {
+                console.log("통신성공" + url);
+                $('.reportUl').empty();
+                var path = polyline.getPath();
+
+                $.each(data, function (i) {
+                    var x = data[i].witness_lat;
+                    var y = data[i].witness_lng;
+                    console.log(x, y);
+                    path.push(new naver.maps.LatLng(x, y));
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(x, y),
+                        map: map
+                    });
+                    str = "<li class='list-group-item' onclick='moveMapCenter(" + x + "," + y + ")'><span style='font-size: small'>목격시간</span><br>";
+                    str += "<span>" + moment(data[i].witnessTime).format('YYYY-MM-DD') + '</span>';
+                    str += '<br><span style="font-size: small">목격 장소</span><br><span>' + data[i].witness_area + '</span></li>';
+                    $('.reportUl').append(str);
+
+                });
+
+            },
+            error: function () {
+                console.log("통신에러");
+            }
+        })
+
+
+    }
+
+
+</script>
 
 </body>
 </html>
