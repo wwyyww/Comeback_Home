@@ -44,7 +44,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
             areaList = area.get().stream().map(s -> s).collect(Collectors.toList());
         } else {
             areaList = new ArrayList<>(
-                Arrays.asList("서울", "경기", "강원", "전북", "전남", "경북", "충남", "충북", "경남", "경북"));
+                Arrays.asList("서울특", "경기도", "강원도", "전라북", "전라남", "경상북", "충청남", "충청북"));
         }
         if (age != null){
             Integer age1 = 0;
@@ -61,9 +61,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         System.out.println("areaList: " + areaList);
         System.out.println("areaList: " + ageList);
         System.out.println("featureList: " + featureList);
-//        List<Case> result2 = em.createQuery("select c from Case c where c.missing_name like :missing_name", Case.class)
-//            .setParameter("missing_name", "%" + missing_name +"%")
-//            .getResultList();
+
 
         List<Case> result = em.createQuery("select c from Case c where c.missingName like :missing_name and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2 and c.missingFeature in (:feature)", Case.class)
             .setParameter("missing_name", "%" + missing_name +"%").setParameter("area", areaList).setParameter("sex", sexList).setParameter("feature", featureList).
@@ -95,7 +93,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         if (area != null){
             areaList = area.get().stream().map(s -> s).collect(Collectors.toList());
         } else {
-            areaList = new ArrayList<>(Arrays.asList("서울", "경기", "강원", "전북", "전남", "경북", "충남", "충북"));
+            areaList = new ArrayList<>(Arrays.asList("서울특", "경기도", "강원도", "전라북", "전라남", "경상북", "충청남", "충청북"));
         }
         if (age != null){
             Integer age1 = 0;
@@ -112,9 +110,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         System.out.println("areaList: " + areaList);
         System.out.println("areaList: " + ageList);
         System.out.println("featureList: " + featureList);
-//        List<Case> result = em.createQuery("select c from Case c where c.missing_area like :missing_area", Case.class)
-//                .setParameter("missing_area", "%"+missing_area+"%")
-//                .getResultList();
+
 
         List<Case> result = em.createQuery("select c from Case c where c.missingArea like :missing_area and c.missingRegion in (:area) and c.missingSex in (:sex) and c.missingAge between :age1 and :age2 and c.missingFeature in (:feature)", Case.class)
             .setParameter("missing_area", "%"+missing_area+"%").setParameter("area", areaList).setParameter("sex", sexList).setParameter("feature", featureList).
@@ -147,7 +143,7 @@ public class CaseCustomRepositoryImpl implements CaseCustomRepository{
         if (area != null){
             areaList = area.get().stream().map(s -> s).collect(Collectors.toList());
         } else {
-            areaList = new ArrayList<>(Arrays.asList("서울", "경기", "강원", "전북", "전남", "경북", "충남", "충북"));
+            areaList = new ArrayList<>(Arrays.asList("서울특", "경기도", "강원도", "전라북", "전라남", "경상북", "충청남", "충청북"));
         }
         if (age != null){
             Integer age1 = 0;

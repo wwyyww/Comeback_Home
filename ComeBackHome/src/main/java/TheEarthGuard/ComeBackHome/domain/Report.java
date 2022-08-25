@@ -89,6 +89,6 @@ public class Report extends BaseTimeEntity{
         this.witness_lat =  Double.parseDouble(dto.getWitness_lat());
         this.witness_lng = Double.parseDouble(dto.getWitness_lng());
         this.witnessTime = dto.getWitnessTime();
-        this.witnessRegion = this.witness_area.substring(0,2);
+        this.witnessRegion = this.witness_area.substring(0,3);
     }
 }

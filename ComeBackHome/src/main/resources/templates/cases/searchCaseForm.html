@@ -111,39 +111,39 @@
                     <th style="text-align: center;">실종 지역</th>
                     <td>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area00" value="서울">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area00" value="서울특">
                             <label class="form-check-label" for="area00">서울</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area01" value="경기">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area01" value="경기도">
                             <label class="form-check-label" for="area01">경기도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area02" value="강원">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area02" value="강원도">
                             <label class="form-check-label" for="area02">강원도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area03" value="전남">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area03" value="전라남">
                             <label class="form-check-label" for="area03">전라남도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area04" value="전북">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area04" value="전라북">
                             <label class="form-check-label" for="area04">전라북도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area05" value="경북">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area05" value="경상북">
                             <label class="form-check-label" for="area05">경상북도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area06" value="경남">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area06" value="경상남">
                             <label class="form-check-label" for="area06">경상남도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area07" value="충남">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area07" value="충청남">
                             <label class="form-check-label" for="area07">충청남도</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="missing_area" id="area08" value="충북">
+                            <input type="checkbox" class="form-check-input" name="missing_area" id="area08" value="충청북">
                             <label class="form-check-label" for="area08">충청북도</label>
                         </div>
                     </td>
@@ -199,7 +199,7 @@
                         <span th:if="${case.getMissingSex() == false}">(여성)</span>
                         <span th:if="${case.getMissingSex() == true}">(남성)</span>
                     </div>
-                    <p th:text="'실종 지역: ' + ${case.getMissingRegion()}"/>
+                    <p th:text="'실종 지역: ' + ${case.getMissingArea()}"/>
                     <p th:if="${case.getIsFind() == false}" style="color:red;">상태: 실종</p>
                     <p th:if="${case.getIsFind() == true}" style="color:green;">상태: 찾음</p>
                     <div style="text-align: right;">

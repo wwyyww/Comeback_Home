@@ -47,7 +47,7 @@ public class ReportRequestDto extends BaseTimeEntity {
         Report report=Report.builder()
                 .witness_title(this.witness_title)
                 .witness_area(this.witness_area)
-                .witnessRegion(this.witness_area.substring(0,2))
+                .witnessRegion(this.witness_area.substring(0,3))
                 .witness_desc(this.witness_desc)
                 .witness_lat(Double.valueOf(this.witness_lat))
                 .witness_lng(Double .valueOf(this.witness_lng))
