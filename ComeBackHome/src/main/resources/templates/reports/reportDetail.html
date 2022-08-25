@@ -96,7 +96,7 @@
                     </tr>
                     <tr>
                         <th style="text-align: center;">목격 시간</th>
-                        <td th:text="${report.getWitnessTime()}"></td>
+                        <td th:text="${#temporals.format(report.getWitnessTime(), 'yyyy-MM-dd HH:MM')}"></td>
                     </tr>
                     <tr>
                         <th style="text-align: center;">제보 내용</th>

@@ -103,7 +103,6 @@ public class ReportController {
             reportList = (Optional<List<Report>>) RequestContextUtils.getInputFlashMap(request).values().stream().collect(Collectors.toList()).get(0);
             if (reportList.isPresent()){
                 System.out.println("값이 있음");
-                //System.out.println(reportList.get().get(0).getId());
             } else {
                 System.out.println("값이 없음");
             }
@@ -132,7 +131,6 @@ public class ReportController {
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             model.addAttribute("reports", pagingDtoList);
-//            model.addAttribute("reports", reportDtoList);
         } else {
             System.out.println("없음");
         }
@@ -162,7 +160,6 @@ public class ReportController {
     @GetMapping(value = "/mypage/reports")
     public String myReportList(Model model, @CurrentUser User user, @PageableDefault(size=12) Pageable pageable,@RequestParam(value="page", defaultValue="0") int page) {
         List<Report> reports = reportService.getReportsListByUser(user);
-//        model.addAttribute("reports", reports);
 
         List<ReportResponseDto> reportDtoList = reports.stream().map(
 

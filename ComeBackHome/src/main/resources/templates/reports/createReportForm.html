@@ -466,7 +466,6 @@
                                     for (var j = 0; j < markers.length; j++) {
                                         markers[j].setAnimation(null);
                                     }
-                                    console.log("list click", title, placePosition);
                                     marker.setAnimation(naver.maps.Animation.BOUNCE);
                                     map.setCenter(placePosition);
                                 }
@@ -483,7 +482,6 @@
 
                     //키워드 검색을 요청하는 함수
                     function searchPlaces(keyword) {
-                        console.log("searchPlaces");
                         // 장소 검색 객체를 생성합니다
                         var ps = new kakao.maps.services.Places();
                         // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다.
@@ -495,7 +493,6 @@
 
                             removeMarker();
                             for (var i = 0; i < data.length; i++) {
-                                console.log("marker: ", data[i], data[i].place_name.toString(), data[i].x.toString());
                                 areaArr.push(
                                     {
                                         location: data[i].place_name.toString(),
@@ -627,7 +624,6 @@
                         var htmlAddresses = [],
                             item = address[0],
                             point = new naver.maps.Point(item.x, item.y);
-                        console.log("items: " + address[0].x, point);
                         // var htmlAddresses = [],
                         //     item = response.v2.addresses[0],
                         //     point = new naver.maps.Point(item.x, item.y);

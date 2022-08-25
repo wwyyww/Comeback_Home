@@ -190,8 +190,7 @@
                         style: naver.maps.ZoomControlStyle.SMALL
                     }
                 });
-
-                console.log("통신성공" + url);
+                showMarker();
                 $('.reportUl').empty();
                 $('.reportUl').css("list-style", "none");
                 $('.upMenu').empty();
@@ -207,7 +206,6 @@
                     var x = data[i].witness_lat;
                     var y = data[i].witness_lng;
 
-                    console.log(x, y);
                     path.push(new naver.maps.LatLng(x, y));
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(x, y),
@@ -238,13 +236,11 @@
             success: function (data) {
                 markers = []
                 infoWindows = []
-                console.log("통신성공 in showMarker" + url);
 
 
                 $.each(data, function (i) {
                     var x = data[i].witness_lat;
                     var y = data[i].witness_lng;
-                    console.log(x, y);
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(x, y),
                         map: map
@@ -319,7 +315,6 @@
 
                 $.each(data, function (key, value) {
                     $.each(value, function (key, value) {
-                        console.log("each 문 " + key + value[1] + value[2]);
 
                         var x, y;
                         var color;
@@ -370,14 +365,13 @@
             url: "report.json/" + url,
             dataType: "json",
             success: function (data) {
-                console.log("통신성공" + url);
+                showMarker();
                 $('.reportUl').empty();
                 var path = polyline.getPath();
 
                 $.each(data, function (i) {
                     var x = data[i].witness_lat;
                     var y = data[i].witness_lng;
-                    console.log(x, y);
                     path.push(new naver.maps.LatLng(x, y));
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(x, y),

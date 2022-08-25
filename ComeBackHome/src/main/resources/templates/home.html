@@ -237,9 +237,7 @@
             var counter1 = document.getElementById("counter1").innerHTML;
             var counter2 = document.getElementById("counter2").innerHTML;
             var counter3 = document.getElementById("counter3").innerHTML;
-            console.log("aaa  " + counter1);
-            console.log("aaa  " + counter2);
-            console.log("aaa  " + counter3);
+
 
             let counting = setInterval(function() {
               if (count === parseInt(counter1)) {
@@ -354,7 +352,6 @@
           var sex;
           var feature;
           var url = "/cases/detail/"+ cases.caseId;
-          console.log("여자 남자: "+ cases.caseId, cases.missingSex === false);
 
           if (cases.missingSex === false){
             sex = '여성';
@@ -445,7 +442,6 @@
                 //   markers[k].setAnimation(null);
                 // }
 
-                console.log("case click2" + placePosition.x + placePosition.y); //lat lng
                 var casePoint = new naver.maps.Point(placePosition.x, placePosition.y);
               // case click22(lat:126.9943022,lng:37.5924412)(lat:37.5924412,lng:126.9943022)
                 map.setZoom(15);
@@ -455,7 +451,6 @@
                 // }
 
                 for (var j=0; j < markers.length ; j++){
-                  console.log("case click22" + placePosition.x === markers[j].position.x); //
                   if (placePosition.x === markers[j].position.x){
                     if(placePosition.y === markers[j].position.y){
                       //markers[j].setAnimation(naver.maps.Animation.BOUNCE);
@@ -490,7 +485,6 @@
             (function(placePosition) {
 
               itemEl.onclick = function (){
-                console.log("list click", placePosition);
 
                 $('ul.tabs li').removeClass('current');
                 $('.tab-content').removeClass('current');
@@ -499,7 +493,6 @@
                 cur_marker.setPosition(placePosition);
                 map.setCenter(placePosition);
                 cases = caseListByLatLng(placePosition.y, placePosition.x);
-                //console.log("제발 : " + JSON.stringify(cases[0]));
                 displayCases(cases);
                 //displayPagination(pagination);
                 //searchAddressToCoordinate(data); 지도 센터 이동
@@ -515,7 +508,6 @@
 
         //키워드 검색을 요청하는 함수
         function searchPlaces(keyword){
-          console.log("searchPlaces");
           // 장소 검색 객체를 생성합니다
           var ps = new kakao.maps.services.Places();
           // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다.
@@ -561,7 +553,6 @@
           var htmlAddresses = [],
                   item = address[0],
                   point = new naver.maps.Point(item.x, item.y);
-          console.log("items: " + address[0].x, point);
 
           map.setCenter(point);
           map.setZoom(15);
@@ -668,14 +659,12 @@
           dataType: "json",
           async: false,
           success: function (data) {
-            console.log("통신성공: "+center_lat+center_lng);
             test = data
 
           }
         })
 
         for(var c=0 ; c<test.length ; c++) {
-          console.log("dist : " + getDistance(center_lat, center_lng, test[c].missingLat, test[c].missingLng));
           if (parseInt(getDistance(center_lat, center_lng, test[c].missingLat, test[c].missingLng)) <= 3000){
             result.push(test[c]);
           }
@@ -692,7 +681,6 @@
           url:"data.json",
           dataType:"json",
           success: function(data){
-            console.log("통신성공");
             $.each(data , function(i){
               var x = data[i].missingLat;
               var y = data[i].missingLng;
@@ -725,7 +713,6 @@
               markers.push(marker);
               infoWindows.push(infoWindow);
             });
-            console.log(markers);
 
             //클러스터링
             var markerClustering = new MarkerClustering({
@@ -756,7 +743,6 @@
             }
 
             for (var i=0, ii=markers.length; i<ii; i++) {
-              console.log(markers[i] , getClickHandler(i));
               naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
             }
           },
