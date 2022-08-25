@@ -148,7 +148,7 @@ public class UserController {
 //        newAuth.setDetails(authentication.getDetails());
 //        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        return "redirect:/users/mypage";
+        return "redirect:/";
     }
 
 }
