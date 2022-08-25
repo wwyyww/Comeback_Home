@@ -58,7 +58,7 @@ public class CaseService {
         System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingLng());
         System.out.println("[CaseService-UploadCase] lan : " + caseDto.getMissingArea());
         List<FileEntity> missing_pictures = fileService.parseFileInfo(files);
-        if (missing_pictures == null) {
+        if (missing_pictures.isEmpty()) {
             System.out.println("[CaseService - UploadCase] 유해이미지로 판단됨!");
             return null;
         }

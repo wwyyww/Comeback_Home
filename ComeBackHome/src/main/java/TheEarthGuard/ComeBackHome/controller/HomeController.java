@@ -2,6 +2,7 @@ package TheEarthGuard.ComeBackHome.controller;
 
 
 import TheEarthGuard.ComeBackHome.service.CaseService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import java.util.Scanner;
 public class HomeController {
     private final CaseService caseService;
 
+    @SuppressFBWarnings(justification = "Generated code")
     public HomeController(CaseService caseService) {
         this.caseService = caseService;
     }
