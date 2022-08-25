@@ -89,7 +89,7 @@ public class CaseService {
      * 사건  수정하기
      */
     @Transactional
-    public Long updateCase(Long user_id,  Long case_id, CaseSaveRequestDto caseDto, List<MultipartFile> files) throws Exception{
+    public Long updateCase(Long user_id,  Long case_id, CaseSaveRequestDto caseDto) throws Exception{
         Optional<User> user = userRepository.findById(user_id);
         Optional<Case> caseEntity = Optional
             .ofNullable(caseRepository.findById(case_id).orElseThrow(() ->
