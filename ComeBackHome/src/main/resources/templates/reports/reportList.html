@@ -1,123 +1,135 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout}">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
+    <meta charset="utf-8">
+    <title>제보 목록</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=lez4a7aeq8&submodules=geocoder"></script>
 </head>
 <body>
 <div layout:fragment="content" class="container">
-  <div th:if="${case != null}">
-    <form th:action="@{/reports/reportList/{id}/submit(id=${case.getCaseId()})}" method="post">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-      <div>
-        <table>
-          <tbody>
-          <tr>
-            <td>목격 지역</td>
-            <td>
-              <select name="missing_area2">
-                <option id="01" name="missing_area2" value="전체" selected>전체</option>
-                <option id="02" name="missing_area2" value="서울">서울</option>
-                <option id="03" name="missing_area2" value="경기">경기도</option>
-                <option id="04" name="missing_area2" value="강원">강원도</option>
-                <option id="05" name="missing_area2" value="전남">전라남도</option>
-                <option id="06" name="missing_area2" value="전북">전라북도</option>
-                <option id="07" name="missing_area2" value="경남">경상남도</option>
-                <option id="08" name="missing_area2" value="경북">경상북도</option>
-                <option id="09" name="missing_area2" value="충남">충청남도</option>
-                <option id="10" name="missing_area2" value="충북">충청북도</option>
-              </select>
-            </td>
-            <td>목격 기간</td>
-            <td>
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:50px;">제보목록</h2>
+    <hr>
+
+    <div th:if="${case != null}">
+        <form th:action="@{/reports/reportList/{id}/submit(id=${case.getCaseId()})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;">목격 지역</th>
+                        <td style="vertical-align: middle;">
+                            <select name="missing_area2">
+                                <option id="01" name="missing_area2" value="전체" selected>전체</option>
+                                <option id="02" name="missing_area2" value="서울">서울</option>
+                                <option id="03" name="missing_area2" value="경기">경기도</option>
+                                <option id="04" name="missing_area2" value="강원">강원도</option>
+                                <option id="05" name="missing_area2" value="전남">전라남도</option>
+                                <option id="06" name="missing_area2" value="전북">전라북도</option>
+                                <option id="07" name="missing_area2" value="경남">경상남도</option>
+                                <option id="08" name="missing_area2" value="경북">경상북도</option>
+                                <option id="09" name="missing_area2" value="충남">충청남도</option>
+                                <option id="10" name="missing_area2" value="충북">충청북도</option>
+                            </select>
+                        </td>
+                        <th style="text-align: center; vertical-align: middle;">목격 기간</th>
+                        <td style="vertical-align: middle;">
                     <span>
                       <input type="date" id="missing_time_start" name="missing_time_start">
                     </span>
-              <span>  ~  </span>
-              <span>
+                            <span>  ~  </span>
+                            <span>
                       <input type="date" id="missing_time_end" name="missing_time_end" onchange="setMinValue()">
                     </span>
-              <script>
-                let missingTimeStart = document.getElementById("missing_time_start");
-                let missingTimeEnd = document.getElementById("missing_time_end");
+                            <script>
+                                let missingTimeStart = document.getElementById("missing_time_start");
+                                let missingTimeEnd = document.getElementById("missing_time_end");
 
-                function setMinValue() {
-                  console.log(missingTimeStart.value, missingTimeEnd.value);
-                  if( missingTimeStart.value >= missingTimeEnd.value) {
-                    alert('목격 기간보다 이전의 날짜는 설정할 수 없습니다.');
-                    missingTimeEnd.value = null;
-                  }
-                  if( missingTimeStart.value === "" && missingTimeEnd.value != null) {
-                    alert('목격 기간 기반 검색을 위해서는 앞에 날짜부터 모두 선택해야 합니다.');
-                    missingTimeEnd.value = null;
-                  }
-                }
-                // function setValue(){
-                //   if (missingTimeStart.value == null) {
-                //     alert('실종 기간 기반 검색을 위해서는 모두 선택해야 합니다.')
-                //   }
-                // }
-              </script>
-            </td>
-          </tr>
-          </tbody>
+                                function setMinValue() {
+                                    console.log(missingTimeStart.value, missingTimeEnd.value);
+                                    if (missingTimeStart.value >= missingTimeEnd.value) {
+                                        alert('목격 기간보다 이전의 날짜는 설정할 수 없습니다.');
+                                        missingTimeEnd.value = null;
+                                    }
+                                    if (missingTimeStart.value === "" && missingTimeEnd.value != null) {
+                                        alert('목격 기간 기반 검색을 위해서는 앞에 날짜부터 모두 선택해야 합니다.');
+                                        missingTimeEnd.value = null;
+                                    }
+                                }
+
+                                // function setValue(){
+                                //   if (missingTimeStart.value == null) {
+                                //     alert('실종 기간 기반 검색을 위해서는 모두 선택해야 합니다.')
+                                //   }
+                                // }
+                            </script>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="container" style="text-align:center;">
+                    <button class="btn btn-dark" type="submit">적용</button>
+                    <button class="btn btn-dark" type="reset">조건 초기화</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <hr>
+    <div>
+        <table class="table table-bordered" style="margin-top:20px;">
+            <!-- CONTENTS !-->
+            <thead>
+            <tr style="text-align: center;">
+                <th class="col-md-1">번호</th>
+                <th class="col-md-6">글제목</th>
+                <th class="col-md-2">작성일</th>
+                <th class="col-md-2">목격일</th>
+                <th class="col-md-1">작성자</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- CONTENTS !-->
+            <tr th:each="report, index : ${reports}">
+                <td style="text-align: center;" th:text="${index.index} +1"></td>
+                <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}"
+                       th:text="${report.getWitness_title()}"></a></td>
+                <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(report.witnessTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${report.getUser().getName()}"></td>
+            </tr>
+            </tbody>
         </table>
-      </div>
-      <button type="submit">적용</button> <button type="reset">조건 초기화</button>
-    </form>
-  </div>
-  <div>
-    <table class="table table-bordered">
-      <!-- CONTENTS !-->
-      <thead>
-      <tr>
-        <th class="col-md-1">번호</th>
-        <th class="col-md-4">글제목</th>
-        <th class="col-md-3">작성자</th>
-        <th class="col-md-2">작성일</th>
-        <th class="col-md-2">목격일</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <!-- CONTENTS !-->
-      <tr th:each="report : ${reports}">
-        <td th:text="${report.getId()}"></td>
-        <td><a th:href="@{/reports/detail/{id}(id=${report.getId()})}" th:text="${report.getWitness_title()}"></a></td>
-        <td th:text="${report.getUser().getName()}"></td>
-        <td th:text="${#temporals.format(report.createdTime, 'yyyy-MM-dd')}"></td>
-        <td th:text="${#temporals.format(report.witnessTime, 'yyyy-MM-dd')}"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <!-- 페이징처리 시작 -->
-  <div th:if="${!reports.isEmpty()}">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
-        <a class="page-link"
-           th:href="@{|?page=${reports.number-1}|}">
-          <span>이전</span>
-        </a>
-      </li>
-      <li th:each="page: ${#numbers.sequence(0, reports.totalPages-1)}"
-          th:classappend="${page == reports.number} ? 'active'"
-          class="page-item">
-        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
-      </li>
-      <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
-        <a class="page-link" th:href="@{|?page=${reports.number+1}|}">
-          <span>다음</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <!-- 페이징처리 끝 -->
+    </div>
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!reports.isEmpty()}" style="margin-bottom: 70px;">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|?page=${reports.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(1, reports.totalPages)}"
+                th:classappend="${page == reports.number} ? 'active'"
+                class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page - 1}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${reports.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
 </div> <!-- /container -->
 </body>
 </html>

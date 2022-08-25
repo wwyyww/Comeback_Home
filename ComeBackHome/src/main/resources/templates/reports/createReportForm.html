@@ -336,18 +336,20 @@
 </head>
 <body>
 <div layout:fragment="content" class="container">
+    <h2 style="text-align: center; margin-top:50px; margin-bottom:10px;">제보하기</h2>
+    <p style="text-align:center; padding-bottom: 50px;" class="text-decoration-underline">실종자 목격 내용을 작성해주세요</p>
+    <hr>
     <form method="post" enctype="multipart/form-data" id="newReportForm" onsubmit="return checkFileNull();">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-
         <div class="form-group">
-            <div className="form-group">
+            <div className="form-group" style="text-align: left; margin-bottom:20px;">
                 <input type="hidden" id="witness_lat" name="witness_lat"
                        th:value="${reportForm.witness_lat}">
                 <input type="hidden" id="witness_lng" name="witness_lng"
                        th:value="${reportForm.witness_lng}">
-                <input type="text" id="witness_area" name="witness_area" placeholder="장소를 선택해주세요"
+                <input type="text" class="form-control col-md-6" id="witness_area" name="witness_area"
+                       placeholder="지도에서 장소를 선택해주세요"
                        th:value="${reportForm.witness_area}" readonly>
-                <span><em>지도를 클릭해주세요!</em></span>
             </div>
             <div>
                 <div class="box">
@@ -683,86 +685,58 @@
                 </script>
             </div>
             <div>
-                <label for="witness_title">제보 제목</label>
-                <span th:if="${reportForm.witness_title}">
-                <input type="text" id="witness_title" name="witness_title" th:value="${reportForm.witness_title}"
-                       placeholder="제목을 입력하세요">
-            </span>
-                <span th:unless="${reportForm.witness_title}">
-                <input type="text" id="witness_title" name="witness_title" placeholder="제목을 입력하세요">
-            </span>
+                <table class="table table-bordered" style="margin-top:40px; ">
+                    <tbody>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;" for="witness_title">제보 제목</th>
+                        <td style="vertical-align: middle;">
+                            <div>
+                                <input class="form-control col-md-6" type="text" id="witness_title" name="witness_title"
+                                       th:value="${reportForm.witness_title}"
+                                       placeholder="제목을 입력하세요">
+                            </div>
+                        </td>
+                        <span th:text="${valid_witness_title}"></span>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;" for="witness_desc">제보 내용</th>
+                        <td style="vertical-align: middle;">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="witness_desc" name="witness_desc" rows="3"
+                                          th:value="${reportForm.witness_desc}"
+                                          placeholder="제보 내용을 입력하세요"></textarea>
+                            </div>
+                        </td>
+                        <span th:text="${valid_witness_desc}"></span>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;" for="witnessTime">목격 시간</th>
+                        <td style="vertical-align: middle;">
+                            <input type="datetime-local" id="witnessTime" name="witnessTime"
+                                   th:value="${reportForm.witnessTime}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;" for="witnessPics">제보 사진</th>
+                        <td style="vertical-align: middle;">
+                            <div>
+                                <input type="file" id="witnessPics" name="witnessPics" multiple="multiple"
+                                       placeholder="사진 경로를 입력하세요">
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
             </div>
 
-
-            <!--        <label for="witness_title">제보 제목</label>-->
-            <!--      <div th:if="${reportForm.witness_title}">-->
-            <!--        <input type="text" id="witness_title" name="witness_title" th:value="${reportForm.witness_title}" placeholder="제목을 입력하세요">-->
-            <!--      </div>-->
-            <!--      <div th:unless="${reportForm.witness_title}">-->
-            <!--        <input type="text" id="witness_title" name="witness_title" placeholder="제목을 입력하세요">-->
-            <!--      </div>-->
-            <div>
-                <label for="missing_desc">제보 내용</label>
-                <span th:if="${reportForm.witness_desc}">
-                <input type="text" id="witness_desc" name="witness_desc" th:value="${reportForm.witness_desc}"
-                       placeholder="제보 내용을 입력하세요">
-            </span>
-                <span th:unless="${reportForm.witness_desc}">
-                <input type="text" id="witness_desc" name="witness_desc" placeholder="추가 실종자 정보를 입력하세요">
-            </span>
+            <div class="container" style="text-align:center; margin-top:30px; margin-bottom: 30px;">
+                <button class="btn btn-primary btn-lg" type="submit">제보하기</button>
             </div>
-            <div>
-                <label for="witnessTime">발견 시간</label>
-                <span th:if="${reportForm.witnessTime}">
-                <input type="datetime-local" id="witnessTime" name="witnessTime" th:value="${reportForm.witnessTime}">
-            </span>
-                <span th:unless="${reportForm.witnessTime}">
-                <input type="datetime-local" id="witnessTime" name="witnessTime">
-            </span>
-            </div>
-
-            <div>
-                <label for="witnessPics">제보 사진</label>
-                <input type="file" id="witnessPics" name="witnessPics" multiple="multiple"
-                       placeholder="사진 경로를 입력하세요">
-            </div>
-
-            <!--        &lt;!&ndash;장소 검색&ndash;&gt;-->
-            <!--        <div class="search" style="">-->
-            <!--            <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />-->
-            <!--            <input id="submit" type="button" value="주소 검색" />-->
-            <!--        </div>-->
-
-
-            <p>
-
-                <!-- 지도 표기 -->
-
-
         </div>
-        <button type="submit">등록</button>
+
     </form>
 
-    <div class="form-group">
-
-        <!--        <label for="witness_title">제보 제목</label>-->
-        <!--      <div th:if="${reportForm.witness_title}">-->
-        <!--        <input type="text" id="witness_title" name="witness_title" th:value="${reportForm.witness_title}" placeholder="제목을 입력하세요">-->
-        <!--      </div>-->
-        <!--      <div th:unless="${reportForm.witness_title}">-->
-        <!--        <input type="text" id="witness_title" name="witness_title" placeholder="제목을 입력하세요">-->
-        <!--      </div>-->
-
-
-        <!--        &lt;!&ndash;장소 검색&ndash;&gt;-->
-        <!--        <div class="search" style="">-->
-        <!--            <input id="address" type="text" placeholder="검색할 주소" value="불정로 6" />-->
-        <!--            <input id="submit" type="button" value="주소 검색" />-->
-        <!--        </div>-->
-
-        <!-- 지도 표기 -->
-
-        <div>
 
             <script>
                 // 파일 null인지 확인
@@ -776,7 +750,7 @@
                     }
                 }
             </script>
-        </div> <!-- /container -->
+        </div>
 
     </div>
 </div>
