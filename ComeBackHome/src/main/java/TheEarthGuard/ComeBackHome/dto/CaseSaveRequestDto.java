@@ -60,7 +60,7 @@ public class CaseSaveRequestDto {
             .missingDesc(this.missingDesc)
             .missingFeature(this.missingFeature)
             .missingArea(this.missingArea)
-            .missingRegion(this.missingArea.substring(0,2)) // 지역명 앞 2글자만
+            .missingRegion(this.missingArea.substring(0,3)) // 지역명 앞 2글자만
             .missingLat(Double.parseDouble(this.missingLat))
             .missingLng(Double.parseDouble(this.missingLng))
             .missingTimeStart(this.missingTimeStart)
