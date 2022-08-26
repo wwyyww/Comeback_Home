@@ -110,7 +110,7 @@
                         <td th:text="${case.getMissingArea()}"></td>
                     </tr>
                     <tr>
-                        <th style="text-align: center;">실종 추정 기간</th>
+                        <th style="text-align: center;" nowrap>실종 추정 기간</th>
                         <td>
               <span
                   th:text="${#temporals.format(case.getMissingTimeStart(), 'yyyy-MM-dd HH:MM')}"></span>
@@ -135,7 +135,7 @@
                 <div class="flex-item-center" th:if="${case.getUserId() != user.getId()}">
                     <a class="btn btn-primary" th:href="@{/reports/new/{id}(id=${case.getCaseId()})}">제보하기</a>
                     <a class="btn btn-danger" data-toggle="modal" href="#warnModal">게시물 신고하기</a>
-                    <a class="btn btn-primary" id="share-btn" onclick="screenShot($('#screenBox'))">이메일 공유하기</a>
+                    <a class="btn btn-primary" style="color:white;" id="share-btn" onclick="screenShot($('#screenBox'))">이메일 공유하기</a>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
                     </script>
                     <script >

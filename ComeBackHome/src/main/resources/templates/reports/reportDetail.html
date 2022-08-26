@@ -81,9 +81,9 @@
 
             <div style="width: 60%">
                 <table class="table table-bordered">
-                    <tbody>
+                    <tbody style="vertical-align: middle;">
                     <tr>
-                        <th style="text-align: center;">제보 제목</th>
+                        <th style="text-align: center;" nowrap>제보 제목</th>
                         <td th:text="${report.getWitness_title()}"></td>
                     </tr>
                     <tr>
@@ -99,7 +99,7 @@
                         <td th:text="${#temporals.format(report.getWitnessTime(), 'yyyy-MM-dd HH:MM')}"></td>
                     </tr>
                     <tr>
-                        <th style="text-align: center;">제보 내용</th>
+                        <th style="text-align: center;vertical-align: middle;">제보 내용</th>
                         <td th:text="${report.getWitness_desc()}"></td>
                     </tr>
 
