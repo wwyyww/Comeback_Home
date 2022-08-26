@@ -9,11 +9,17 @@ import TheEarthGuard.ComeBackHome.dto.WarnDto;
 import TheEarthGuard.ComeBackHome.repository.CaseRepository;
 import TheEarthGuard.ComeBackHome.repository.UserRepository;
 import TheEarthGuard.ComeBackHome.repository.WarnRepository;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.io.IOException;
+import java.util.*;
 import javax.transaction.Transactional;
+
+import com.google.api.client.util.Value;
+import com.slack.api.Slack;
+import com.slack.api.methods.MethodsClient;
+import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +28,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class CaseService {
     private final CaseRepository caseRepository;
@@ -164,6 +171,30 @@ public class CaseService {
 
         // 사건에 신고 객체 추가
         caseEntity.get().getWarns().add(warn);
+        String msg = "사건(#" + String.valueOf(caseId) + ")에 대한 신고가 접수되었습니다.\n신고 이유 : "+warn.getWarnReason();
+        postSlack(msg);
+
+
+    }
+
+    public void postSlack(String message) {
+
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        String slackToken = bundle.getString("slackBotToken");  // parent 폴더
+        String slackChannel = bundle.getString("slackChannel");  // parent 폴더
+
+        try{
+            MethodsClient methods = Slack.getInstance().methods(slackToken);
+            ChatPostMessageRequest request = ChatPostMessageRequest.builder()
+                    .channel(slackChannel)
+                    .text(message)
+                    .build();
+
+            methods.chatPostMessage(request);
+        }catch (SlackApiException | IOException e) {
+            log.error(e.getMessage());
+        }
+
 
     }
 
