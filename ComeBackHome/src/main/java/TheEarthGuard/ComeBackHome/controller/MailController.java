@@ -11,7 +11,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import groovy.util.logging.Slf4j;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -21,7 +20,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
@@ -40,12 +38,14 @@ public class MailController {
 
     @GetMapping(value = "/ImageSave/{id}" )
     @ResponseBody
-    public void ImgSaveTest(@RequestParam HashMap<Object, Object> param, final HttpServletRequest request, @PathVariable("id") Long id, @CurrentUser User user) throws Exception {
+    public String saveImage(final HttpServletRequest request, @PathVariable("id") Long id, @CurrentUser User user)
+        throws Exception {
+
         User currentUser = userService.findByEmail(user.getEmail());
         Optional<Case> caseEntity = caseService.findCase(id);
 
         if (currentUser == null && caseEntity.isPresent()) {
-            return ;
+            return "redirect:/cases/detail/{id}";
         }
 
         String binaryData = request.getParameter("imgSrc");
@@ -63,13 +63,14 @@ public class MailController {
             String fileName =  UUID.randomUUID().toString() + ".png";
 
 
-            stream = new FileOutputStream(fileDirPath +  FilenameUtils.getName(fileName));
+            File filePath = new File(fileDirPath,  FilenameUtils.getName(fileName));
+            stream = new FileOutputStream(filePath);
             stream.write(file);
             stream.close();
             System.out.println("캡처 저장");
 
             //파일 불러오기
-            File savedfile = new File(fileDirPath, fileName);
+            File savedfile = new File(fileDirPath,  FilenameUtils.getName(fileName));
 
             // 3. 메일 보내기
             if (caseEntity.isPresent()) {
@@ -92,7 +93,7 @@ public class MailController {
                 stream.close();
             }
         }
-
+        return "redirect:/cases/detail/{id}";
     }
 
 
